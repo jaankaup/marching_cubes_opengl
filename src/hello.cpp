@@ -4,6 +4,7 @@
 #include <emscripten.h>
 
 #include "Graphics/window.h"
+#include "Graphics/shader.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -198,6 +199,7 @@ void loop_handler2(void *arg)
 int main()
 {
   Window w;
+  Shader s;
 //    SDL_Window *window;
 //    struct context ctx;
 

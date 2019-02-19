@@ -8,23 +8,33 @@
 struct SDL_Window;
 using SDL_GLContext = void*;
 
-/* Ikkuna luokka. */
+/* A window class using SDL2 window. */
 class Window
 {
   public:
+
+    // Creates a window and initializes SDL2.
     Window();
+
+    // Destroys both window and SDL2.
     ~Window();
 
+    // Initializes window.
     bool init(int width, int height);
+
+    // Swaps buffers.
     void swapBuffers();
+
+    // Resize method for window.
     void resize(int width, int height);
+
+    // Remove?
     void isValid() const;
 
   private:
 
     SDL_Window* pWindow = NULL; 
     SDL_GLContext pContext = NULL; 
-    bool pBlah = false;
 
 }; // Class window
 
