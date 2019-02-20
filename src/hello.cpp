@@ -200,6 +200,9 @@ int main()
 {
   Window w;
   Shader s;
+  std::vector<std::string> shaderSources = {"shaders/default.vert", "shaders/default.frag"};
+  s.build(shaderSources);
+  //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
 //    struct context ctx;
 

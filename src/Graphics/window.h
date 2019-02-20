@@ -36,6 +36,8 @@ class Window
     SDL_Window* pWindow = NULL; 
     SDL_GLContext pContext = NULL; 
 
+    bool pBlah = false;
+
 }; // Class window
 
 #endif //WINDOW_H

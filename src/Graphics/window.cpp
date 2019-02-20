@@ -80,10 +80,10 @@ bool Window::init(int width, int height)
 
 void Window::swapBuffers()
 {
-//  pBlah = !pBlah;
-//  if (pBlah) glClearColor(0.0f,0.5f,0.0f,1.0f);
-//  else glClearColor(0.0f,0.2f,0.0f,1.0f);
-//  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+  pBlah = !pBlah;
+  if (pBlah) glClearColor(0.0f,0.5f,0.0f,1.0f);
+  else glClearColor(0.0f,0.2f,0.0f,1.0f);
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   SDL_GL_SwapWindow(pWindow);
 }
 

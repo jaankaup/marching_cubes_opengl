@@ -1,0 +1,7 @@
+Model::Model()
+{
+}
+
+Model::~Model()
+{
+}

@@ -8,6 +8,8 @@
 Shader::Shader()
 {
   pId = glCreateProgram();
+  Log::getDebug().log("Creating shader program: %", std::to_string(pId));
+
   if (pId == 0)
   {
     Log::getError().log("%","Shader::Shader. Failed to create program.");
@@ -16,17 +18,136 @@ Shader::Shader()
 
 Shader::~Shader()
 {
+  Log::getDebug().log("Deleting shader program: %", std::to_string(pId));
   if (pId != 0) glDeleteProgram(pId);
 }
 
 void Shader::build(const std::vector<std::string>& sources)
 {
+    using ShaderObjData = struct{
+        GLenum shaderType;
+        GLuint shaderObj;
+        std::string sourceCode;
+    };
 
+    /* A typedef for shader object data: shader object type and source code. */
+    using SOD = std::vector<ShaderObjData>;
+
+    /* A container for shader objects type and source code. */
+    SOD sod;
+
+    /* We iterate trought all source codes and extract shader object types and sourcecodes. */
+    for (const auto& location : sources)
+    {
+        Log::getDebug().log("Creating shader from file: %", location);
+
+        /* Solve the type of shader object from file extension. */
+        GLenum shaderType = getShaderType(location);
+        if (shaderType == 0)
+        {
+            Log::getError().log("Shader::build: Could'n solve the shader object type from file '%'.",location);
+            Log::getError().log("Shader::build: file extension must be one the following: [%].",".vert .gtcs .gtes .geom .frag");
+            // TODO: exception
+        }
+
+        ShaderObjData shaderObjectData;
+        shaderObjectData.shaderType = shaderType;
+        shaderObjectData.shaderObj = glCreateShader(shaderType);
+        shaderObjectData.sourceCode = loadSource(location);
+        /* Put the source type and source code to sod. */
+        sod.push_back(shaderObjectData);
+    }
+
+    for (const auto& object : sod)
+    {
+        compileShader(object.shaderObj, object.sourceCode);
+        if (!checkShader(object.shaderObj))
+            Log::getError().log("Shader::build: couldn't build shader object from source:\n%",object.sourceCode);
+            std::runtime_error("Shader::build: An error occurred while compiling a shader object.");
+    }
+
+    /* Attach shader objects to the program. */
+    for (const auto& object : sod)
+    {
+        glAttachShader(pId, object.shaderObj);
+    }
+
+    GLenum pname = GL_LINK_STATUS;
+
+    Log::getDebug().log("Linking shader.");
+
+    glLinkProgram(pId);
+
+    Log::getDebug().log("Linked shader succeed.");
+
+    int status;
+    int errorLength;
+
+    Log::getDebug().log("Checking shader for errors.");
+
+    glGetShaderiv(pId, pname, &status);
+
+    if (status == GL_FALSE)
+    {
+        glGetShaderiv(pId, GL_INFO_LOG_LENGTH, &errorLength);
+        GLchar *errorMessage = new GLchar[errorLength];
+        glGetShaderInfoLog(pId, errorLength, NULL, errorMessage);
+        Log::getError().log("Shader object compilation failed: %", errorMessage);
+        delete[] errorMessage;
+    }
+
+    for (const auto object : sod)
+    {
+        glDeleteShader(object.shaderObj);
+    }
+    Log::getDebug().log("Shader created succesfully.");
 }
 
-void Shader::bind()
+void Shader::bind() const
 {
+  glUseProgram(pId);
+}
 
+void Shader::setUniform(const std::string& name, int value) const
+{
+    GLint loc = glGetUniformLocation(pId, name.c_str());
+    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
+    glUniform1i(loc, value);
+}
+
+void Shader::setUniform(const std::string& name, float value) const
+{
+    GLint loc = glGetUniformLocation(pId, name.c_str());
+    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
+    glUniform1f(loc, value);
+}
+
+void Shader::setUniform(const std::string& name, const glm::vec3& value) const
+{
+    GLint loc = glGetUniformLocation(pId, name.c_str());
+    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
+    glUniform3fv(loc, 1,  glm::value_ptr(value));
+}
+
+void Shader::setUniform(const std::string& name, const glm::mat3& value) const
+{
+    GLint loc = glGetUniformLocation(pId, name.c_str());
+    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
+    glUniformMatrix3fv(loc, 1, GL_FALSE,  glm::value_ptr(value));
+}
+
+void Shader::setUniform(const std::string& name, const glm::vec4& value) const
+{
+    GLint loc = glGetUniformLocation(pId, name.c_str());
+    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
+    glUniform4fv(loc, 1,  glm::value_ptr(value));
+}
+
+void Shader::setUniform(const std::string& name, const glm::mat4& value) const
+{
+    GLint loc = glGetUniformLocation(pId, name.c_str());
+    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
+    glUniformMatrix4fv(loc, 1, GL_FALSE,  glm::value_ptr(value));
 }
 
 std::string Shader::loadSource(const std::string& fileLoc)
@@ -63,12 +184,12 @@ GLuint Shader::getShaderType(const std::string& fileLoc)
 
 
     /* Supported shader object source code types. */
-    static std::array<std::string, 6> fileSuffixes = {".vert",
+    static std::array<std::string, 5> fileSuffixes = {".vert",
                                                       ".gtcs",
                                                       ".gtes",
                                                       ".geom",
-                                                      ".frag",
-                                                      ".comp"
+                                                      ".frag"
+//                                                      ".comp"
                                                      };
 
     /* Corrresponding shader object types in opengl. */
