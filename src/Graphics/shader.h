@@ -6,7 +6,6 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
-//#include "misc.h"
 
 /** A simple shader class with basic shader operations. */
 class Shader

@@ -22,6 +22,10 @@ set (util_dir ${src_dir}/Utils)
 set(graphics_src 
       ${graphics_dir}/window.cpp
       ${graphics_dir}/shader.cpp
+      ${graphics_dir}/model.cpp
+      ${graphics_dir}/vertexbuffer.cpp
+      ${graphics_dir}/indexbuffer.cpp
+      ${graphics_dir}/vertexAttributes.cpp
       )
 
 set(util_src 

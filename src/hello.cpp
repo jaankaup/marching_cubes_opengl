@@ -5,6 +5,10 @@
 
 #include "Graphics/window.h"
 #include "Graphics/shader.h"
+#include "Graphics/model.h"
+#include "Graphics/vertexbuffer.h"
+#include "Graphics/indexbuffer.h"
+#include "Graphics/vertexAttributes.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -202,6 +206,10 @@ int main()
   Shader s;
   std::vector<std::string> shaderSources = {"shaders/default.vert", "shaders/default.frag"};
   s.build(shaderSources);
+  Vertexbuffer vb;
+  Indexbuffer ib;
+  Model m;
+  VertexAttributes atrr;
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
 //    struct context ctx;
