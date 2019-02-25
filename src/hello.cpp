@@ -209,7 +209,7 @@ int main()
   Vertexbuffer vb;
   Indexbuffer ib;
   Model m;
-  VertexAttributes atrr;
+  VertexAttributes atr;
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
 //    struct context ctx;

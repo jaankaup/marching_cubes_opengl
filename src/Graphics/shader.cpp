@@ -8,7 +8,8 @@
 Shader::Shader()
 {
   pId = glCreateProgram();
-  Log::getDebug().log("Creating shader program: %", std::to_string(pId));
+
+  Log::getDebug().log("Created shader program: %", std::to_string(pId));
 
   if (pId == 0)
   {
@@ -85,7 +86,8 @@ void Shader::build(const std::vector<std::string>& sources)
 
     Log::getDebug().log("Checking shader for errors.");
 
-    glGetShaderiv(pId, pname, &status);
+//    glGetShaderiv(pId, pname, &status);
+    glGetProgramiv(pId, pname, &status);
 
     if (status == GL_FALSE)
     {
@@ -211,6 +213,7 @@ GLuint Shader::getShaderType(const std::string& fileLoc)
 
 void Shader::compileShader(const GLuint id, const std::string& source)
 {
+    Log::getDebug().log("Shader::compileShaer(): Compiling shader: %", std::to_string(id));
     // Transform c++ string to C string.
     const char* src_C = source.c_str();
     // Push source to shader object managed by opengl.
@@ -221,6 +224,7 @@ void Shader::compileShader(const GLuint id, const std::string& source)
 
 bool Shader::checkShader(GLuint obj)
 {
+    Log::getDebug().log("Shader::checkShader(): Checking shader: %", std::to_string(obj));
     /* We are checking linking status by default. */
     GLenum pname = GL_COMPILE_STATUS;
 
@@ -237,5 +241,6 @@ bool Shader::checkShader(GLuint obj)
         delete[] errorMessage;
         return false;
     }
+    Log::getDebug().log("Shader::checkShader(): Shader checked successfully: %", std::to_string(obj));
     return true;
 }
