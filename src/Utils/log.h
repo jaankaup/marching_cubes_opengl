@@ -26,6 +26,7 @@ class Log
     static Log& getError();
 
     void log(const char* str) {
+      if (pDisabled) return;
       printPrefix();
 
       while (*str)
@@ -51,6 +52,7 @@ class Log
     template <typename T, typename... Args>
       void log(const char* str, T val, Args... args)
       {
+        if (pDisabled) return;
         printPrefix();
 
         while (*str)
@@ -87,6 +89,7 @@ class Log
     std::ostream& os_;
     bool printPrefix_ = true;
     bool printEOF_ = false;
+    bool pDisabled = false;
 
     void printPrefix()
     {

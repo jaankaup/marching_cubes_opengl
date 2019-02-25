@@ -96,10 +96,10 @@ void Shader::build(const std::vector<std::string>& sources)
         delete[] errorMessage;
     }
 
-    for (const auto object : sod)
-    {
-        glDeleteShader(object.shaderObj);
-    }
+    //for (const auto object : sod)
+    //{
+    //    glDeleteShader(object.shaderObj);
+    //}
     Log::getDebug().log("Shader created succesfully.");
 }
 

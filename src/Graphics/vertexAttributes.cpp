@@ -2,7 +2,7 @@
 #include "vertexAttributes.h"
 #include "../Utils/log.h"
 
-#define DEBUG_PROJECT
+//#define DEBUG_PROJECT
 
 VertexAttributes::VertexAttributes()
 {
@@ -58,6 +58,7 @@ bool VertexAttributes::create_interleaved_attributes(const std::vector<std::stri
         Log::getError().log("VertexAttributes::create_interleaved_attributes. Unrecognized attribute type '%'.", std::to_string(type));
         return false;
     }
+
     VertexAttribute va;
     va.attributeLocation = location;
     va.size = size; 
@@ -75,4 +76,21 @@ bool VertexAttributes::create_interleaved_attributes(const std::vector<std::stri
     x.stride = stride;
   }
   return true;
+}
+
+void VertexAttributes::registerAttributes() const
+{
+    // tell to opengl how to interpret the data of the binded buffer.
+    for (const auto& x : pAttributes)
+    {
+        glEnableVertexAttribArray(x.attributeLocation);
+        glVertexAttribPointer(
+            x.attributeLocation,   // attribute location. location for shader attribute.
+            x.size,       // size
+            x.type,       // type
+            x.normalized, // normalized
+            x.stride,     // stride
+            x.offset      // array buffer offset.
+            );
+    }
 }

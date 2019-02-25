@@ -9,12 +9,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 # Debug. 
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     message("Debug Build")
+    add_compile_definitions(DEBUG_PROJECT)
 # Release. Tanne optimoinnit ym. 
 elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
     message("Release Build")
 endif()
 
 #find_package(OPENGL REQUIRED)
+
 
 set (graphics_dir ${src_dir}/Graphics)
 set (util_dir ${src_dir}/Utils)

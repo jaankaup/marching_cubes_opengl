@@ -8,7 +8,10 @@ Log& Log::getInfo()
 
 Log& Log::getDebug()
 {
-  static Log instance("DEBUG: ",std::cout);
+    static Log instance("DEBUG: ",std::cout);
+  #ifndef DEBUG_PROJECT
+    instance.pDisabled = true;
+  #endif  
   return instance;
 }
 
