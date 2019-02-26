@@ -6,19 +6,19 @@
 
 Window::Window()
 {
-  Log::getDebug().log("%","Window::Window. Creating window.");
-  auto sdl = SDL_Init(SDL_INIT_VIDEO);
-  Log::getDebug().log("%",std::to_string(sdl));
-  if (!SDL_WasInit(SDL_INIT_VIDEO))
-  {
-    Log::getDebug().log("%","Window::Window. initializing SDL.");
-    //if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0)
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-      Log::getError().log("%","Window::Window. Failed to initialize SDL.");
-      return;
-  }
-  Log::getDebug().log("%","Window::Window. window created.");
-  init(800,800);
+//  Log::getDebug().log("%","Window::Window. Creating window.");
+//  auto sdl = SDL_Init(SDL_INIT_VIDEO);
+//  Log::getDebug().log("%",std::to_string(sdl));
+//  if (!SDL_WasInit(SDL_INIT_VIDEO))
+//  {
+//    Log::getDebug().log("%","Window::Window. initializing SDL.");
+//    //if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0)
+//    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+//      Log::getError().log("%","Window::Window. Failed to initialize SDL.");
+//      return;
+//  }
+//  Log::getDebug().log("%","Window::Window. window created.");
+//  init(800,800);
 }
 
 Window::~Window()
@@ -28,9 +28,27 @@ Window::~Window()
   SDL_Quit(); 
 }
 
+Window& Window::operator=(Window&& other)
+{
+        std::swap(pWindow,other.pWindow);
+        std::swap(pContext, other.pContext);
+        return *this;
+}
 
 bool Window::init(int width, int height)
 {
+  Log::getDebug().log("%","Window::Window. Creating window.");
+  auto sdl = SDL_Init(SDL_INIT_VIDEO);
+  Log::getDebug().log("%",std::to_string(sdl));
+  if (!SDL_WasInit(SDL_INIT_VIDEO))
+  {
+    Log::getDebug().log("%","Window::Window. initializing SDL.");
+    //if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+      Log::getError().log("%","Window::Window. Failed to initialize SDL.");
+      return false;
+  }
+  Log::getDebug().log("%","Window::Window. window created.");
     int x = SDL_WINDOWPOS_UNDEFINED;
     int y = SDL_WINDOWPOS_UNDEFINED;
     int flags = SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE;
@@ -52,7 +70,7 @@ bool Window::init(int width, int height)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     //SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
@@ -80,10 +98,10 @@ bool Window::init(int width, int height)
 
 void Window::swapBuffers()
 {
-  pBlah = !pBlah;
-  if (pBlah) glClearColor(0.0f,0.5f,0.0f,1.0f);
-  else glClearColor(0.0f,0.2f,0.0f,1.0f);
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+//  pBlah = !pBlah;
+//  if (pBlah) glClearColor(0.0f,0.5f,0.0f,1.0f);
+//  else glClearColor(0.0f,0.2f,0.0f,1.0f);
+//  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   SDL_GL_SwapWindow(pWindow);
 }
 

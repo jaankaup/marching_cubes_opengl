@@ -12,7 +12,8 @@ struct VertexAttribute
   GLenum type;
   GLboolean normalized;
   GLsizei stride;
-  const GLvoid* offset;
+  int offset;
+  //const GLvoid* offset;
 };
 
 /** A class for gl vertexattributes. */

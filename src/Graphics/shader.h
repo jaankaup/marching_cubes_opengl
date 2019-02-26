@@ -14,6 +14,7 @@ class Shader
 		Shader();
 		~Shader();
 
+    void init();
 		void build(const std::vector<std::string>& sources);
 		void bind() const;
 

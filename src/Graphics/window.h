@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 //#include <memory>
+//#include <memory>
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
@@ -18,6 +19,9 @@ class Window
 
     // Destroys both window and SDL2.
     ~Window();
+
+//    Window& operator=(const Window& other) = delete;
+    Window& operator=(Window&& other);
 
     // Initializes window.
     bool init(int width, int height);

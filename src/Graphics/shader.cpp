@@ -7,6 +7,16 @@
 
 Shader::Shader()
 {
+}
+
+Shader::~Shader()
+{
+  Log::getDebug().log("Deleting shader program: %", std::to_string(pId));
+  if (pId != 0) glDeleteProgram(pId);
+}
+
+void Shader::init()
+{
   pId = glCreateProgram();
 
   Log::getDebug().log("Created shader program: %", std::to_string(pId));
@@ -15,12 +25,6 @@ Shader::Shader()
   {
     Log::getError().log("%","Shader::Shader. Failed to create program.");
   }
-}
-
-Shader::~Shader()
-{
-  Log::getDebug().log("Deleting shader program: %", std::to_string(pId));
-  if (pId != 0) glDeleteProgram(pId);
 }
 
 void Shader::build(const std::vector<std::string>& sources)
@@ -107,6 +111,7 @@ void Shader::build(const std::vector<std::string>& sources)
 
 void Shader::bind() const
 {
+//  Log::getDebug().log("Binding shader %.",std::to_string(pId));
   glUseProgram(pId);
 }
 
@@ -199,7 +204,7 @@ GLuint Shader::getShaderType(const std::string& fileLoc)
                                                  GL_TESS_CONTROL_SHADER,
                                                  GL_TESS_EVALUATION_SHADER,
                                                  GL_GEOMETRY_SHADER,
-                                                 GL_FRAGMENT_SHADER,
+                                                 GL_FRAGMENT_SHADER
                                                  //GL_COMPUTE_SHADER
                                                 };
 
