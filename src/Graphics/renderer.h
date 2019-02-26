@@ -4,9 +4,12 @@
 #include <vector>
 #include <array>
 #include <GL/glew.h>
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 #include "shader.h"
 #include "vertexbuffer.h"
 #include "../Utils/log.h"

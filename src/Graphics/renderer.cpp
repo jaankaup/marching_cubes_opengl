@@ -43,6 +43,7 @@ void Renderer::render(const Vertexbuffer& vb,
 //  else { glFrontFace(GL_CCW); glCullFace(GL_BACK); }
 //  auto h = vb.getHandle();
   float yhyy = sin((float)lkm*0.008);
+  float yhyy2 = sin((float)lkm*0.00008);
 //  Log::getDebug().log("yhyy: %", std::to_string(yhyy));
   vb.bind();
   shader.bind();
@@ -63,7 +64,9 @@ void Renderer::render(const Vertexbuffer& vb,
   glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
   glm::mat4 view = glm::lookAt(eyePosition, glm::vec3(0.0,0.0,0.0), glm::vec3(0.0f, 1.0f,  0.0f));
   //glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)); // glm::mat4(yhyy*0.2f);
-  glm::mat4 model = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)), glm::vec3((-1.0f)*yhyy*5.0f,yhyy*5.0f, yhyy*1.0f)); // glm::mat4(yhyy*0.2f);
+  glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
+  glm::mat4 rotation = glm::rotate(yhyy2*180.0f, glm::vec3(1.0f,1.0f,1.0f));
+  glm::mat4 model = glm::translate(rotation * scale, glm::vec3((-1.0f)*yhyy*5.0f,yhyy*5.0f, yhyy*1.0f)); // glm::mat4(yhyy*0.2f);
   shader.setUniform("normalMatrix", glm::inverseTranspose(glm::mat3(model)));
 
   shader.setUniform("MVP", projection * view * model);
