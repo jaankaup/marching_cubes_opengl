@@ -30,6 +30,7 @@ out vec3 color;
 
 void main(){
         color = vec3(0.2f,0.3f,0.9f);
+        //color = vec3(vFrag_in);
 //        // Verteksin paikka maailmassa.
 //	vec3 vPositionCamera = (M * vec4(vFrag_in,1.0f)).xyz;
 //

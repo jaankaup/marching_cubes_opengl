@@ -3,6 +3,7 @@
 
 Vertexbuffer::Vertexbuffer()
 {
+  auto joo = 13;
 }
 
 Vertexbuffer::~Vertexbuffer()

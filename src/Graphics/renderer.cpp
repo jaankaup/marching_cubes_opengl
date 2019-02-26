@@ -2,7 +2,7 @@
 #include "window.h"
 Renderer::Renderer()
 {
-  auto b = 123;
+//  auto b = 123;
 }
 	
 Renderer::~Renderer()
@@ -12,13 +12,13 @@ Renderer::~Renderer()
 
 void Renderer::init()
 {
-//    glEnable(GL_DEPTH_TEST); // Enable depth test
-//    glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one
-//    glFrontFace(GL_CW);
+    glEnable(GL_DEPTH_TEST); // Enable depth test
+    glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one
+    glFrontFace(GL_CW);
 //    //glFrontFace(GL_CCW);
-//    glCullFace(GL_FRONT);
+    glCullFace(GL_FRONT);
 //    //glCullFace(GL_BACK);
-//    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     //glEnable(GL_MULTISAMPLE);
 }
 
@@ -48,7 +48,7 @@ void Renderer::render(const Vertexbuffer& vb,
   shader.bind();
   //vb.bind();
   glm::vec3 lightPosition = glm::vec3(15.0f,25.0f,5.0f);
-  glm::vec3 eyePosition = glm::vec3(20.0f,20.0f,20.0f);
+  glm::vec3 eyePosition = glm::vec3(1.0f,1.0f,yhyy*1.0f);
 
 //  shader.setUniform("LightPosition_worldspace", glm::vec3(10.0f,50.0f,10.0f));
 //  shader.setUniform("lightPosition", eyePosition);
@@ -59,12 +59,12 @@ void Renderer::render(const Vertexbuffer& vb,
 //  shader.setUniform("lights[0].materialShininess", 70.0f);
 //  shader.setUniform("lights[0].attentuationFactor", 0.000009f);
 
-  glm::mat4 projection = glm::perspective(glm::radians(150.0f), 16.0f / 9.0f, 0.1f, 100.f);
+  glm::mat4 projection = glm::perspective(glm::radians(150.0f), 16.0f / 9.0f, 0.1f, 1000.f);
   glm::mat4 view = glm::lookAt(eyePosition, glm::vec3(0.0,0.0,0.0), glm::vec3(0.0f, 1.0f,  0.0f));
   glm::mat4 model = glm::mat4(1.0f);// glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(yhyy*0.2f)), glm::vec3(yhyy*0.2f, 1.0f, 1.0f)); // glm::mat4(yhyy*0.2f);
 //  shader.setUniform("normalMatrix", glm::inverseTranspose(glm::mat3(model)));
 
-//  shader.setUniform("MVP", projection * view * model);
+  shader.setUniform("MVP", projection * view * model);
 //  shader.setUniform("M", model);
 //  shader.setUniform("V", view);
 //  shader.setUniform("P", projection);
