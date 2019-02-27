@@ -23,7 +23,7 @@ class Vertexbuffer
     GLuint pVAO = 0;
     GLenum pTarget;
     GLenum pUsage;
-    std::vector<glm::vec3> pData;
+    std::vector<float> pData;
 
 };
 

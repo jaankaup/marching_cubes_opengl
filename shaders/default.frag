@@ -6,7 +6,7 @@ precision highp float;
 
 // Interpolated values from the vertex shaders
 in vec3 vFrag_in;
-//in vec2 tFrag_in;
+in vec2 tFrag_in;
 in vec3 nFrag_in;
 
 // Ouput data
@@ -21,7 +21,7 @@ struct Light {
        float attentuationFactor;
 };
 
-//uniform sampler2D diffuseTexture;
+uniform sampler2D diffuseTexture;
 uniform mat4 M;
 //uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
@@ -65,8 +65,8 @@ void main(){
         vec3 specularComponent = specularCoeffient * lights[0].materialSpecularColor * lights[0].color;
 
         // Pinnan vä.
-	//vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
-	vec3 surfaceColor = vec3(0.5,0.5,0.5);
+	vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
+	//vec3 surfaceColor = vec3(0.5,0.5,0.5);
 
 	// Ambient vä.
         vec3 ambient = lights[0].ambientCoeffience * lights[0].color * surfaceColor;

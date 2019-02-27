@@ -95,9 +95,9 @@ void Shader::build(const std::vector<std::string>& sources)
 
     if (status == GL_FALSE)
     {
-        glGetShaderiv(pId, GL_INFO_LOG_LENGTH, &errorLength);
+        glGetProgramiv(pId, GL_INFO_LOG_LENGTH, &errorLength);
         GLchar *errorMessage = new GLchar[errorLength];
-        glGetShaderInfoLog(pId, errorLength, NULL, errorMessage);
+        glGetProgramInfoLog(pId, errorLength, NULL, errorMessage);
         Log::getError().log("Shader object compilation failed: %", errorMessage);
         delete[] errorMessage;
     }

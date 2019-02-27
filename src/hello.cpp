@@ -151,11 +151,14 @@ int main()
   c.shader = s; 
   c.shader.init();
   c.shader.build(shaderSources);
+  c.shader.bind();
   
   Texture t;
   c.texture = t;
   c.texture.init();
   c.texture.create("assets/rock.jpg");
+  c.texture.use(0);
+  c.shader.setUniform("diffuseTexture",0);
 
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
