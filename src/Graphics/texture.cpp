@@ -2,7 +2,7 @@
 
 Texture::Texture()
 {
-    glGenTextures(1,&pId);
+//    glGenTextures(1,&pId);
 }
 
 Texture::~Texture()
@@ -19,14 +19,15 @@ void Texture::init()
 /* For more information: https://open.gl/textures */
 void Texture::create(const std::string& fileloc)
 {
+    Log::getDebug().log("%","Texture::create(%): Creating texture from file.",fileloc);
     int width, height;
     unsigned char* image = SOIL_load_image(fileloc.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
 
     if (image == 0)
     {
         Log::getError().log("Error: Texture::create(%)", fileloc);
-//        Log::getError().log("%","Shader::Shader. Failed to create program.");
-        throw std::runtime_error(SOIL_last_result());
+        Log::getError().log("%",SOIL_last_result());
+//        throw std::runtime_error(SOIL_last_result());
     }
 
     /* HATARATKAISU: jos polku alkaa nain, niin bindataan tekstuuri texture unit 1:seen. */
@@ -35,6 +36,7 @@ void Texture::create(const std::string& fileloc)
 //        use(1);
 //    }
 //    else use(0);
+    use(0);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);

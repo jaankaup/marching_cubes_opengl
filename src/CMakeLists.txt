@@ -10,6 +10,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
     message("Debug Build")
     add_compile_definitions(DEBUG_PROJECT)
+    #    add_compile_definitions(EMSCRIPTEN)
+    #    add_compile_definitions(__cplusplus)
 # Release. Tanne optimoinnit ym. 
 elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
     message("Release Build")
@@ -19,6 +21,7 @@ endif()
 
 
 set (graphics_dir ${src_dir}/Graphics)
+set (soil_dir ${src_dir}/soil)
 set (util_dir ${src_dir}/Utils)
 
 set(graphics_src 
@@ -36,6 +39,14 @@ set(util_src
       ${util_dir}/log.cpp
       ${util_dir}/kokeilu.cpp
       )
+
+set (soil_src
+	${soil_dir}/image_DXT.c
+       	${soil_dir}/image_helper.c
+	${soil_dir}/SOIL.c
+	${soil_dir}/stb_image_aug.c
+	)
+
 
 set (headers ${CMAKE_SOURCE_DIR}/headers)
 message("libraries : ${libraries}")
@@ -71,9 +82,10 @@ set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
 #add_library(math STATIC lib/math/operations.cpp)
 
 
-add_executable(hello ${src_dir}/hello.cpp ${util_src} ${graphics_src})
+add_executable(hello ${src_dir}/hello.cpp ${util_src} ${graphics_src} ${soil_src})
+#add_executable(hello ${src_dir}/hello.cpp ${util_src} ${graphics_src} ${soil_src})
 #set_target_properties(hello PROPERTIES LINK_FLAGS "-s INVOKE_RUN=0 -s SAFE_HEAP=1 -s DEMANGLE_SUPPORT=1 -s USE_FREETYPE=1 -s DISABLE_EXCEPTION_CATCHING=0 -s USE_WEBGL2=1 -s FULL_ES3=1 -s LEGACY_GL_EMULATION=0 -s GL_UNSAFE_OPTS=0 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s OFFSCREENCANVAS_SUPPORT=1 --preload-file ${CMAKE_SOURCE_DIR}/assets/owl.png@assets/ --bind")
-set_target_properties(hello PROPERTIES LINK_FLAGS "-s DISABLE_EXCEPTION_CATCHING=2 -s DEMANGLE_SUPPORT=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s GL_ASSERTIONS=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES2=1 --bind --preload-file ${CMAKE_SOURCE_DIR}/shaders@shaders/")
+set_target_properties(hello PROPERTIES LINK_FLAGS "-s DISABLE_EXCEPTION_CATCHING=2 -s DEMANGLE_SUPPORT=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s GL_ASSERTIONS=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES2=1 --bind --preload-file ${CMAKE_SOURCE_DIR}/shaders@shaders/ --preload-file ${CMAKE_SOURCE_DIR}/assets/rock.jpg@assets/ ")
 #set_target_properties(hello PROPERTIES LINK_FLAGS "-s DEMANGLE_SUPPORT=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES3=1 --preload-file ${CMAKE_SOURCE_DIR}/assets/owl.png@assets/ --bind")
 #include_directories(${OPENGL_INCLUDE_DIR})
 #link_directories(${util_src})
@@ -82,8 +94,10 @@ set_target_properties(hello PROPERTIES LINK_FLAGS "-s DISABLE_EXCEPTION_CATCHING
 #set_target_properties(libSOIL PROPERTIES IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/lib/libSOIL.so )
 #TARGET_LINK_LIBRARIES(hello libSOIL)
 #include_directories(${headers}/soil)
-add_library(libSOIL SHARED IMPORTED)
-set_property(TARGET libSOIL PROPERTY IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/lib/libSOIL.so")
+#add_library(libSOIL STATIC IMPORTED)
+#set_property(TARGET libSOIL PROPERTY IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/lib/libSOIL.bc")
+message("BLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH ::: ${CMAKE_SOURCE_DIR}/lib/libSOIL.bc")
+#target_link_libraries(hello ${CMAKE_SOURCE_DIR}/lib/libSOIL.bc)
 #/target_include_directories(hello PUBLIC ${libraries}/soil/headers)
 #target_link_libraries(hello ${libraries}/lib/libSOIL)
 

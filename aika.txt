@@ -15,7 +15,12 @@
 > Koodailua. GL-koneiston ohjelmointia. 
 > Nyt selaimessa pyorii testikuutio. 
 
-### 27.2.2019 9:00 ->  
+### 27.2.2019 9:00 -> 11:00 (2h) 
 
 > Soil kirjaston kaantaminen ja importtaaminen projektiin.
 > Tata tarvitaan jotta saadaan ladattua tekstuureita. 
+
+### 27.2.2019 12:00 ->  
+
+> Soil kirjaston kaantaminen ja importtaaminen projektiin onnistui.
+> Ensimmainen versio Texture luokkasta implementoitu. 

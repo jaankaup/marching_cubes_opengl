@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include <SOIL.h>
 #include <GL/glew.h>
+#include <SOIL.h>
 #include "../Utils/log.h"
 
 class Texture
@@ -19,9 +19,9 @@ class Texture
         void use(const int unit) const;
         void bind() const;
         GLuint getID() const;
+        void create(const std::string& fileloc);
 
     private:
-        void create(const std::string& fileloc);
 
         GLuint pId = 0;
 };

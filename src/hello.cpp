@@ -41,59 +41,8 @@ struct context
     Renderer renderer;
     Shader shader;
     Vertexbuffer vertexbuffer;
+    Texture texture;
 };
-
-/**
- * Loads the owl texture into the context
- */
-int get_owl_texture(struct context * ctx)
-{
-//  joopajoo();
-//  window w;
-//  Log::getInfo().log("%","tama on inifo");
-//  Log::getDebug().log("%","tama on debbuggi");
-//  Log::getWarning().log("%","tama on varoitus");
-//  Log::getError().log("%","virihe!!!!");
-  //joopajoo();
-//  SDL_Surface *image = IMG_Load("owl.png");
-//  //SDL_Surface *image = IMG_Load("owl.png");
-//  bool error = false;
-//  if (!image)
-//  {
-//     printf("IMG_Load: %s\n", IMG_GetError());
-//     error = true;
-//  }
-//  if (error == true)
-//  {
-//	  image = IMG_Load("assets/owl.png");
-//	  //SDL_Surface *image = IMG_Load("owl.png");
-//	  if (!image)
-//	  {
-//		  printf("IMG_Load: %s\n", IMG_GetError());
-//	  }
-//	  else { error = false; }
-//
-//  }
-//  if (error == true)
-//  {
-//	  image = IMG_Load("home/jaankaup/TIES448/temp/assets/owl.png");
-//	  //SDL_Surface *image = IMG_Load("owl.png");
-//	  if (!image)
-//	  {
-//		  printf("IMG_Load: %s\n", IMG_GetError());
-//		  return 0;
-//	  }
-//	  else { error = false; }
-//
-//  }
-//  ctx->owl_tex = SDL_CreateTextureFromSurface(ctx->renderer, image);
-//  ctx->dest.w = image->w;
-//  ctx->dest.h = image->h;
-//
-//  SDL_FreeSurface (image);
-//
-//  return 1;
-}
 
 /**
  * Processes the input events and sets the velocity
@@ -153,27 +102,6 @@ void process_input()
 //    }
 }
 
-/**
- * Loop handler that gets called each animation frame,
- * process the input, update the position of the owl and 
- * then render the texture
- */
-void loop_handler(void *arg)
-{
-//    struct context *ctx = static_cast<context*>(arg);
-//
-//    int vx = 0;
-//    int vy = 0;
-//    process_input(ctx);
-//
-//    ctx->dest.x += ctx->owl_vx;
-//    ctx->dest.y += ctx->owl_vy;
-//
-//    SDL_RenderClear(ctx->renderer);
-//    SDL_RenderCopy(ctx->renderer, ctx->owl_tex, NULL, &ctx->dest);
-//    SDL_RenderPresent(ctx->renderer);
-}
-
 void loop_handler2(void *arg)
 {
 //  auto time = SDL_GetTicks() * 0.005f;
@@ -181,6 +109,7 @@ void loop_handler2(void *arg)
   process_input();
     context* c = static_cast<context*>(arg);
 //    Window *ctx = static_cast<Window*>(arg);
+//    c->texture.bind();
     c->renderer.render(c->vertexbuffer,c->shader);
     c->window.swapBuffers();
 
@@ -224,7 +153,10 @@ int main()
   c.shader.build(shaderSources);
   
   Texture t;
-  t.init();
+  c.texture = t;
+  c.texture.init();
+  c.texture.create("assets/rock.jpg");
+
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
 //    struct context ctx;
