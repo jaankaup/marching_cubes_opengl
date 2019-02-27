@@ -11,6 +11,7 @@
 #include "Graphics/indexbuffer.h"
 #include "Graphics/vertexAttributes.h"
 #include "Graphics/renderer.h"
+#include "Graphics/texture.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -221,6 +222,9 @@ int main()
   c.shader = s; 
   c.shader.init();
   c.shader.build(shaderSources);
+  
+  Texture t;
+  t.init();
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
 //    struct context ctx;

@@ -10,5 +10,12 @@
 
 > Koodailua. GL-koneiston ohjelmointia. 
 
-### 26.2.2019 12:00 -> 
+### 26.2.2019 12:00 -> 19:00 (7h) ### 
 
+> Koodailua. GL-koneiston ohjelmointia. 
+> Nyt selaimessa pyorii testikuutio. 
+
+### 27.2.2019 9:00 ->  
+
+> Soil kirjaston kaantaminen ja importtaaminen projektiin.
+> Tata tarvitaan jotta saadaan ladattua tekstuureita. 

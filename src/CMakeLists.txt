@@ -29,12 +29,17 @@ set(graphics_src
       ${graphics_dir}/indexbuffer.cpp
       ${graphics_dir}/vertexAttributes.cpp
       ${graphics_dir}/renderer.cpp
+      ${graphics_dir}/texture.cpp
       )
 
 set(util_src 
       ${util_dir}/log.cpp
       ${util_dir}/kokeilu.cpp
       )
+
+set (headers ${CMAKE_SOURCE_DIR}/headers)
+message("libraries : ${libraries}")
+message("headers : ${headers}")
 
 # Jos luodaan webassemlya.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
@@ -65,8 +70,6 @@ set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
 #add_library(math SHARED lib/math/operations.cpp)
 #add_library(math STATIC lib/math/operations.cpp)
 
-# The following folder will be included
-include_directories("${CMAKE_SOURCE_DIR}/includes")
 
 add_executable(hello ${src_dir}/hello.cpp ${util_src} ${graphics_src})
 #set_target_properties(hello PROPERTIES LINK_FLAGS "-s INVOKE_RUN=0 -s SAFE_HEAP=1 -s DEMANGLE_SUPPORT=1 -s USE_FREETYPE=1 -s DISABLE_EXCEPTION_CATCHING=0 -s USE_WEBGL2=1 -s FULL_ES3=1 -s LEGACY_GL_EMULATION=0 -s GL_UNSAFE_OPTS=0 -s ASSERTIONS=1 -s GL_ASSERTIONS=1 -s OFFSCREENCANVAS_SUPPORT=1 --preload-file ${CMAKE_SOURCE_DIR}/assets/owl.png@assets/ --bind")
@@ -74,7 +77,15 @@ set_target_properties(hello PROPERTIES LINK_FLAGS "-s DISABLE_EXCEPTION_CATCHING
 #set_target_properties(hello PROPERTIES LINK_FLAGS "-s DEMANGLE_SUPPORT=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES3=1 --preload-file ${CMAKE_SOURCE_DIR}/assets/owl.png@assets/ --bind")
 #include_directories(${OPENGL_INCLUDE_DIR})
 #link_directories(${util_src})
-#target_link_libraries(${util_src})
+#LINK_DIRECTORIES(${CMAKE_BINARY_DIR}/lib)
+#add_library( libSOIL SHARED IMPORTED )
+#set_target_properties(libSOIL PROPERTIES IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/lib/libSOIL.so )
+#TARGET_LINK_LIBRARIES(hello libSOIL)
+#include_directories(${headers}/soil)
+add_library(libSOIL SHARED IMPORTED)
+set_property(TARGET libSOIL PROPERTY IMPORTED_LOCATION "${CMAKE_BINARY_DIR}/lib/libSOIL.so")
+#/target_include_directories(hello PUBLIC ${libraries}/soil/headers)
+#target_link_libraries(hello ${libraries}/lib/libSOIL)
 
 #Tanne linkitykset
 #target_link_libraries(hello math)

@@ -15,6 +15,11 @@ FATAL: In-source builds are not allowed.
 ")
 endif()
 
+# The following folder will be included
+include_directories("${CMAKE_SOURCE_DIR}/includes")
+include_directories("${CMAKE_SOURCE_DIR}/includes/soil")
+include_directories("${CMAKE_SOURCE_DIR}/lib")
+#link_directories(${libraries})
 
 #set(CMAKE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 
