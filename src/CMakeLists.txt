@@ -33,6 +33,8 @@ set(graphics_src
       ${graphics_dir}/vertexAttributes.cpp
       ${graphics_dir}/renderer.cpp
       ${graphics_dir}/texture.cpp
+      ${graphics_dir}/cell.cpp
+      ${graphics_dir}/marchingCubes.cpp
       )
 
 set(util_src 

@@ -1,0 +1,6 @@
+# cmake kasky
+cmake -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=</path/to/Emscripten.cmake> -H. -Bbuild
+
+# kaannos
+cd build
+make all

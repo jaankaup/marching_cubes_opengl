@@ -20,7 +20,25 @@
 > Soil kirjaston kaantaminen ja importtaaminen projektiin.
 > Tata tarvitaan jotta saadaan ladattua tekstuureita. 
 
-### 27.2.2019 12:00 ->  
+### 27.2.2019 12:00 -> 19:00 (7h) ###  (aikaa kaytetty 21h)  
 
 > Soil kirjaston kaantaminen ja importtaaminen projektiin onnistui.
 > Ensimmainen versio Texture luokkasta implementoitu. 
+
+### 4.3.2019 12:00 -> 20:00 (8h) ###
+
+> Projetkin siirto serversikoneesta lappariin. Uuden kuutio demon teko, silla aikaisempi tuhoutui.
+> Alustavasti tutustuminen matching cubes tekniikkaan. Olisikohan tama tekniikka toteutettavissa?
+
+### 4.3.2019 9:00 -> 11:00 (2h) ###
+
+> Marching cubes tekniikan opettelua.
+
+### 4.3.2019 12:00 -> 16:00 (4h) ###
+
+> Marching cubes tekniikan opettelua.
+
+### 4.3.2019 17:00 -> 20:00 (3h) ###
+
+> Marching cubes tekniikan opettelua.
+> Oman marching cubes koodin aloittelu.
