@@ -12,6 +12,9 @@
 #include "Graphics/vertexAttributes.h"
 #include "Graphics/renderer.h"
 #include "Graphics/texture.h"
+#include "Graphics/testData.h"
+#include "Graphics/cell.h"
+#include "Graphics/marchingCubes.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -159,6 +162,9 @@ int main()
   c.texture.create("assets/rock.jpg");
   c.texture.use(0);
   c.shader.setUniform("diffuseTexture",0);
+  auto tData = exampleVoxelDataset1();
+//std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
+  auto res = triangulate(tData, 1.0);
 
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;

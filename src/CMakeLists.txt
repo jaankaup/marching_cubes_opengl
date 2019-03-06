@@ -34,6 +34,7 @@ set(graphics_src
       ${graphics_dir}/renderer.cpp
       ${graphics_dir}/texture.cpp
       ${graphics_dir}/cell.cpp
+      ${graphics_dir}/testData.cpp
       ${graphics_dir}/marchingCubes.cpp
       )
 

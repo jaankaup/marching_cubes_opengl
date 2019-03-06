@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "../Utils/log.h"
 
 //extern std::vector<glm::vec3> createSomething();
 
@@ -20,8 +21,33 @@
 // 7. Consider ambiguous cases
 // 8. Go to next cell
 
+/*
+        v4         e4             v5
+         +------------------------+
+        /|                       /|
+       / |                      / |
+  e7  /  |                  e5 /  |
+     /   |                    /   |
+    /    |       e6          /    |
+v7 +------------------------+ v6  |
+   |     |                  |     |
+   |     |                  |     |
+   |     |        e0        |     |
+   |  v0 +------------------|-----+ v1
+   |    /                   |    /
+   |   /                    |   /
+   |  / e3                  |  /  e1
+   | /                      | /
+   |/                       |/
+   +------------------------+
+  v3          e2           v2
+
+ v(n) vertex-index.
+ e(n) edge-index.
+
+ */
+
 //marching cubes table data
-//static const int edgeTable[256]={
 static const std::array<int,256> lookupTable =  {
 0x0  , 0x109, 0x203, 0x30a, 0x406, 0x50f, 0x605, 0x70c,
 0x80c, 0x905, 0xa0f, 0xb06, 0xc0a, 0xd03, 0xe09, 0xf00,
@@ -315,5 +341,50 @@ static const std::array<std::array<char,16>,256> triTable =  {{
   {{0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}},
   {{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}}
 }};
+
+/* @param data is the set of cells to travel. @param isovalue is the to
+ * determine if a corner of a cell is inside or outside of the surface.
+ */
+template <typename ArrayType>
+std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
+{
+  std::vector<glm::vec3> vertices; 
+  std::vector<glm::vec3> normals; 
+  int cubeindex = 0;
+  //glm::ivec3 positionIndex = data[0].pPosition;
+
+  // Check whetever the cell corners are inside the surface (1) or outside the
+  // surface (0).
+  for (int i=0 ; i<data.size() ; i++)
+  {
+   if (data[i].pIsovalues[0] < isolevel) cubeindex |= 1;
+   if (data[i].pIsovalues[1] < isolevel) cubeindex |= 2;
+   if (data[i].pIsovalues[2] < isolevel) cubeindex |= 4;
+   if (data[i].pIsovalues[3] < isolevel) cubeindex |= 8;
+   if (data[i].pIsovalues[4] < isolevel) cubeindex |= 16;
+   if (data[i].pIsovalues[5] < isolevel) cubeindex |= 32;
+   if (data[i].pIsovalues[6] < isolevel) cubeindex |= 64;
+   if (data[i].pIsovalues[7] < isolevel) cubeindex |= 128;
+  }
+ 
+  int lookupTable_index = -1;
+  for (int i=0 ; i<lookupTable.size() ; i++)
+  {
+    if (cubeindex == lookupTable[i])
+    {
+      // We found the index of edge list.
+      lookupTable_index = i;
+      break;
+    }
+  }
+  if (lookupTable_index == -1)
+  {
+    Log::getDebug().log("marchingCubes.triangulate: an invalid cubeindex '%'.", std::to_string(cubeindex));
+  }
+  std::array<char,16> edgeIncides = triTable[lookupTable_index]; 
+
+  std::vector<glm::vec3> result;
+  return result;
+}
   
 #endif // MARCHINGCUBES_H
