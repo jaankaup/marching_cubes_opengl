@@ -44,26 +44,26 @@ void Renderer::render(const Vertexbuffer& vb,
 //  if (pah){ glFrontFace(GL_CW); glCullFace(GL_FRONT); }
 //  else { glFrontFace(GL_CCW); glCullFace(GL_BACK); }
 //  auto h = vb.getHandle();
-  float yhyy = sin((float)lkm*0.008f);
-  float yhyy2 = sin((float)lkm*0.00008f);
-  float yhyy3 = cos((float)lkm*0.00005f);
+  float yhyy = sin((float)lkm* 0.008f);
+  float yhyy2 = sin((float)lkm*0.008f);
+  float yhyy3 = cos((float)lkm*0.005f);
 //  Log::getDebug().log("yhyy: %", std::to_string(yhyy));
   vb.bind();
   shader.bind();
   //vb.bind();
-  glm::vec3 lightPosition = glm::vec3(10.0f,-10.0f,-10.0f);
-  glm::vec3 eyePosition = glm::vec3(5.0f,5.0f,5.0f);
+  glm::vec3 lightPosition = glm::vec3(20.0f,20.0f,-20.0f);
+  glm::vec3 eyePosition = glm::vec3(115.0f,125.0f,125.0f);
 //
 //  shader.setUniform("lightPosition", lightPosition);
   if (normaalitMukana)
   {
-  shader.setUniform("cameraPosition", eyePosition);
+//  shader.setUniform("cameraPosition", eyePosition);
   shader.setUniform("lights[0].position", lightPosition);
   shader.setUniform("lights[0].color", glm::vec3(1.0f,1.0f,1.0f));
   shader.setUniform("lights[0].ambientCoeffience", 0.25f);
   shader.setUniform("lights[0].materialSpecularColor", glm::vec3(1.0f,1.0f,1.0f));
-  shader.setUniform("lights[0].materialShininess", 70.0f);
-  shader.setUniform("lights[0].attentuationFactor", 0.000009f);
+  shader.setUniform("lights[0].materialShininess", 10.0f);
+  shader.setUniform("lights[0].attentuationFactor", 0.00009f);
   //shader.setUniform("lights[0].attentuationFactor", 0.000009f);
   }
 
@@ -91,12 +91,15 @@ void Renderer::render(const Vertexbuffer& vb,
        d = yhyy2 + yhyy3 + (1.0f * i);
 
     }
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+    glm::vec3 eyePosition = glm::vec3(yhyy*120.0f + 125.0f,yhyy3*100.0f + 125.0f, yhyy2*100.0f + 125.0f);
+    shader.setUniform("cameraPosition", eyePosition);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 700.0f);
     glm::mat4 view = glm::lookAt(eyePosition, glm::vec3(0.0,0.0,0.0), glm::vec3(0.0f, 1.0f,  0.0f));
     //glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)); // glm::mat4(yhyy*0.2f);
-    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-    glm::mat4 rotation = glm::rotate(a*180.0f, glm::vec3(1.0f,b*1.0f,c*1.0f));
-    glm::mat4 model = glm::translate(rotation * scale, glm::vec3(b*2.0f,c*2.0f, d*2.0f)); // glm::mat4(yhyy*0.2f);
+//    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+//    glm::mat4 rotation = glm::rotate(a*180.0f, glm::vec3(1.0f,b*1.0f,c*1.0f));
+//    glm::mat4 model = glm::translate(rotation * scale, glm::vec3(b*2.0f,c*2.0f, d*2.0f)); // glm::mat4(yhyy*0.2f);
+    glm::mat4 model = glm::mat4(1.0f); // glm::mat4(yhyy*0.2f);
   
     shader.setUniform("MVP", projection * view * model);
     if (normaalitMukana)

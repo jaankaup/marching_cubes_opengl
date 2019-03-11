@@ -164,25 +164,25 @@ int main()
   c.texture.create("assets/rock.jpg");
   c.texture.use(0);
 //  c.shader.setUniform("diffuseTexture",0);
-  auto tData = exampleData2();
+  auto tData = exampleData4();
 
 //std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
-  auto [vertices,normals] = triangulate(tData, 0.1);
+  auto [vertices,normals] = triangulate(tData, 0.01f);
   std::vector<glm::vec3> marchingData;
   for (int q=0; q<vertices.size() ; q++)
   {
     marchingData.push_back(vertices[q]);
-    Log::getDebug().log("vertice = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
+//    Log::getDebug().log("vertice = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
     marchingData.push_back(normals[q]);
-    Log::getDebug().log("normal = (%,%,%)", std::to_string(normals[q].x),std::to_string(normals[q].y),std::to_string(normals[q].z));
+//    Log::getDebug().log("normal = (%,%,%)", std::to_string(normals[q].x),std::to_string(normals[q].y),std::to_string(normals[q].z));
 //    auto n = glm::vec3(0.0f,0.0f,0.0f);
 //    marchingData.push_back(n);
 
 ///    Log::getDebug().log("(%,%,%)", std::to_string(x.x), std::to_string(x.y),std::to_string(x.z));
   }
 //  Log::getDebug().log("size of tData = %", std::to_string(tData.size()));
-  Log::getDebug().log("size of vertices = %", std::to_string(vertices.size()));
-  Log::getDebug().log("size of normals/3 = %", std::to_string(normals.size()/3));
+//  Log::getDebug().log("size of vertices = %", std::to_string(vertices.size()));
+//  Log::getDebug().log("size of normals/3 = %", std::to_string(normals.size()/3));
 //  for (const auto& e : res)
 //  {
 ////    std::cout << x << std::endl;

@@ -346,7 +346,16 @@ static const std::array<std::array<char,16>,256> triTable =  {{
 
 extern glm::vec3 interPolateV(float isolevel,const glm::vec3& p1, const glm::vec3& p2,float valp1, float valp2);
 
-extern glm::vec3 calculateNormal(const int i, const int j, const int k, const VoxelData& data);
+template<typename T>
+glm::vec3 calculateNormal(const int i, const int j, const int k, const VoxelData<T>& data)
+{
+    float gx = data.getValue(i+1  ,j  ,k) - data.getValue(i-1, j, k);
+    float gy = data.getValue(i  ,j+1  ,k) - data.getValue(i, j-1, k);
+    float gz = data.getValue(i  ,j  ,k+1) - data.getValue(i, j, k-1);
+
+    glm::vec3 v(gx,gy,gz);
+    return glm::normalize(v);
+}
 
 /* @param data is the set of cells to travel. @param isovalue is the to
  * determine if a corner of a cell is inside or outside of the surface.
@@ -356,6 +365,9 @@ std::tuple<std::vector<glm::vec3>,std::vector<glm::vec3>> triangulate(const Arra
 {
   std::vector<glm::vec3> vertices; 
   std::vector<glm::vec3> result_normals; 
+
+  std::array<glm::vec3,12> edgeVertices;
+  std::array<glm::vec3,12> edgeNormals;
   //glm::ivec3 positionIndex = data[0].pPosition;
 
   // Phase 2. Check whetever the cell corners are inside the surface (1) or outside the
@@ -363,27 +375,25 @@ std::tuple<std::vector<glm::vec3>,std::vector<glm::vec3>> triangulate(const Arra
   // 3. Build an index
 
   auto [xDim,yDim,zDim] = data.getDimensions();
-  int indexCount = (xDim-1)*(yDim-1)*(zDim-1);
-  Log::getDebug().log("INDEXCOUNT = %",std::to_string(indexCount));
-  int laskuri = 0;
+//  int indexCount = (xDim-1)*(yDim-1)*(zDim-1);
+//  Log::getDebug().log("INDEXCOUNT = %",std::to_string(indexCount));
+//  int laskuri = 0;
   for (int k=0 ; k<zDim-1; k++)
   {
   for (int j=0 ; j<yDim-1; j++)
   {
   for (int i=0 ; i<xDim-1; i++)
   {
-    Log::getDebug().log("IND (%,%,%)",std::to_string(i),std::to_string(j),std::to_string(k));
+ //   Log::getDebug().log("IND (%,%,%)",std::to_string(i),std::to_string(j),std::to_string(k));
     int cubeindex = 0;
-    std::array<glm::vec3,12> edgeVertices;
-    std::array<glm::vec3,12> edgeNormals;
 
     // Construct the cube.
     std::vector<float> isovalues(8);
     std::vector<glm::vec3> coordinates(8);
     std::vector<glm::vec3> normals(8);
 
-    Log::getDebug().log("laskuri = %",std::to_string(laskuri));
-    laskuri++;
+//    Log::getDebug().log("laskuri = %",std::to_string(laskuri));
+//    laskuri++;
 
     isovalues[0] = data.getValue(i  ,j  ,k);
     isovalues[1] = data.getValue(i+1,j  ,k);
@@ -431,19 +441,19 @@ std::tuple<std::vector<glm::vec3>,std::vector<glm::vec3>> triangulate(const Arra
     normals[5] = calculateNormal(i+1,j+1,k, data);
     normals[6] = calculateNormal(i+1,j+1,k+1, data);
     normals[7] = calculateNormal(i  ,j+1,+k+1, data);
-    std::string cubeindexBinary = "00000000";
+//    std::string cubeindexBinary = "00000000";
 
-    if (isovalues[0] < isolevel) { cubeindex |= 1; cubeindexBinary[0] = '1';}
-    if (isovalues[1] < isolevel) { cubeindex |= 2; cubeindexBinary[1] = '1';}  
-    if (isovalues[2] < isolevel) { cubeindex |= 4; cubeindexBinary[2] = '1';} 
-    if (isovalues[3] < isolevel) { cubeindex |= 8; cubeindexBinary[3] = '1';}
-    if (isovalues[4] < isolevel) { cubeindex |= 16; cubeindexBinary[4] = '1';}
-    if (isovalues[5] < isolevel) { cubeindex |= 32; cubeindexBinary[5] = '1';}
-    if (isovalues[6] < isolevel) { cubeindex |= 64; cubeindexBinary[6] = '1';}
-    if (isovalues[7] < isolevel) { cubeindex |= 128; cubeindexBinary[7] = '1';}
+    if (isovalues[0] < isolevel) { cubeindex |= 1;  /* cubeindexBinary[0] = '1';*/}
+    if (isovalues[1] < isolevel) { cubeindex |= 2;  /* cubeindexBinary[1] = '1';*/}  
+    if (isovalues[2] < isolevel) { cubeindex |= 4;  /* cubeindexBinary[2] = '1';*/} 
+    if (isovalues[3] < isolevel) { cubeindex |= 8;  /* cubeindexBinary[3] = '1';*/}
+    if (isovalues[4] < isolevel) { cubeindex |= 16; /* cubeindexBinary[4] = '1';*/}
+    if (isovalues[5] < isolevel) { cubeindex |= 32; /* cubeindexBinary[5] = '1';*/}
+    if (isovalues[6] < isolevel) { cubeindex |= 64; /* cubeindexBinary[6] = '1';*/}
+    if (isovalues[7] < isolevel) { cubeindex |= 128;/* cubeindexBinary[7] = '1';*/}
   
-    Log::getDebug().log("CUBEINDEX = %",std::to_string(cubeindex));
-    Log::getDebug().log("CUBEINDEX = %",cubeindexBinary);
+//    Log::getDebug().log("CUBEINDEX = %",std::to_string(cubeindex));
+//    Log::getDebug().log("CUBEINDEX = %",cubeindexBinary);
 //    Log::getDebug().log("0 : % < %",std::to_string(isovalues[0]),std::to_string(isolevel));
 //    Log::getDebug().log("1 : % < %",std::to_string(isovalues[1]),std::to_string(isolevel));
 //    Log::getDebug().log("2 : % < %",std::to_string(isovalues[2]),std::to_string(isolevel));
@@ -453,10 +463,10 @@ std::tuple<std::vector<glm::vec3>,std::vector<glm::vec3>> triangulate(const Arra
 //    Log::getDebug().log("6 : % < %",std::to_string(isovalues[6]),std::to_string(isolevel));
 //    Log::getDebug().log("7 : % < %",std::to_string(isovalues[7]),std::to_string(isolevel));
 //    Log::getDebug().log("cubeindex = %", std::to_string(cubeindex));
-  for (const auto& a : coordinates)
-  {
-    Log::getDebug().log("POSITIONS (%,%,%)", std::to_string(a.x), std::to_string(a.y),std::to_string(a.z));
-  }
+//  for (const auto& a : coordinates)
+//  {
+//    Log::getDebug().log("POSITIONS (%,%,%)", std::to_string(a.x), std::to_string(a.y),std::to_string(a.z));
+//  }
 //  for (int b=0 ; b<isovalues.size(); b++)
 //  {
 //    Log::getDebug().log("VALUES %", std::to_string(isovalues[b]));
