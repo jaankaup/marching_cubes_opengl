@@ -164,10 +164,10 @@ int main()
   c.texture.create("assets/rock.jpg");
   c.texture.use(0);
 //  c.shader.setUniform("diffuseTexture",0);
-  auto tData = exampleData1();
+  auto tData = exampleData2();
 
 //std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
-  auto [vertices,normals] = triangulate(tData, 0.5);
+  auto [vertices,normals] = triangulate(tData, 0.1);
   std::vector<glm::vec3> marchingData;
   for (int q=0; q<vertices.size() ; q++)
   {

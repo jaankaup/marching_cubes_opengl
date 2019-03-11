@@ -107,7 +107,8 @@ void Renderer::render(const Vertexbuffer& vb,
   //  shader.setUniform("V", view);
   //  shader.setUniform("P", projection);
   
-    glDrawArrays(GL_TRIANGLES, 0, 24 /* triangleCount */);
+    // 0 (offset taulukossa). piirrettava kolmiomaara ts. 3*trianglecount 
+    glDrawArrays(GL_TRIANGLES, 0, 3 * triangleCount );
   }
 
 //  for (int i=0; i<10; i++)

@@ -24,16 +24,17 @@ extern glm::vec3 calculateNormal(const int i, const int j, const int k, const Vo
     float gx = data.getValue(i+1  ,j  ,k) - data.getValue(i-1, j, k);
     float gy = data.getValue(i  ,j+1  ,k) - data.getValue(i, j-1, k);
     float gz = data.getValue(i  ,j  ,k+1) - data.getValue(i, j, k-1);
-//    if (gx == 0.0f && gy == 0.0f && gz == 0.0f)
-//    {
-//    Log::getDebug().log("ZERO VECTOR!");
-//    }
+    if (gx == 0.0f && gy == 0.0f && gz == 0.0f)
+    {
+    Log::getDebug().log("ZERO VECTOR!");
+    return glm::vec3(1.0f,1.0f,1.0f);
+    }
     glm::vec3 v(gx,gy,gz);
 //    Log::getDebug().log("v = (%,%,%)", std::to_string(v.x),std::to_string(v.y),std::to_string(v.z));
 //    auto pah = glm::vec3(4.0f,3.0f,0.5f);
 //    auto n = glm::normalize(glm::vec3(0.5f,0.4f,0.3f));
 //    glm::vec3 n = glm::normalize(v);
 //    Log::getDebug().log("n = (%,%,%)", std::to_string(n.x),std::to_string(n.y),std::to_string(n.z));
-    return v;
+    return glm::normalize(v);
 //    return glm::vec3(1.0f,0.0f,0.0f);
 }
