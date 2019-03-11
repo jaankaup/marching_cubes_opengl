@@ -36,6 +36,7 @@ set(graphics_src
       ${graphics_dir}/cell.cpp
       ${graphics_dir}/testData.cpp
       ${graphics_dir}/marchingCubes.cpp
+      ${graphics_dir}/voxeldata.cpp
       )
 
 set(util_src 

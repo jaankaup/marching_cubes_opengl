@@ -15,6 +15,7 @@
 #include "Graphics/testData.h"
 #include "Graphics/cell.h"
 #include "Graphics/marchingCubes.h"
+#include "Graphics/voxeldata.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -45,6 +46,7 @@ struct context
     Shader shader;
     Vertexbuffer vertexbuffer;
     Texture texture;
+    int triangleCount;
 };
 
 /**
@@ -113,7 +115,7 @@ void loop_handler2(void *arg)
     context* c = static_cast<context*>(arg);
 //    Window *ctx = static_cast<Window*>(arg);
 //    c->texture.bind();
-    c->renderer.render(c->vertexbuffer,c->shader);
+    c->renderer.render(c->vertexbuffer,c->shader,c->triangleCount);
     c->window.swapBuffers();
 
 //    int vx = 0;
@@ -135,7 +137,7 @@ int main()
   c.window = std::move(w); 
   c.window.init(800,800);
   Shader s;
-  std::vector<std::string> shaderSources = {"shaders/default.vert", "shaders/default.frag"};
+  std::vector<std::string> shaderSources = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
   Vertexbuffer vb;
 //  vb.createExampleCube();
  // Indexbuffer ib;
@@ -149,7 +151,7 @@ int main()
 
   c.vertexbuffer = vb; 
   c.vertexbuffer.init();
-  c.vertexbuffer.createExampleCube();
+//  c.vertexbuffer.createExampleCube();
 
   c.shader = s; 
   c.shader.init();
@@ -161,11 +163,45 @@ int main()
   c.texture.init();
   c.texture.create("assets/rock.jpg");
   c.texture.use(0);
-  c.shader.setUniform("diffuseTexture",0);
-  auto tData = exampleVoxelDataset1();
-//std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
-  auto res = triangulate(tData, 1.0);
+//  c.shader.setUniform("diffuseTexture",0);
+  auto tData = exampleData1();
 
+//std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
+  auto [vertices,normals] = triangulate(tData, 0.5);
+  std::vector<glm::vec3> marchingData;
+  for (int q=0; q<vertices.size() ; q++)
+  {
+    marchingData.push_back(vertices[q]);
+    Log::getDebug().log("vertice = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
+    marchingData.push_back(normals[q]);
+    Log::getDebug().log("normal = (%,%,%)", std::to_string(normals[q].x),std::to_string(normals[q].y),std::to_string(normals[q].z));
+//    auto n = glm::vec3(0.0f,0.0f,0.0f);
+//    marchingData.push_back(n);
+
+///    Log::getDebug().log("(%,%,%)", std::to_string(x.x), std::to_string(x.y),std::to_string(x.z));
+  }
+//  Log::getDebug().log("size of tData = %", std::to_string(tData.size()));
+  Log::getDebug().log("size of vertices = %", std::to_string(vertices.size()));
+  Log::getDebug().log("size of normals/3 = %", std::to_string(normals.size()/3));
+//  for (const auto& e : res)
+//  {
+////    std::cout << x << std::endl;
+//    Log::getDebug().log("(%,%,%)", std::to_string(e.x), std::to_string(e.y),std::to_string(e.z));
+//  }
+  
+//  Log::getDebug().log("size of tData = %", std::to_string(tData.size()));
+//  for (int k=0 ; k<3 ; k++)
+//  {
+//  for (int j=0 ; j<3 ; j++)
+//  {
+//  for (int i=0 ; i<3 ; i++)
+//  {
+//    Log::getDebug().log("vData.getValue(%,%,%) = %", std::to_string(i), std::to_string(j),std::to_string(k),std::to_string(tData.getValue(i,j,k)));
+//    Log::getDebug().log("index = %", std::to_string(i+4*j+16*k));
+//  }}}
+  c.vertexbuffer.addData(&marchingData[0], marchingData.size() * sizeof(glm::vec3));
+
+  c.triangleCount = vertices.size()/3;
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
 //    SDL_Window *window;
 //    struct context ctx;

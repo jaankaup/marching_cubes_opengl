@@ -12,12 +12,12 @@ class Cell
 {
 	public:
     Cell();
-		Cell(const std::array<glm::ivec3,8>& positions, const std::array<float,8>& isovalues);
+		Cell(const std::array<glm::vec3,8>& positions, const std::array<float,8>& isovalues);
 		~Cell();
 
     // The values for cell corners.
     std::array<float,8> pIsovalues;
-    std::array<glm::ivec3, 8> pPositions;
+    std::array<glm::vec3, 8> pPositions;
      
     int pIndex;
 //    std::vector<glm::vec3> pTriangles; 

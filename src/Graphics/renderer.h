@@ -24,7 +24,7 @@ class Renderer
 		~Renderer();
 
     void init();
-    void render(const Vertexbuffer& vb, const Shader& shader);
+    void render(const Vertexbuffer& vb, const Shader& shader, int triangleCount);
 
 	private:
 

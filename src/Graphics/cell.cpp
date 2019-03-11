@@ -2,10 +2,12 @@
 
 Cell::Cell() {}
 
-Cell::Cell(const std::array<glm::ivec3, 8>& positions, const std::array<float,8>& isovalues)
+Cell::Cell(const std::array<glm::vec3, 8>& positions, const std::array<float,8>& isovalues)
 {
-  pPositions = std::move(positions);
-  pIsovalues = std::move(isovalues);
+//  pPositions = std::move(positions);
+//  pIsovalues = std::move(isovalues);
+  pPositions = positions;
+  pIsovalues = isovalues;
 }
 
 Cell::~Cell()

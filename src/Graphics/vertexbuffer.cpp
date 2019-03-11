@@ -39,7 +39,8 @@ void Vertexbuffer::addData(const void* data, unsigned int size) const
   glBindBuffer(pTarget, pId);
   glBufferData(pTarget,size, data, pUsage);
   VertexAttributes vas;
-  std::vector<std::string> types = {"3f","2f","3f"};
+//  std::vector<std::string> types = {"3f","2f","3f"};
+  std::vector<std::string> types = {"3f","3f"};
   vas.create_interleaved_attributes(types, false);
   vas.registerAttributes();
   glBindVertexArray(0);

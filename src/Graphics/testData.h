@@ -8,8 +8,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "cell.h"
+#include "voxeldata.h"
 #include "../Utils/log.h"
 
+extern VoxelData exampleData1();
+extern VoxelData exampleData2();
 extern std::vector<glm::vec3> createSomething();
 
 extern std::vector<Cell> exampleVoxelDataset1();

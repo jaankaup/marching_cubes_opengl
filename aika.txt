@@ -42,3 +42,28 @@
 
 > Marching cubes tekniikan opettelua.
 > Oman marching cubes koodin aloittelu.
+
+### 5.3.2019 10:00 -> 12:00 (2h) ###
+
+> Marching cubes tekniikan opettelua.
+> Oman marching cubes koodin aloittelu.
+
+### 5.3.2019 13:00 -> 20:00 (7h) ###
+
+> Marching cubes tekniikan opettelua.
+> Oman marching cubes koodin toteutusta. c++:n opistkelua.
+
+### 6.3.2019 9:00 -> 10:00 (1h) ### 
+
+> Marching cubes tekniikan opettelua.
+> Oman marching cubes koodin toteutusta.
+
+### 7.3.2019 16:00 -> 20:00 (4h) ### 
+
+> Oman marching cubes koodin toteutusta.
+> Oman voxeldata luokan luontia ja indeksi ihmettelya.
+
+### 8.3.2019 12:00 -> 20:00 (8h) ### 
+
+> Oman marching cubes koodin toteutusta.
+> Oman voxeldata luokan luontia ja indeksi ihmettelya.
