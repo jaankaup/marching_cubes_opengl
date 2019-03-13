@@ -16,6 +16,7 @@
 #include "Graphics/cell.h"
 #include "Graphics/marchingCubes.h"
 #include "Graphics/voxeldata.h"
+#include "Graphics/camera.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -47,6 +48,7 @@ struct context
     Vertexbuffer vertexbuffer;
     Texture texture;
     int triangleCount;
+    Camera camera;
 };
 
 /**
@@ -111,11 +113,12 @@ void loop_handler2(void *arg)
 {
 //  auto time = SDL_GetTicks() * 0.005f;
 //  auto value = sin(time) * 20;
-  process_input();
+  //process_input();
     context* c = static_cast<context*>(arg);
 //    Window *ctx = static_cast<Window*>(arg);
 //    c->texture.bind();
-    c->renderer.render(c->vertexbuffer,c->shader,c->triangleCount);
+    auto viewMatrix = c->camera.handleEvents();
+    c->renderer.render(c->vertexbuffer,c->shader,c->triangleCount,viewMatrix,c->camera.getPosition());
     c->window.swapBuffers();
 
 //    int vx = 0;
@@ -135,7 +138,7 @@ int main()
   Window w;
   context c;
   c.window = std::move(w); 
-  c.window.init(800,800);
+  c.window.init(1200,800);
   Shader s;
   std::vector<std::string> shaderSources = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
   Vertexbuffer vb;
@@ -145,6 +148,8 @@ int main()
 //  VertexAttributes atr;
   Renderer r;
 //  int a = 0;
+
+  c.camera = Camera();
 
   c.renderer = r; 
   c.renderer.init();
@@ -167,7 +172,7 @@ int main()
   auto tData = exampleData4();
 
 //std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
-  auto [vertices,normals] = triangulate(tData, 0.01f);
+  auto [vertices,normals] = triangulate(tData, 0.05f);
   std::vector<glm::vec3> marchingData;
   for (int q=0; q<vertices.size() ; q++)
   {

@@ -24,7 +24,7 @@ class Renderer
 		~Renderer();
 
     void init();
-    void render(const Vertexbuffer& vb, const Shader& shader, int triangleCount);
+    void render(const Vertexbuffer& vb, const Shader& shader, int triangleCount, const glm::mat4& viewMatrix,const glm::vec3& eyePosition);
 
 	private:
 

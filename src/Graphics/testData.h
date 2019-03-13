@@ -62,8 +62,8 @@ static VoxelData<float> exampleData4()
     //randomData.setValue(i,j,k,static_cast<float>(rand()));
   }}};
 
-  int a = -2; 
-  int b = -2;
+  int a = -5; 
+  int b = 2;
 
   VoxelData<float> result(dim,dim,dim);
   for (int i=0; i<dim ; i++) {
@@ -73,7 +73,7 @@ static VoxelData<float> exampleData4()
     float z = exp(a * static_cast<float>(i)/dim) * exp(a * static_cast<float>(j)/dim); 
     float k1 = exp(b * static_cast<float>(i)/dim) * exp(b * static_cast<float>(j)/dim); 
     
-    int sampleCount = 100;
+    int sampleCount = 50;
     float initialValue = randomData.getValue(i,j,k);
     float gx = 0.0f;
     float gy = 0.0f;
@@ -85,6 +85,7 @@ static VoxelData<float> exampleData4()
     }
     float neightbours =  ((gx + gy + gz)/3.0f) / sampleCount;
     float finalValue = neightbours + initialValue / 2.0f;
+    finalValue = finalValue > 1.0f ? 1.0f : finalValue;
 //    result.setValue(i,j,k,(gx+gy+gz)*z*k1);
 //    result.setValue(i,j,k,10000000.0f*z*k1);
       result.setValue(i,j,k,finalValue*z*k1);

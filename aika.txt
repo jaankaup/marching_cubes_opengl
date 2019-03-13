@@ -67,3 +67,22 @@
 
 > Oman marching cubes koodin toteutusta.
 > Oman voxeldata luokan luontia ja indeksi ihmettelya.
+
+### 11.3.2019 9:00 -> 13:00 (4h) ### 
+
+> Oman marching cubes koodin toteutusta ja debuggausta.
+
+### 11.3.2019 14:00 -> 20:00 (6h) ### 
+
+> Oman marching cubes koodin toteutusta ja debuggausta. Nyt algoritmi toimii.
+> Oman kohinafunktion kehittelya huonolla menestyksella.
+> Mallidatojen luontia.
+> cpp template metaohjelmoinnin kertausta ja funtioiden tyyppiparametrisointia.
+
+### 12.3.2019 10:00 -> 11:00 (1h) ### 
+
+> Web assemblyn opettelua.
+
+### 12.3.2019 13:00 -> 20:00 (7h) ### 
+
+> Kameran luontia. Nain ei tarvitse kaantaa ohjelmaa joka kerta kun halutaan muuttaa kameran orientatiota.
