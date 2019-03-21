@@ -21,23 +21,6 @@
 #include "Utils/kokeilu.h"
 
 /**
- * Inverse square root of two, for normalising velocity
- */
-#define REC_SQRT2 0.7071067811865475 
-
-/**
- * Set of input states
- */
-enum input_state : int
-{
-    NOTHING_PRESSED = 0,
-    UP_PRESSED = 1,
-    DOWN_PRESSED = 1<<1,
-    LEFT_PRESSED = 1<<2,
-    RIGHT_PRESSED = 1<<3
-};
-
-/**
  * Context structure that will be passed to the loop handler
  */
 struct context
@@ -51,86 +34,13 @@ struct context
     Camera camera;
 };
 
-/**
- * Processes the input events and sets the velocity
- * of the owl accordingly
- */
-void process_input()
-{
-    SDL_Event event;
-//
-    while (SDL_PollEvent(&event)) {
-//        switch (event.key.keysym.sym)
-//        {
-//            case SDLK_UP:
-//                if (event.key.type == SDL_KEYDOWN)
-//                    ctx->active_state |= UP_PRESSED;
-//                else if (event.key.type == SDL_KEYUP)
-//                    ctx->active_state ^= UP_PRESSED;
-//                break;
-//            case SDLK_DOWN:
-//                if (event.key.type == SDL_KEYDOWN)
-//                    ctx->active_state |= DOWN_PRESSED;
-//                else if (event.key.type == SDL_KEYUP)
-//                    ctx->active_state ^= DOWN_PRESSED;
-//                break;
-//            case SDLK_LEFT:
-//                if (event.key.type == SDL_KEYDOWN)
-//                    ctx->active_state |= LEFT_PRESSED;
-//                else if (event.key.type == SDL_KEYUP)
-//                    ctx->active_state ^= LEFT_PRESSED;
-//                break;
-//            case SDLK_RIGHT:
-//                if (event.key.type == SDL_KEYDOWN)
-//                    ctx->active_state |= RIGHT_PRESSED;
-//                else if (event.key.type == SDL_KEYUP)
-//                    ctx->active_state ^= RIGHT_PRESSED;
-//                break;
-//            default:
-//                break;
-//        }
-    }
-//
-//    ctx->owl_vy = 0;
-//    ctx->owl_vx = 0;
-//    if (ctx->active_state & UP_PRESSED)
-//        ctx->owl_vy = -5;
-//    if (ctx->active_state & DOWN_PRESSED)
-//        ctx->owl_vy = 5;
-//    if (ctx->active_state & LEFT_PRESSED)
-//        ctx->owl_vx = -5;
-//    if (ctx->active_state & RIGHT_PRESSED)
-//        ctx->owl_vx = 5;
-//
-//    if (ctx->owl_vx != 0 && ctx->owl_vy != 0)
-//    {
-//        ctx->owl_vx *= REC_SQRT2;
-//        ctx->owl_vy *= REC_SQRT2;
-//    }
-}
-
 void loop_handler2(void *arg)
 {
-//  auto time = SDL_GetTicks() * 0.005f;
-//  auto value = sin(time) * 20;
-  //process_input();
     context* c = static_cast<context*>(arg);
-//    Window *ctx = static_cast<Window*>(arg);
 //    c->texture.bind();
     auto viewMatrix = c->camera.handleEvents();
     c->renderer.render(c->vertexbuffer,c->shader,c->triangleCount,viewMatrix,c->camera.getPosition());
     c->window.swapBuffers();
-
-//    int vx = 0;
-//    int vy = 0;
-//    process_input(ctx);
-//
-//    ctx->dest.x += ctx->owl_vx;
-//    ctx->dest.y += ctx->owl_vy;
-//
-//    SDL_RenderClear(ctx->renderer);
-//    SDL_RenderCopy(ctx->renderer, ctx->owl_tex, NULL, &ctx->dest);
-//    SDL_RenderPresent(ctx->renderer);
 }
 
 int main()
@@ -154,7 +64,7 @@ int main()
   c.renderer = r; 
   c.renderer.init();
 
-  c.vertexbuffer = vb; 
+  c.vertexbuffer = std::move(vb); 
   c.vertexbuffer.init();
 //  c.vertexbuffer.createExampleCube();
 
@@ -169,17 +79,17 @@ int main()
   c.texture.create("assets/rock.jpg");
   c.texture.use(0);
 //  c.shader.setUniform("diffuseTexture",0);
-  auto tData = exampleData4();
+  auto tData = exampleData2();
 
 //std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
-  auto [vertices,normals] = triangulate(tData, 0.05f);
+  auto [vertices,normals] = triangulate(tData, 0.5f);
   std::vector<glm::vec3> marchingData;
   for (int q=0; q<vertices.size() ; q++)
   {
     marchingData.push_back(vertices[q]);
-//    Log::getDebug().log("vertice = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
+    Log::getDebug().log("vertice = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
     marchingData.push_back(normals[q]);
-//    Log::getDebug().log("normal = (%,%,%)", std::to_string(normals[q].x),std::to_string(normals[q].y),std::to_string(normals[q].z));
+    Log::getDebug().log("normal = (%,%,%)", std::to_string(normals[q].x),std::to_string(normals[q].y),std::to_string(normals[q].z));
 //    auto n = glm::vec3(0.0f,0.0f,0.0f);
 //    marchingData.push_back(n);
 
@@ -208,6 +118,7 @@ int main()
 
   c.triangleCount = vertices.size()/3;
   //ShaderManager::getInstance().createShader(shaderSources2, "pah");
+  Log::getDebug().log("triangleCount = %", std::to_string(c.triangleCount));
 //    SDL_Window *window;
 //    struct context ctx;
 

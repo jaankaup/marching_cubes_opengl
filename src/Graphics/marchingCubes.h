@@ -345,6 +345,7 @@ static const std::array<std::array<char,16>,256> triTable =  {{
 }};
 
 extern glm::vec3 interPolateV(float isolevel,const glm::vec3& p1, const glm::vec3& p2,float valp1, float valp2);
+extern glm::vec3 interPolateN(float isolevel,const glm::vec3& n1, const glm::vec3& n2);
 
 template<typename T>
 glm::vec3 calculateNormal(const int i, const int j, const int k, const VoxelData<T>& data)
@@ -353,8 +354,55 @@ glm::vec3 calculateNormal(const int i, const int j, const int k, const VoxelData
     float gy = data.getValue(i  ,j+1  ,k) - data.getValue(i, j-1, k);
     float gz = data.getValue(i  ,j  ,k+1) - data.getValue(i, j, k-1);
 
-    glm::vec3 v(gx,gy,gz);
-    return glm::normalize(v);
+//    glm::vec3 v(gx,gy,gz);
+//    if (gx == 0.0f && gy == 0.0f && gz == 0.0f) return glm::vec3(0.0f);
+//    Log::getDebug().log("calcNormal = (%,%,%)", std::to_string(v.x),std::to_string(v.y),std::to_string(v.z));
+//    glm::vec3 n = glm::normalize(v);
+//    Log::getDebug().log("normalizedcalcNormal = (%,%,%)", std::to_string(n.x),std::to_string(n.y),std::to_string(n.z));
+//    return glm::normalize(v);
+    return glm::vec3(gx,gy,gz);
+#include "marchingCubes.h"
+
+//extern glm::vec3 interPolateV(float isolevel,const glm::vec3& p1, const glm::vec3& p2,float valp1, float valp2)
+//{
+//   float mu;
+//   glm::vec3 p;
+//
+//   if (std::abs(isolevel-valp1) < 0.00001)
+//      return p1;
+//   if (std::abs(isolevel-valp2) < 0.00001)
+//      return p2;
+//   if (std::abs(valp1-valp2) < 0.00001)
+//      return p1;
+//   mu = (isolevel - valp1) / (valp2 - valp1);
+//   p.x = p1.x + mu * (p2.x - p1.x);
+//   p.y = p1.y + mu * (p2.y - p1.y);
+//   p.z = p1.z + mu * (p2.z - p1.z);
+//
+////   Log::getDebug().log("isolevel = %", std::to_string(isolevel));
+////   Log::getDebug().log("p1 = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
+//   return p;
+//}
+
+//extern glm::vec3 calculateNormal(const int i, const int j, const int k, const VoxelData& data)
+//{
+//    float gx = data.getValue(i+1  ,j  ,k) - data.getValue(i-1, j, k);
+//    float gy = data.getValue(i  ,j+1  ,k) - data.getValue(i, j-1, k);
+//    float gz = data.getValue(i  ,j  ,k+1) - data.getValue(i, j, k-1);
+////    if (gx == 0.0f && gy == 0.0f && gz == 0.0f)
+////    {
+////    Log::getDebug().log("ZERO VECTOR!");
+////    return glm::vec3(1.0f,1.0f,1.0f);
+////    }
+//    glm::vec3 v(gx,gy,gz);
+////    Log::getDebug().log("v = (%,%,%)", std::to_string(v.x),std::to_string(v.y),std::to_string(v.z));
+////    auto pah = glm::vec3(4.0f,3.0f,0.5f);
+////    auto n = glm::normalize(glm::vec3(0.5f,0.4f,0.3f));
+////    glm::vec3 n = glm::normalize(v);
+////    Log::getDebug().log("n = (%,%,%)", std::to_string(n.x),std::to_string(n.y),std::to_string(n.z));
+//    return glm::normalize(v);
+////    return glm::vec3(1.0f,0.0f,0.0f);
+//}
 }
 
 /* @param data is the set of cells to travel. @param isovalue is the to
@@ -441,19 +489,19 @@ std::tuple<std::vector<glm::vec3>,std::vector<glm::vec3>> triangulate(const Arra
     normals[5] = calculateNormal(i+1,j+1,k, data);
     normals[6] = calculateNormal(i+1,j+1,k+1, data);
     normals[7] = calculateNormal(i  ,j+1,+k+1, data);
-//    std::string cubeindexBinary = "00000000";
+    std::string cubeindexBinary = "00000000";
 
-    if (isovalues[0] < isolevel) { cubeindex |= 1;  /* cubeindexBinary[0] = '1';*/}
-    if (isovalues[1] < isolevel) { cubeindex |= 2;  /* cubeindexBinary[1] = '1';*/}  
-    if (isovalues[2] < isolevel) { cubeindex |= 4;  /* cubeindexBinary[2] = '1';*/} 
-    if (isovalues[3] < isolevel) { cubeindex |= 8;  /* cubeindexBinary[3] = '1';*/}
-    if (isovalues[4] < isolevel) { cubeindex |= 16; /* cubeindexBinary[4] = '1';*/}
-    if (isovalues[5] < isolevel) { cubeindex |= 32; /* cubeindexBinary[5] = '1';*/}
-    if (isovalues[6] < isolevel) { cubeindex |= 64; /* cubeindexBinary[6] = '1';*/}
-    if (isovalues[7] < isolevel) { cubeindex |= 128;/* cubeindexBinary[7] = '1';*/}
+    if (isovalues[0] < isolevel) { cubeindex |= 1;   cubeindexBinary[0] = '1';}
+    if (isovalues[1] < isolevel) { cubeindex |= 2;   cubeindexBinary[1] = '1';}  
+    if (isovalues[2] < isolevel) { cubeindex |= 4;   cubeindexBinary[2] = '1';} 
+    if (isovalues[3] < isolevel) { cubeindex |= 8;   cubeindexBinary[3] = '1';}
+    if (isovalues[4] < isolevel) { cubeindex |= 16;  cubeindexBinary[4] = '1';}
+    if (isovalues[5] < isolevel) { cubeindex |= 32;  cubeindexBinary[5] = '1';}
+    if (isovalues[6] < isolevel) { cubeindex |= 64;  cubeindexBinary[6] = '1';}
+    if (isovalues[7] < isolevel) { cubeindex |= 128; cubeindexBinary[7] = '1';}
   
-//    Log::getDebug().log("CUBEINDEX = %",std::to_string(cubeindex));
-//    Log::getDebug().log("CUBEINDEX = %",cubeindexBinary);
+    Log::getDebug().log("CUBEINDEX = %",std::to_string(cubeindex));
+    Log::getDebug().log("CUBEINDEX = %",cubeindexBinary);
 //    Log::getDebug().log("0 : % < %",std::to_string(isovalues[0]),std::to_string(isolevel));
 //    Log::getDebug().log("1 : % < %",std::to_string(isovalues[1]),std::to_string(isolevel));
 //    Log::getDebug().log("2 : % < %",std::to_string(isovalues[2]),std::to_string(isolevel));
@@ -492,79 +540,91 @@ std::tuple<std::vector<glm::vec3>,std::vector<glm::vec3>> triangulate(const Arra
      if (lookupTable[cubeindex] & 1) {
 //        Log::getDebug().log("lookupTable[%] & 1.",std::to_string(cubeindex));
         edgeVertices[0] = interPolateV(isolevel,coordinates[0],coordinates[1],isovalues[0],isovalues[1]);
-        edgeNormals[0] = interPolateV(isolevel,normals[0],normals[1],isovalues[0],isovalues[1]);
+        //edgeNormals[0] = glm::normalize(interPolateV(isolevel,normals[0],normals[1],isovalues[0],isovalues[1]));
+        edgeNormals[0] = glm::normalize(interPolateN(isolevel,normals[0],normals[1]));
      }
      if (lookupTable[cubeindex] & 2) {
         //vertlist[1] =
 //        Log::getDebug().log("lookupTable[%] & 2.",std::to_string(cubeindex));
            edgeVertices[1] = interPolateV(isolevel,coordinates[1],coordinates[2],isovalues[1],isovalues[2]);
-           edgeNormals[1] = interPolateV(isolevel,normals[1],normals[2],isovalues[1],isovalues[2]);
+//           edgeNormals[1] = glm::normalize(interPolateV(isolevel,normals[1],normals[2],isovalues[1],isovalues[2]));
+           edgeNormals[1] = glm::normalize(interPolateN(isolevel,normals[1],normals[2]));
      }
      if (lookupTable[cubeindex] & 4) {
         //vertlist[2] =
 //        Log::getDebug().log("lookupTable[%] & 4.",std::to_string(cubeindex));
            edgeVertices[2] = interPolateV(isolevel,coordinates[2],coordinates[3],isovalues[2],isovalues[3]);
-           edgeNormals[2] = interPolateV(isolevel,normals[2],normals[3],isovalues[2],isovalues[3]);
+//           edgeNormals[2] = glm::normalize(interPolateV(isolevel,normals[2],normals[3],isovalues[2],isovalues[3]));
+           edgeNormals[2] = glm::normalize(interPolateN(isolevel,normals[2],normals[3]));
      }
      if (lookupTable[cubeindex] & 8)
      {
  //       Log::getDebug().log("lookupTable[%] & 8.",std::to_string(cubeindex));
         //vertlist[3] =
            edgeVertices[3] = interPolateV(isolevel,coordinates[3],coordinates[0],isovalues[3],isovalues[0]);
-           edgeNormals[3] = interPolateV(isolevel,normals[3],normals[0],isovalues[3],isovalues[0]);
+           //edgeNormals[3] = glm::normalize(interPolateV(isolevel,normals[3],normals[0],isovalues[3],isovalues[0]));
+           edgeNormals[3] = glm::normalize(interPolateN(isolevel,normals[3],normals[0]));
      }
      if (lookupTable[cubeindex] & 16)
      {
 //        Log::getDebug().log("lookupTable[%] & 16.",std::to_string(cubeindex));
         //vertlist[4] =
            edgeVertices[4] = interPolateV(isolevel,coordinates[4],coordinates[5],isovalues[4],isovalues[5]);
-           edgeNormals[4] = interPolateV(isolevel,normals[4],normals[5],isovalues[4],isovalues[5]);
+//           edgeNormals[4] = glm::normalize(interPolateV(isolevel,normals[4],normals[5],isovalues[4],isovalues[5]));
+           edgeNormals[4] = glm::normalize(interPolateN(isolevel,normals[4],normals[5]));
      }
      if (lookupTable[cubeindex] & 32)
      {
 //        Log::getDebug().log("lookupTable[%] & 32.",std::to_string(cubeindex));
         //vertlist[5] =
            edgeVertices[5] = interPolateV(isolevel,coordinates[5],coordinates[6],isovalues[5],isovalues[6]);
-           edgeNormals[5] = interPolateV(isolevel,normals[5],normals[6],isovalues[5],isovalues[6]);
+//           edgeNormals[5] = glm::normalize(interPolateV(isolevel,normals[5],normals[6],isovalues[5],isovalues[6]));
+           edgeNormals[5] = glm::normalize(interPolateN(isolevel,normals[5],normals[6]));
      }
      if (lookupTable[cubeindex] & 64)
      {
 //        Log::getDebug().log("lookupTable[%] & 64.",std::to_string(cubeindex));
         //vertlist[6] =
            edgeVertices[6] = interPolateV(isolevel,coordinates[6],coordinates[7],isovalues[6],isovalues[7]);
-           edgeNormals[6] = interPolateV(isolevel,normals[6],normals[7],isovalues[6],isovalues[7]);
+           //edgeNormals[6] = glm::normalize(interPolateV(isolevel,normals[6],normals[7],isovalues[6],isovalues[7]));
+           edgeNormals[6] = glm::normalize(interPolateN(isolevel,normals[6],normals[7]));
      }
      if (lookupTable[cubeindex] & 128)
      {
 //        Log::getDebug().log("lookupTable[%] & 128.",std::to_string(cubeindex));
         //vertlist[7] =
            edgeVertices[7] = interPolateV(isolevel,coordinates[7],coordinates[4],isovalues[7],isovalues[4]);
-           edgeNormals[7] = interPolateV(isolevel,normals[7],normals[4],isovalues[7],isovalues[4]);
+           //edgeNormals[7] = glm::normalize(interPolateV(isolevel,normals[7],normals[4],isovalues[7],isovalues[4]));
+           edgeNormals[7] = glm::normalize(interPolateN(isolevel,normals[7],normals[4]));
      }
      if (lookupTable[cubeindex] & 256)
      {
 //        Log::getDebug().log("lookupTable[%] & 256.",std::to_string(cubeindex));
         //vertlist[8] =
            edgeVertices[8] = interPolateV(isolevel,coordinates[0],coordinates[4],isovalues[0],isovalues[4]);
-           edgeNormals[8] = interPolateV(isolevel,normals[0],normals[4],isovalues[0],isovalues[4]);
+//           edgeNormals[8] = glm::normalize(interPolateV(isolevel,normals[0],normals[4],isovalues[0],isovalues[4]));
+           edgeNormals[8] = glm::normalize(interPolateN(isolevel,normals[0],normals[4]));
      }
      if (lookupTable[cubeindex] & 512)
      {
         //vertlist[9] =
            edgeVertices[9] = interPolateV(isolevel,coordinates[1],coordinates[5],isovalues[1],isovalues[5]);
-           edgeNormals[9] = interPolateV(isolevel,normals[1],normals[5],isovalues[1],isovalues[5]);
+           //edgeNormals[9] = glm::normalize(interPolateV(isolevel,normals[1],normals[5],isovalues[1],isovalues[5]));
+           edgeNormals[9] = glm::normalize(interPolateN(isolevel,normals[1],normals[5]));
      }
      if (lookupTable[cubeindex] & 1024)
      {
         //vertlist[10] =
            edgeVertices[10] = interPolateV(isolevel,coordinates[2],coordinates[6],isovalues[2],isovalues[6]);
-           edgeNormals[10] = interPolateV(isolevel,normals[2],normals[6],isovalues[2],isovalues[6]);
+           //edgeNormals[10] = glm::normalize(interPolateV(isolevel,normals[2],normals[6],isovalues[2],isovalues[6]));
+           edgeNormals[10] = glm::normalize(interPolateN(isolevel,normals[2],normals[6]));
      }
      if (lookupTable[cubeindex] & 2048)
      {
         //vertlist[11] =
            edgeVertices[11] = interPolateV(isolevel,coordinates[3],coordinates[7],isovalues[3],isovalues[7]);  
-           edgeNormals[11] = interPolateV(isolevel,normals[3],normals[7],isovalues[3],isovalues[7]);
+           //edgeNormals[11] = glm::normalize(interPolateV(isolevel,normals[3],normals[7],isovalues[3],isovalues[7]));
+           edgeNormals[11] = glm::normalize(interPolateN(isolevel,normals[3],normals[7]));
      }
    }
       //int ntriang = 0;

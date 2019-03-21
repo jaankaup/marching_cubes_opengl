@@ -16,14 +16,14 @@
 
 static VoxelData<float> exampleData1()
 {
-  VoxelData<float> result(3,3,3);
+  VoxelData<float> result(3,3,3,1.0f);
   result.setValue(1,1,1,0.0f);
   return result;
 }
 
 static VoxelData<float> exampleData2()
 {
-  VoxelData<float> result(4,4,4);
+  VoxelData<float> result(4,4,4,1.0f);
   result.setValue(1,1,1,0.0f);
   result.setValue(2,1,1,0.0f);
   result.setValue(1,2,1,0.0f);
@@ -37,7 +37,7 @@ static VoxelData<float> exampleData2()
 
 static VoxelData<float> exampleData3()
 {
-  VoxelData<float> result(128,128,128);
+  VoxelData<float> result(128,128,128,1.0f);
   for (int k=0 ; k<128 ; k++) {
   for (int j=0 ; j<128 ; j++) {
   for (int i=0 ; i<128 ; i++) {
@@ -54,7 +54,7 @@ static VoxelData<float> exampleData3()
 static VoxelData<float> exampleData4()
 {
   int dim = 64;
-  VoxelData<float> randomData(dim,dim,dim);
+  VoxelData<float> randomData(dim,dim,dim,1.0f);
   for (int i=0; i<dim ; i++) {
   for (int j=0; j<dim ; j++) {
   for (int k=0; k<dim ; k++) {
@@ -65,7 +65,7 @@ static VoxelData<float> exampleData4()
   int a = -5; 
   int b = 2;
 
-  VoxelData<float> result(dim,dim,dim);
+  VoxelData<float> result(dim,dim,dim,1.0f);
   for (int i=0; i<dim ; i++) {
   for (int j=0; j<dim ; j++) {
   for (int k=0; k<dim ; k++) {

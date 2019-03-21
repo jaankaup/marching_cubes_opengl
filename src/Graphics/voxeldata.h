@@ -16,7 +16,7 @@ class VoxelData
 {
 	public:
 		VoxelData();
-		VoxelData(const int xSize, const int ySize, const int zSize); 
+		VoxelData(const int xSize, const int ySize, const int zSize, const T maxvalue); 
 		~VoxelData();
 
     T getValue(const int i, const int j, const int k) const;
@@ -29,6 +29,7 @@ class VoxelData
     int pMaxJ = 0;
     int pMaxK = 0;
     std::vector<T> pData;
+    T pMaxvalue;
           
 };
 
@@ -38,7 +39,8 @@ inline VoxelData<T>::VoxelData() {}
 
 template<typename T>
 //inline VoxelData<T>(const int xSize, const int ySize, const int zSize) {
-inline VoxelData<T>::VoxelData(const int xSize, const int ySize, const int zSize) {
+inline VoxelData<T>::VoxelData(const int xSize, const int ySize, const int zSize, const T maxvalue) {
+      pMaxvalue = maxvalue;
       if (xSize < 1 || ySize <1 || zSize < 1)
       {
         Log::getError().log("VoxelData::VoxelData(%,%,%). Arguments must be > 0.",std::to_string(xSize),std::to_string(ySize),std::to_string(zSize));
@@ -48,24 +50,24 @@ inline VoxelData<T>::VoxelData(const int xSize, const int ySize, const int zSize
         pMaxJ = ySize;
         pMaxK = zSize;
     
-        // Alustetaan kaikki arvot 1.0f.
-        pData = std::vector<T>(xSize*ySize*zSize);
+        pData = std::vector<T>(xSize*ySize*zSize,pMaxvalue);
 }
 
 template<typename T>
 //inline ~VoxelData<T>() {}
 inline VoxelData<T>::~VoxelData() {}
 
+// TODO: erikoista.
 template<typename T>
 inline T VoxelData<T>::getValue(const int i, const int j, const int k) const
 {
   // Jos viitataan alueen ulkopuolelle, niin palautetaan 1.0f.
-  if (i >= pMaxI) return 1.0f; 
-  if (j >= pMaxJ) return 1.0f;
-  if (k >= pMaxK) return 1.0f;
-  if (i < 0) return 1.0f; 
-  if (j < 0) return 1.0f;
-  if (k < 0) return 1.0f;
+  if (i >= pMaxI) return pMaxvalue; 
+  if (j >= pMaxJ) return pMaxvalue;
+  if (k >= pMaxK) return pMaxvalue;
+  if (i < 0) return pMaxvalue; 
+  if (j < 0) return pMaxvalue;
+  if (k < 0) return pMaxvalue;
 
   return pData[i + j*pMaxJ + k*pMaxK*pMaxK];
 }
@@ -82,6 +84,7 @@ inline void VoxelData<T>::setValue(const int i, const int j, const int k, T valu
 
   pData[i + j*pMaxJ + k*pMaxK*pMaxK] = value;
 }
+
 template<typename T>
 //inline std::tuple<int,int,int> VoxelData<T>::getDimensions() const
 inline std::tuple<int,int,int> VoxelData<T>::getDimensions() const

@@ -16,7 +16,27 @@ extern glm::vec3 interPolateV(float isolevel,const glm::vec3& p1, const glm::vec
    p.y = p1.y + mu * (p2.y - p1.y);
    p.z = p1.z + mu * (p2.z - p1.z);
 
+//   Log::getDebug().log("isolevel = %", std::to_string(isolevel));
+//   Log::getDebug().log("p1 = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
    return p;
+}
+
+extern glm::vec3 interPolateN(float isolevel,const glm::vec3& n1, const glm::vec3& n2)
+{
+   float u;
+   glm::vec3 p;
+
+//   if (std::abs(isolevel-valp1) < 0.00001)
+//      return p1;
+//   if (std::abs(isolevel-valp2) < 0.00001)
+//      return p2;
+//   if (std::abs(valp1-valp2) < 0.00001)
+//      return p1;
+//   u = 1.0f - isolevel;
+   return isolevel * n2 + (1-isolevel) * n1; 
+
+//   Log::getDebug().log("isolevel = %", std::to_string(isolevel));
+//   Log::getDebug().log("p1 = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
 }
 
 //extern glm::vec3 calculateNormal(const int i, const int j, const int k, const VoxelData& data)

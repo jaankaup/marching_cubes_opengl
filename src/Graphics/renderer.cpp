@@ -14,8 +14,8 @@ void Renderer::init()
 {
     glEnable(GL_DEPTH_TEST); // Enable depth test
     glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one
-    glFrontFace(GL_CW);
-//    glFrontFace(GL_CCW);
+//    glFrontFace(GL_CW);
+    glFrontFace(GL_CCW);
     glEnable(GL_CULL_FACE);
 //    glDisable(GL_CULL_FACE);
 //    glCullFace(GL_FRONT);
@@ -35,28 +35,13 @@ void Renderer::render(const Vertexbuffer& vb,
                       )
 {
   bool normaalitMukana = true;
-  //Log::getDebug().log("rendering: %", std::to_string(lkm));
-  lkm++;
+  //lkm++;
   glClearColor(0.0f,0.0f,0.0f,1.0f);
-//  if (pah) glClearColor(0.8f,0.1f,0.3f,1.0f);
-//  else glClearColor(0.0f,0.0f,0.0f,1.0f);
-  pah = !pah;
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-//  if (pah){ glFrontFace(GL_CW); glCullFace(GL_FRONT); }
-//  else { glFrontFace(GL_CCW); glCullFace(GL_BACK); }
-//  auto h = vb.getHandle();
-  float yhyy = sin((float)lkm* 0.008f);
-  float yhyy2 = sin((float)lkm*0.008f);
-  float yhyy3 = cos((float)lkm*0.005f);
-//  Log::getDebug().log("yhyy: %", std::to_string(yhyy));
   vb.bind();
   shader.bind();
   //vb.bind();
-  glm::vec3 lightPosition = glm::vec3(20.0f,20.0f,-20.0f);
-//  glm::vec3 eyePosition = glm::vec3(115.0f,125.0f,125.0f);
-//
-//  shader.setUniform("lightPosition", lightPosition);
   if (normaalitMukana)
   {
 //  shader.setUniform("lights[0].position", lightPosition);
@@ -68,34 +53,11 @@ void Renderer::render(const Vertexbuffer& vb,
   //shader.setUniform("lights[0].attentuationFactor", 0.000009f);
   }
 
-  for (int i=0; i<1; i++)
-  {
-
-    float a = 0.0f;
-    float b = 0.0f;
-    float c = 0.0f;
-    float d = 0.0f;
-    if (i % 2 == 0)
-    {
-       a = yhyy2;
-       b = (i*1.5f)*yhyy3;
-       c = yhyy*(2.0f*i);
-       d = yhyy3*(1.0f*i);
-
-    }
-
-    else
-    {
-       a = (-1.0f)*yhyy2+(i*1.0f);
-       b = (-1.0f*i)*yhyy3;
-       c = yhyy + (i * 2.0f);
-       d = yhyy2 + yhyy3 + (1.0f * i);
-
-    }
     //glm::vec3 eyePosition = glm::vec3(yhyy*40.0f + (-1.0f)*25.0f,yhyy3*50.0f + 25.0f, yhyy2*50.0f + 25.0f);
 //    glm::vec3 eyePosition = glm::vec3(yhyy*200.0f + 100.0f,50.0f, 150.0f);
     shader.setUniform("cameraPosition", eyePosition);
     shader.setUniform("lights[0].position", eyePosition);
+//    Log::getDebug().log("lights[0].position(%,%,%)", std::to_string(eyePosition.x),std::to_string(eyePosition.y),std::to_string(eyePosition.z));
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 700.0f);
 //    glm::mat4 view = glm::lookAt(eyePosition, glm::vec3(0.0,0.0,0.0), glm::vec3(0.0f, 1.0f,  0.0f));
     //glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)); // glm::mat4(yhyy*0.2f);
@@ -116,44 +78,3 @@ void Renderer::render(const Vertexbuffer& vb,
     // 0 (offset taulukossa). piirrettava kolmiomaara ts. 3*trianglecount 
     glDrawArrays(GL_TRIANGLES, 0, 3 * triangleCount );
   }
-
-//  for (int i=0; i<10; i++)
-//  {
-//
-//    float a = 0.0f;
-//    float b = 0.0f;
-//    float c = 0.0f;
-//    float d = 0.0f;
-//    if (i % 2 == 0)
-//    {
-//       a = yhyy2;
-//       b = (i*0.5f)*yhyy3;
-//       c = yhyy*(1.5f*i);
-//       d = yhyy3*(0.0f*i);
-//
-//    }
-//
-//    else
-//    {
-//       a = (-1.0f)*yhyy2+(i*1.0f);
-//       b = (-1.2f*i)*yhyy3;
-//       c = yhyy + (i * 1.4f);
-//       d = yhyy2 + yhyy3 + (1.3f * i);
-//
-//    }
-//    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-//    glm::mat4 view = glm::lookAt(eyePosition, glm::vec3(0.0,0.0,0.0), glm::vec3(0.0f, 1.0f,  0.0f));
-//    //glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)); // glm::mat4(yhyy*0.2f);
-//    glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-//    glm::mat4 rotation = glm::rotate(b*180.0f, glm::vec3(1.0f,c*1.0f,d*1.0f));
-//    glm::mat4 model = glm::translate(rotation * scale, glm::vec3(a*3.0f,c*3.0f, d*3.0f)); // glm::mat4(yhyy*0.2f);
-//    shader.setUniform("normalMatrix", glm::inverseTranspose(glm::mat3(model)));
-//  
-//    shader.setUniform("MVP", projection * view * model);
-//    shader.setUniform("M", model);
-//  //  shader.setUniform("V", view);
-//  //  shader.setUniform("P", projection);
-//  
-//    glDrawArrays(GL_TRIANGLES, 0, 36);
-//  }
-}

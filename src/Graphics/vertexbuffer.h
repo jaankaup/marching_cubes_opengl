@@ -12,6 +12,14 @@ class Vertexbuffer
 		Vertexbuffer();
 		~Vertexbuffer();
 
+    // Copying causes problems because destructor deletes the buffers.
+    Vertexbuffer& operator=(const Vertexbuffer&) = delete;
+    Vertexbuffer(const Vertexbuffer&) = delete;
+
+    // Use move instead.
+    Vertexbuffer(Vertexbuffer&&) = default;
+    Vertexbuffer& operator=(Vertexbuffer&&) = default;
+
     void init();
     void bind() const;
     void addData(const void* data, unsigned int size) const;

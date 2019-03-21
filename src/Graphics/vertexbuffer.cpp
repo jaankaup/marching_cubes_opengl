@@ -3,13 +3,13 @@
 
 Vertexbuffer::Vertexbuffer()
 {
-  auto joo = 13;
 }
 
 Vertexbuffer::~Vertexbuffer()
 {
   if (pId != 0) glDeleteBuffers(1,&pId);
   glDeleteVertexArrays(1, &pVAO);
+  glDeleteBuffers(1, &pId);
 }
 
 void Vertexbuffer::bind() const

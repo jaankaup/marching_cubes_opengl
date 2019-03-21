@@ -4,11 +4,13 @@
 
 Camera::Camera()
 {
-    pEyePosition = glm::vec3(10.0f);
+    pEyePosition = glm::vec3(0.0f,0.0f,0.0f);
 //    glm::vec3 pUp = glm::vec3(0.0f,1.0f, 0.0f);
 //    glm::vec3 pLookat = glm::vec3(0.0f,0.0f,0.0f);
-    pPitch = -40.0f;
-    pYaw = -90.0f;
+    pPitch = 0.0f;
+    pYaw = 0.0f;
+//    pPitch = -40.0f;
+//    pYaw = -90.0f;
     pRoll = 0.0f;
     pCamera_quat = glm::quat(glm::vec3(pPitch, pYaw, pRoll));
     pMousePosition =  glm::vec2(0.0f,0.0f); 
@@ -43,12 +45,12 @@ glm::mat4 Camera::update()
   glm::mat4 rotate = glm::mat4_cast(pCamera_quat);
 
   glm::mat4 translate = glm::mat4(1.0f);
-  translate = glm::translate(translate, pEyePosition);
+  translate = glm::translate(translate, -pEyePosition);
 
   glm::mat4 viewMatrix = rotate * translate;
   pLookat = glm::vec3(viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]);
-//  Log::getDebug().log("pLookat = (%,%,%)",std::to_string(pLookat.x),std::to_string(pLookat.y),std::to_string(pLookat.z));
-//  Log::getDebug().log("pEyePosition = (%,%,%)",std::to_string(pEyePosition.x),std::to_string(pEyePosition.y),std::to_string(pEyePosition.z));
+  Log::getDebug().log("pLookat = (%,%,%)",std::to_string(pLookat.x),std::to_string(pLookat.y),std::to_string(pLookat.z));
+  Log::getDebug().log("pEyePosition = (%,%,%)",std::to_string(pEyePosition.x),std::to_string(pEyePosition.y),std::to_string(pEyePosition.z));
   //auto temp = glm::vec3(viewMatrix[8],viewMatrix[9],viewMatrix[10]);
   return viewMatrix;
 }
@@ -122,16 +124,16 @@ glm::mat4 Camera::handleEvents()
 
     /* WASD-nappaimet */
     if(keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
-        pEyePosition += pLookat * speedMultiplier * deltaTime;
-
-    if(keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
         pEyePosition -= pLookat * speedMultiplier * deltaTime;
 
+    if(keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
+        pEyePosition += pLookat * speedMultiplier * deltaTime;
+
     if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A])
-        pEyePosition -= glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
+        pEyePosition += glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
 
     if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D])
-        pEyePosition += glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
+        pEyePosition -= glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
 
     /* Ylos ja alas liikkuminen */
     if(keystate[SDL_SCANCODE_V])
@@ -139,7 +141,6 @@ glm::mat4 Camera::handleEvents()
 
     if(keystate[SDL_SCANCODE_C])
         pEyePosition -= glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
-
 
     return update();
 }
