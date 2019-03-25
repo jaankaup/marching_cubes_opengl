@@ -17,9 +17,13 @@ class Texture
         ~Texture();
         void init();
         void use(const int unit) const;
+        void use3D(const int unit) const;
+        void bind3D() const;
         void bind() const;
         GLuint getID() const;
         void create(const std::string& fileloc);
+        void create3D();
+        void createExample2D();
 
     private:
 

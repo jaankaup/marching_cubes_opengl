@@ -33,7 +33,7 @@ extern glm::vec3 interPolateN(float isolevel,const glm::vec3& n1, const glm::vec
 //   if (std::abs(valp1-valp2) < 0.00001)
 //      return p1;
 //   u = 1.0f - isolevel;
-   return isolevel * n2 + (1-isolevel) * n1; 
+   return isolevel * n1 + (1-isolevel) * n2; 
 
 //   Log::getDebug().log("isolevel = %", std::to_string(isolevel));
 //   Log::getDebug().log("p1 = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));

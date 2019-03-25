@@ -12,6 +12,7 @@
 #include <glm/gtx/transform.hpp>
 #include "shader.h"
 #include "vertexbuffer.h"
+#include "texture.h"
 #include "../Utils/log.h"
 
 //#include "misc.h"

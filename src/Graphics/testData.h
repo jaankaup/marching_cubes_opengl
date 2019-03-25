@@ -53,7 +53,7 @@ static VoxelData<float> exampleData3()
 
 static VoxelData<float> exampleData4()
 {
-  int dim = 64;
+  int dim = 8;
   VoxelData<float> randomData(dim,dim,dim,1.0f);
   for (int i=0; i<dim ; i++) {
   for (int j=0; j<dim ; j++) {
@@ -73,7 +73,7 @@ static VoxelData<float> exampleData4()
     float z = exp(a * static_cast<float>(i)/dim) * exp(a * static_cast<float>(j)/dim); 
     float k1 = exp(b * static_cast<float>(i)/dim) * exp(b * static_cast<float>(j)/dim); 
     
-    int sampleCount = 50;
+    int sampleCount = 1;
     float initialValue = randomData.getValue(i,j,k);
     float gx = 0.0f;
     float gy = 0.0f;

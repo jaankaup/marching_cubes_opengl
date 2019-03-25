@@ -86,3 +86,25 @@
 ### 12.3.2019 13:00 -> 20:00 (7h) ### 
 
 > Kameran luontia. Nain ei tarvitse kaantaa ohjelmaa joka kerta kun halutaan muuttaa kameran orientatiota.
+
+### 19.3.2019 16:00 -> 20:00 (4h) ### 
+
+> Kameran luontia: toimii nyt jotenkuten.
+> Koodin siivoilua.
+
+### 20.3.2019 18:00 -> 20:00 (2h) ### 
+
+> Koodin korjailua.
+
+### 21.3.2019 13:00 -> 20:00 (7h) ### 
+
+> Marching cubes algoritmin normaalit pielessa edelleen. Normaalien korjailua ja testausta. (91.5h)
+
+### 22.3.2019 9:00 -> 12:00 (3h) ### 
+
+> Opengl tekstuurien, framebufferien, geometry- ja compute shaderien tutkiskelua. 
+> Ajatuksena siirtaa marching cubes GPU:lle.
+
+### 25.3.2019 12:00 -> 20:00 (8h) ### 
+
+> 3d teksturointi onnistuu.

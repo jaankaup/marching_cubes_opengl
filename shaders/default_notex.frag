@@ -7,6 +7,7 @@ precision highp float;
 // Interpolated values from the vertex shaders
 in vec3 vFrag_in;
 in vec3 nFrag_in;
+in vec3 vPositionCamera;
 
 // Ouput data
 out vec3 color;
@@ -35,8 +36,8 @@ void main(){
 	vec3 vPositionCamera = (M * vec4(vFrag_in,1.0f)).xyz;
 
 	// Normaali. Jos mallia on venytetty ja liikuteltu, niin normaali täyy kertoa normaali matriisilla.
-	//vec3 normal = normalize(normalMatrix * nFrag_in);
 	vec3 normal = normalize(normalMatrix * nFrag_in);
+	normal = nFrag_in;
 
 	// Valon suunta verteksiin näen.
 	vec3 lightDirection = normalize(lights[0].position - vPositionCamera);
