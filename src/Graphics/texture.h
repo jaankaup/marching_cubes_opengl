@@ -5,29 +5,57 @@
 #include <vector>
 #include <GL/glew.h>
 #include <SOIL.h>
+#include "textureManager.h"
 #include "../Utils/log.h"
+
+//enum textureType : int32_t;
+enum class TextureType {d2,d3};
 
 class Texture
 {
-//    friend class TextureControl;
-//    friend class TextureManager;
+    /// TextureManager object has access to all Texture member functions.
+    /// TextureManager creates and destroys textures objects.
+    friend class TextureManager;
 
     public:
-        Texture();
-        ~Texture();
-        void init();
-        void use(const int unit) const;
-        void use3D(const int unit) const;
-        void bind3D() const;
-        void bind() const;
+
+        /// Uses the texture object. Texture object must be initialized 
+        /// before the use method. @param unit is the texture unit to use.
+        void use(const GLuint unit) const;
+
         GLuint getID() const;
         void create(const std::string& fileloc);
         void create3D();
         void createExample2D();
 
+        /// The destructor doesn't release the texture. Use dispose()
+        /// memberfuction to destory texture object.
+        ~Texture();
+
     private:
 
+        /// Handle to the gl texture.
         GLuint pId = 0;
+
+        /// Texture type.
+        TextureType pType;
+
+        /// Current texture unit.
+        ///GLuint pUnit;
+
+        /// Default constructors.
+        Texture();
+
+
+        /// Initializes the texture object.
+        void init(const TextureType t);
+
+        /// Binds the texture. Texture object must be initialized 
+        /// before the use method.
+        void bind() const;
+
+        /// Releases the texture object.
+        void dispose() const;
 };
 
 #endif // TEXTURE_H

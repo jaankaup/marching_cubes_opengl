@@ -17,19 +17,23 @@
 #include "Graphics/marchingCubes.h"
 #include "Graphics/voxeldata.h"
 #include "Graphics/camera.h"
+#include "Graphics/textureManager.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
+
+//struct SDL_Window;
+//enum TextureType : int32_t;
 
 /**
  * Context structure that will be passed to the loop handler
  */
 struct context
 {
-    Window window;
+    Window window = Window::getInstance();
     Renderer renderer;
     Shader shader;
     Vertexbuffer vertexbuffer;
-    Texture texture;
+    Texture texture = TextureManager::getInstance().create3D("my3Dtexgture");//{TextureType::d2,0};
     int triangleCount;
     Camera camera;
 };
@@ -45,13 +49,13 @@ void loop_handler2(void *arg)
 
 int main()
 {
-  Window w;
+//  Window w;
   context c;
-  c.window = std::move(w); 
-  c.window.init(1200,800);
+//  c.window = std::move(w); 
+//  c.window.init(1200,800);
   Shader s;
 //  std::vector<std::string> shaderSources = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
-  std::vector<std::string> shaderSources = {"shaders/default.vert", "shaders/default.frag"};
+  std::vector<std::string> shaderSources = {"shaders/marching.vert", "shaders/marching.frag"};
   Vertexbuffer vb;
 //  vb.createExampleCube();
  // Indexbuffer ib;
@@ -75,9 +79,9 @@ int main()
   c.shader.build(shaderSources);
   c.shader.bind();
   
-  Texture t;
-  c.texture = t;
-  c.texture.init();
+  //Texture t(TextureType::d3, 0);
+  //c.texture = t;
+  //c.texture.init();
   //c.texture.createExample2D();//("assets/rock.jpg");
   c.texture.create3D();//("assets/rock.jpg");
   //c.texture.create("assets/rock.jpg");
@@ -143,6 +147,7 @@ int main()
      */
     emscripten_set_main_loop_arg(loop_handler2, &c, -1, 1);
 
+//    c.window.dispose();
     return 0;
 }
 

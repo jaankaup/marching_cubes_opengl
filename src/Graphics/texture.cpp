@@ -1,18 +1,26 @@
 #include "texture.h"
 
-Texture::Texture(){
+Texture::Texture()
+{
+    Log::getDebug().log("Creating texture object.");
+//  pType = t;
+//  pUnit = unit;
   //    glGenTextures(1,&pId);
 }
 
 Texture::~Texture()
 {
-    if (pId != 0) glDeleteTextures(1,&pId);
 }
 
-void Texture::init()
+void Texture::init(const TextureType t)
 {
-    glGenTextures(1,&pId);
-    Log::getDebug().log("Texture::init(). Creating texture (%).", std::to_string(pId));
+    Log::getDebug().log("1. Texture::init(). Creating texture (%).", std::to_string(pId));
+
+    GLuint i = 0;
+    glGenTextures(1,&i);
+    Log::getDebug().log("2. Texture::init(). Creating texture (%).", std::to_string(i));
+    pType = t;
+    pId = i;
 }
 
 void Texture::create3D()
@@ -31,7 +39,7 @@ void Texture::create3D()
     texels[i+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     hah = !hah;
   }
-  use3D(0);
+  use(0);
   //bind3D();
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -78,24 +86,21 @@ void Texture::create(const std::string& fileloc)
 
 void Texture::bind() const
 {
-    glBindTexture(GL_TEXTURE_2D,pId);
+  switch (pType)
+  {
+    case TextureType::d2:
+      glBindTexture(GL_TEXTURE_2D,pId);
+      break;
+    case TextureType::d3:
+      glBindTexture(GL_TEXTURE_3D,pId);
+      break;
+  }
 }
 
-void Texture::bind3D() const
+void Texture::use(const GLuint unit) const
 {
-    glBindTexture(GL_TEXTURE_3D,pId);
-}
-
-void Texture::use(const int unit) const
-{
-    glActiveTexture(GL_TEXTURE0 + unit);
-    bind();
-}
-
-void Texture::use3D(const int unit) const
-{
-    glActiveTexture(GL_TEXTURE0 + unit);
-    bind3D();
+  glActiveTexture(GL_TEXTURE0 + unit);
+  bind();
 }
 
 GLuint Texture::getID() const
@@ -138,4 +143,9 @@ void Texture::createExample2D()
     glGenerateMipmap(GL_TEXTURE_2D);
 
     delete[] image;
+}
+
+void Texture::dispose() const
+{
+    if (pId != 0) glDeleteTextures(1,&pId);
 }

@@ -3,9 +3,15 @@
 #include "window.h"
 #include "../Utils/log.h"
 
+Window& Window::getInstance()
+{
+    static Window instance;
+    return instance;
+}
 
 Window::Window()
 {
+    init(1200,800);
 //  Log::getDebug().log("%","Window::Window. Creating window.");
 //  auto sdl = SDL_Init(SDL_INIT_VIDEO);
 //  Log::getDebug().log("%",std::to_string(sdl));
@@ -23,17 +29,25 @@ Window::Window()
 
 Window::~Window()
 {
+  dispose();
+//  if (pContext != NULL) { SDL_GL_DeleteContext(pContext); }
+//  if (pWindow != NULL) { SDL_DestroyWindow(pWindow); }
+//  SDL_Quit(); 
+}
+
+void Window::dispose()
+{
   if (pContext != NULL) { SDL_GL_DeleteContext(pContext); }
   if (pWindow != NULL) { SDL_DestroyWindow(pWindow); }
   SDL_Quit(); 
 }
 
-Window& Window::operator=(Window&& other)
-{
-        std::swap(pWindow,other.pWindow);
-        std::swap(pContext, other.pContext);
-        return *this;
-}
+//Window& Window::operator=(Window&& other)
+//{
+//        std::swap(pWindow,other.pWindow);
+//        std::swap(pContext, other.pContext);
+//        return *this;
+//}
 
 bool Window::init(int width, int height)
 {

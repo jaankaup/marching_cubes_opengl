@@ -38,6 +38,7 @@ set(graphics_src
       ${graphics_dir}/marchingCubes.cpp
       ${graphics_dir}/voxeldata.cpp
       ${graphics_dir}/camera.cpp
+      ${graphics_dir}/textureManager.cpp
       )
 
 set(util_src 

@@ -29,8 +29,8 @@ class Renderer
 
 	private:
 
-    int lkm = 0;
-    bool pah = true;
+//    int lkm = 0;
+//    bool pah = true;
 };
 
 

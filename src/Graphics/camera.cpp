@@ -115,6 +115,9 @@ glm::mat4 Camera::handleEvents()
     }
   }
 //  float movementInterp = (SDL_GetTicks() * 0.0005f) * deltaTime;
+
+    auto result =  update();
+
   auto keystate = SDL_GetKeyboardState(NULL); 
 
       /* Shift hidastaa liikkumisnopeutta */
@@ -142,7 +145,7 @@ glm::mat4 Camera::handleEvents()
     if(keystate[SDL_SCANCODE_C])
         pEyePosition -= glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
 
-    return update();
+    return result;
 }
 
 glm::vec3 Camera::getPosition() const
