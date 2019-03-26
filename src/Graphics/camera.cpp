@@ -49,6 +49,7 @@ glm::mat4 Camera::update()
 
   glm::mat4 viewMatrix = rotate * translate;
   pLookat = glm::vec3(viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]);
+  //pEyePosition = glm::vec3(viewMatrix[0][3],viewMatrix[1][3],viewMatrix[2][3]);
 //  Log::getDebug().log("pLookat = (%,%,%)",std::to_string(pLookat.x),std::to_string(pLookat.y),std::to_string(pLookat.z));
 //  Log::getDebug().log("pEyePosition = (%,%,%)",std::to_string(pEyePosition.x),std::to_string(pEyePosition.y),std::to_string(pEyePosition.z));
   //auto temp = glm::vec3(viewMatrix[8],viewMatrix[9],viewMatrix[10]);
@@ -81,6 +82,33 @@ glm::mat4 Camera::handleEvents()
   uint32_t deltaTick = newTick - pPrevTick;
   float deltaTime = pPrevTick == 0 ? 0.0f : newTick / pPrevTick;
   pPrevTick = newTick;
+
+  auto keystate = SDL_GetKeyboardState(NULL); 
+
+      /* Shift hidastaa liikkumisnopeutta */
+    float speedMultiplier = pCamspeed;
+    if(keystate[SDL_SCANCODE_LSHIFT])
+        speedMultiplier *= 0.1f;
+
+    /* WASD-nappaimet */
+    if(keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
+        pEyePosition -= pLookat * speedMultiplier * deltaTime;
+
+    if(keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
+        pEyePosition += pLookat * speedMultiplier * deltaTime;
+
+    if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A])
+        pEyePosition += glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
+
+    if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D])
+        pEyePosition -= glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
+
+    /* Ylos ja alas liikkuminen */
+    if(keystate[SDL_SCANCODE_V])
+        pEyePosition += glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
+
+    if(keystate[SDL_SCANCODE_C])
+        pEyePosition -= glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
 
   SDL_Event e;
   while (SDL_PollEvent(&e))
@@ -116,36 +144,7 @@ glm::mat4 Camera::handleEvents()
   }
 //  float movementInterp = (SDL_GetTicks() * 0.0005f) * deltaTime;
 
-    auto result =  update();
-
-  auto keystate = SDL_GetKeyboardState(NULL); 
-
-      /* Shift hidastaa liikkumisnopeutta */
-    float speedMultiplier = pCamspeed;
-    if(keystate[SDL_SCANCODE_LSHIFT])
-        speedMultiplier *= 0.1f;
-
-    /* WASD-nappaimet */
-    if(keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
-        pEyePosition -= pLookat * speedMultiplier * deltaTime;
-
-    if(keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_S])
-        pEyePosition += pLookat * speedMultiplier * deltaTime;
-
-    if(keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A])
-        pEyePosition += glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
-
-    if(keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D])
-        pEyePosition -= glm::normalize(glm::cross(pLookat, glm::vec3(0.0f,1.0f,0.0f))) * speedMultiplier * deltaTime;
-
-    /* Ylos ja alas liikkuminen */
-    if(keystate[SDL_SCANCODE_V])
-        pEyePosition += glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
-
-    if(keystate[SDL_SCANCODE_C])
-        pEyePosition -= glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
-
-    return result;
+    return update();
 }
 
 glm::vec3 Camera::getPosition() const

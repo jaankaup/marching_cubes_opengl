@@ -4,6 +4,7 @@
 //include <iostream>
 #include <vector>
 #include <tuple>
+#include <stdexcept>
 //#include <GL/glew.h>
 //#include <SOIL.h>
 #include "texture.h"
@@ -15,24 +16,23 @@ class TextureManager
 {
   /// Creates and return a reference to the TextureManager object.
   public:
-  static TextureManager& getInstance();
-  /// Creates a texture.
-//  void createTexture(const std::string& fileLocation, const std::string& nimi);
-  /// Palauttaa pointerinTextureen.
-//  Texture* getTexture(const std::string& nimi) const;
+    static TextureManager& getInstance();
 
-  /// Creates a 2D textrure.
-  Texture create2D(const std::string& name);
-
-  /// Creates a 3D textrure.
-  Texture create3D(const std::string& name);
+    /// Creates a 2D textrure.
+    Texture create2D(const std::string& name);
+  
+    /// Creates a 3D textrure.
+    Texture create3D(const std::string& name);
+  
+    /// Get texture by its name. throws runtime_expecton if texture is not found.  
+    Texture getTextureByName(const std::string& name) const;
 
   private:
-  TextureManager();
-  ~TextureManager();
+    TextureManager();
+    ~TextureManager();
 
-  /// Name:Texture pairs.
-  std::vector<std::tuple<const std::string, Texture>> pTextures;
+    /// Name:Texture pairs.
+    std::vector<std::tuple<const std::string, Texture>> pTextures;
 };
 
 #endif // TEXTUREMANAGER_H

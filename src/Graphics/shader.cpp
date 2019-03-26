@@ -11,6 +11,10 @@ Shader::Shader()
 
 Shader::~Shader()
 {
+}
+
+void Shader::dispose() const
+{
   Log::getDebug().log("Deleting shader program: %", std::to_string(pId));
   if (pId != 0) glDeleteProgram(pId);
 }

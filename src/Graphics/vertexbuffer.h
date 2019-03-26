@@ -25,6 +25,7 @@ class Vertexbuffer
     void addData(const void* data, unsigned int size) const;
     void createExampleCube();
     GLuint getHandle() const;
+    GLuint getVAO() const;
 
 	private:
     GLuint pId = 0;

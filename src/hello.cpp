@@ -18,6 +18,7 @@
 #include "Graphics/voxeldata.h"
 #include "Graphics/camera.h"
 #include "Graphics/textureManager.h"
+#include "Graphics/shaderManager.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -31,9 +32,9 @@ struct context
 {
     Window window = Window::getInstance();
     Renderer renderer;
-    Shader shader;
+    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
     Vertexbuffer vertexbuffer;
-    Texture texture = TextureManager::getInstance().create3D("my3Dtexgture");//{TextureType::d2,0};
+    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
     int triangleCount;
     Camera camera;
 };
@@ -53,7 +54,7 @@ int main()
   context c;
 //  c.window = std::move(w); 
 //  c.window.init(1200,800);
-  Shader s;
+//  Shader s;
 //  std::vector<std::string> shaderSources = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
   std::vector<std::string> shaderSources = {"shaders/marching.vert", "shaders/marching.frag"};
   Vertexbuffer vb;
@@ -74,8 +75,8 @@ int main()
   c.vertexbuffer.createExampleCube();
   c.triangleCount = 6*2;
 
-  c.shader = s; 
-  c.shader.init();
+//  c.shader = s; 
+//  c.shader.init();
   c.shader.build(shaderSources);
   c.shader.bind();
   

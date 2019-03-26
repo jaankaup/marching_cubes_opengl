@@ -256,3 +256,8 @@ void Vertexbuffer::createExampleCube()
   }
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT));
 }
+
+GLuint Vertexbuffer::getVAO() const
+{
+  return pVAO;
+}

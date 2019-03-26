@@ -6,15 +6,18 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "shaderManager.h"
 
 /** A simple shader class with basic shader operations. */
 class Shader
 {
-	public:
-		Shader();
-		~Shader();
+    /// TextureManager object has access to all Texture member functions.
+    /// TextureManager creates and destroys textures objects.
+    friend class ShaderManager;
 
-    void init();
+	public:
+
+		~Shader();
 		void build(const std::vector<std::string>& sources);
 		void bind() const;
 
@@ -33,12 +36,17 @@ class Shader
 
 		GLuint pId = 0;
 
+		Shader();
+
     std::string loadSource(const std::string& fileLoc);
     GLuint getShaderType(const std::string& fileLoc);
     void compileShader(const GLuint id, const std::string& source);
     bool checkShader(GLuint obj);
 
-        //std::vector<GLuint> createShaderObjects(const std::vector<std::string>& shaderSources) const;
+    void init();
+
+    /// Releases the shader object.
+    void dispose() const;
 };
 
 

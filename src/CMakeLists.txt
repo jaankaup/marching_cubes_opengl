@@ -39,6 +39,7 @@ set(graphics_src
       ${graphics_dir}/voxeldata.cpp
       ${graphics_dir}/camera.cpp
       ${graphics_dir}/textureManager.cpp
+      ${graphics_dir}/shaderManager.cpp
       )
 
 set(util_src 
