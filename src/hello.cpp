@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 #include <emscripten.h>
 #include <math.h>
+#include <vector>
 
 #include "Graphics/window.h"
 #include "Graphics/shader.h"
@@ -30,13 +31,14 @@
  */
 struct context
 {
-    Window window = Window::getInstance();
+//    Window window = Window::getInstance();
     Renderer renderer;
-    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
+//    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
     Vertexbuffer vertexbuffer;
-    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
+//    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
     int triangleCount;
     Camera camera;
+    std::vector<Model> models;
 };
 
 void loop_handler2(void *arg)
@@ -44,14 +46,16 @@ void loop_handler2(void *arg)
     context* c = static_cast<context*>(arg);
 //    c->texture.bind();
     auto viewMatrix = c->camera.handleEvents();
-    c->renderer.render(c->vertexbuffer,c->shader,c->triangleCount,viewMatrix,c->camera.getPosition());
-    c->window.swapBuffers();
+    c->renderer.render(c->vertexbuffer,ShaderManager::getInstance().getShaderByName("my3Dshader"),c->triangleCount,viewMatrix,c->camera.getPosition());
+    Window::getInstance().swapBuffers();
 }
 
 int main()
 {
-//  Window w;
-  context c;
+    Window window = Window::getInstance();
+    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
+    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
+    context c;
 //  c.window = std::move(w); 
 //  c.window.init(1200,800);
 //  Shader s;
@@ -77,17 +81,17 @@ int main()
 
 //  c.shader = s; 
 //  c.shader.init();
-  c.shader.build(shaderSources);
-  c.shader.bind();
+  shader.build(shaderSources);
+  shader.bind();
   
   //Texture t(TextureType::d3, 0);
   //c.texture = t;
   //c.texture.init();
   //c.texture.createExample2D();//("assets/rock.jpg");
-  c.texture.create3D();//("assets/rock.jpg");
+  texture.create3D();//("assets/rock.jpg");
   //c.texture.create("assets/rock.jpg");
 //  c.texture.use3D(0);
-  c.shader.setUniform("diffuse3DTexture",0);
+  shader.setUniform("diffuse3DTexture",0);
 ////////  auto tData = exampleData2();
 ////////
 //////////std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
