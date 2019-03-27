@@ -14,6 +14,7 @@
 #include "vertexbuffer.h"
 #include "texture.h"
 #include "model.h"
+#include "camera.h"
 #include "textureManager.h"
 #include "shaderManager.h"
 #include "../Utils/log.h"
@@ -31,7 +32,7 @@ class Renderer
 
     void init();
     void render(const Vertexbuffer& vb, const Shader& shader, int triangleCount, const glm::mat4& viewMatrix,const glm::vec3& eyePosition);
-    void renderModels(const std::vector<Model>& models, const glm::mat4& viewMatrix);
+    void renderModels(const std::vector<Model>& models, const Camera& camera);
 
 	private:
 

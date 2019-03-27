@@ -24,14 +24,15 @@ void Renderer::init()
 //    glEnable(GL_TEXTURE_3D);
 }
 
-void Renderer::renderModels(const std::vector<Model>& models, const glm::mat4& viewMatrix)
+void Renderer::renderModels(const std::vector<Model>& models, const Camera& camera)
 {
   //glClearColor(0.0f,0.0f,0.0f,1.0f);
   glClearColor(0.5f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-  glm::vec3 eyePosition = glm::vec3(viewMatrix[3][0],viewMatrix[3][1],viewMatrix[3][2]);
-  Log::getDebug().log("eyePosition = (%,%,%)",std::to_string(eyePosition.x),std::to_string(eyePosition.y),std::to_string(eyePosition.z));
+  glm::vec3 eyePosition = camera.getPosition();
+  glm::mat4 viewMatrix = camera.getViewMatrix();
+//  Log::getDebug().log("eyePosition = (%,%,%)",std::to_string(eyePosition.x),std::to_string(eyePosition.y),std::to_string(eyePosition.z));
 
   glm::mat4 projection = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 700.0f);
   std::vector<Command> commands;

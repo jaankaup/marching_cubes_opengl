@@ -19,10 +19,14 @@ class Camera
 //    glm::mat4 createViewMatrix() const;
 
     // Returns a view-matrix.
-    glm::mat4 update();
+    void update();
     void rotateCamera(float x, float y, int width, int height, bool isMouserPressed);
-    glm::mat4 handleEvents();
+    void handleEvents();
     glm::vec3 getPosition() const;
+    glm::vec3 getLookAt() const;
+    glm::mat4 getViewMatrix() const;
+    glm::vec3 getStafe() const;
+//    glm::vec3 getEyePosition() const;
 
 	private:
     glm::vec3 pEyePosition;

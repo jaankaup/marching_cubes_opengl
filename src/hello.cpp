@@ -45,9 +45,11 @@ void loop_handler2(void *arg)
 {
     context* c = static_cast<context*>(arg);
     //c->texture.bind();
-    auto viewMatrix = c->camera.handleEvents();
+    
+    c->camera.handleEvents();
+    auto viewMatrix = c->camera.getViewMatrix();
     c->renderer.render(c->vertexbuffer,ShaderManager::getInstance().getShaderByName("my3Dshader"),c->triangleCount,viewMatrix,c->camera.getPosition());
-//    c->renderer.renderModels(c->models,viewMatrix);
+//    c->renderer.renderModels(c->models,c->camera);
     Window::getInstance().swapBuffers();
 }
 
@@ -75,15 +77,19 @@ int main()
 //  c.shader.init();
   c.shader.build(shaderSources);
   c.shader.bind();
+  //shader.build(shaderSources);
+  //shader.bind();
   
   //Texture t(TextureType::d3, 0);
   //c.texture = t;
   //c.texture.init();
   //c.texture.createExample2D();//("assets/rock.jpg");
   c.texture.create3D();//("assets/rock.jpg");
+  //texture.create3D();//("assets/rock.jpg");
   //c.texture.create("assets/rock.jpg");
 //  c.texture.use3D(0);
   c.shader.setUniform("diffuse3DTexture",0);
+  //shader.setUniform("diffuse3DTexture",0);
 ////  Model m;
 //////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 ////  Command command;
