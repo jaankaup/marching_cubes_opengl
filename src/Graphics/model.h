@@ -14,6 +14,7 @@ struct Command
   std::string shaderName;
   uint32_t startIndex = 0;
   uint32_t count = 0;
+  glm::mat4 modelMatrix;
 };
 
 class Model
@@ -24,11 +25,14 @@ class Model
 		~Model();
 
     void addCommand(const Command& command);
-    void addModelMatrix(const glm::mat4& modelMatrix);
+//    void addModelMatrix(const glm::mat4& modelMatrix);
+
+//    glm::mat4 getModelMatrix() const;
+    std::vector<Command> getCommands() const;
 
 	private:
     std::vector<Command> pCommands;
-    glm::mat4 pModelMatrix;
+//    glm::mat4 pModelMatrix;
 };
 
 #endif // MODEL_H

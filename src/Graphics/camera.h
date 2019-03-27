@@ -26,6 +26,7 @@ class Camera
 
 	private:
     glm::vec3 pEyePosition;
+    glm::mat4 pViewMatrix;
 //    glm::vec3 pUp;
     glm::vec3 pLookat;
     glm::quat pCamera_quat;

@@ -13,9 +13,14 @@
 #include "shader.h"
 #include "vertexbuffer.h"
 #include "texture.h"
+#include "model.h"
+#include "textureManager.h"
+#include "shaderManager.h"
 #include "../Utils/log.h"
 
 //#include "misc.h"
+
+//struct Command;
 
 /** A simple shader class with basic shader operations. */
 class Renderer
@@ -26,6 +31,7 @@ class Renderer
 
     void init();
     void render(const Vertexbuffer& vb, const Shader& shader, int triangleCount, const glm::mat4& viewMatrix,const glm::vec3& eyePosition);
+    void renderModels(const std::vector<Model>& models, const glm::mat4& viewMatrix);
 
 	private:
 

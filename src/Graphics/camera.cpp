@@ -12,7 +12,7 @@ Camera::Camera()
 //    pPitch = -40.0f;
 //    pYaw = -90.0f;
     pRoll = 0.0f;
-    pCamera_quat = glm::quat(glm::vec3(pPitch, pYaw, pRoll));
+    pCamera_quat = glm::quat(glm::vec3(0.0f, 1.0f, 0.0f));
     pMousePosition =  glm::vec2(0.0f,0.0f); 
     pPrevTick = SDL_GetTicks();
     float pMouseX_sensitivity = 0.2f;
@@ -33,7 +33,7 @@ glm::mat4 Camera::update()
 {
   //temporary frame quaternion from pitch,yaw,roll
   //here roll is not used
-  glm::quat key_quat = glm::quat(glm::vec3(pPitch, pYaw, pRoll));
+  glm::quat key_quat = glm::quat(glm::vec3(pPitch, pYaw, 0.0f /* pRoll */));
 
   pPitch = 0.0f;
   pYaw = 0.0f;
@@ -44,14 +44,20 @@ glm::mat4 Camera::update()
   pCamera_quat = glm::normalize(pCamera_quat);
   glm::mat4 rotate = glm::mat4_cast(pCamera_quat);
 
-  glm::mat4 translate = glm::mat4(1.0f);
-  translate = glm::translate(translate, -pEyePosition);
+  glm::mat4 translate = glm::translate(glm::mat4(1.0f), -pEyePosition);
+  Log::getDebug().log("pEyePosition = (%,%,%)",std::to_string(pEyePosition.x),std::to_string(pEyePosition.y),std::to_string(pEyePosition.z));
 
   glm::mat4 viewMatrix = rotate * translate;
   pLookat = glm::vec3(viewMatrix[0][2],viewMatrix[1][2],viewMatrix[2][2]);
-  //pEyePosition = glm::vec3(viewMatrix[0][3],viewMatrix[1][3],viewMatrix[2][3]);
+  //pLookat = glm::vec3(viewMatrix[2][0],viewMatrix[2][1],viewMatrix[2][2]);
+//  pEyePosition = glm::vec3(viewMatrix[3][0],viewMatrix[3][1],viewMatrix[3][2]);
 //  Log::getDebug().log("pLookat = (%,%,%)",std::to_string(pLookat.x),std::to_string(pLookat.y),std::to_string(pLookat.z));
 //  Log::getDebug().log("pEyePosition = (%,%,%)",std::to_string(pEyePosition.x),std::to_string(pEyePosition.y),std::to_string(pEyePosition.z));
+//  Log::getDebug().log("viewMatrix = (%,%,%,%)",std::to_string(viewMatrix[0][0]),std::to_string(viewMatrix[1][0]),std::to_string(viewMatrix[2][0]),std::to_string(viewMatrix[3][0]));
+//  Log::getDebug().log("viewMatrix = (%,%,%,%)",std::to_string(viewMatrix[0][1]),std::to_string(viewMatrix[1][1]),std::to_string(viewMatrix[2][1]),std::to_string(viewMatrix[3][1]));
+//  Log::getDebug().log("viewMatrix = (%,%,%,%)",std::to_string(viewMatrix[0][2]),std::to_string(viewMatrix[1][2]),std::to_string(viewMatrix[2][2]),std::to_string(viewMatrix[3][2]));
+//  Log::getDebug().log("viewMatrix = (%,%,%,%)",std::to_string(viewMatrix[0][3]),std::to_string(viewMatrix[1][3]),std::to_string(viewMatrix[2][3]),std::to_string(viewMatrix[3][3]));
+  Log::getDebug().log("**********************");
   //auto temp = glm::vec3(viewMatrix[8],viewMatrix[9],viewMatrix[10]);
   return viewMatrix;
 }
@@ -63,11 +69,10 @@ void Camera::rotateCamera(float x, float y, int width, int height, bool isMouseP
   //always compute delta
   //mousePosition is the last mouse position
   glm::vec2 mouse_delta = glm::vec2(x, y) - pMousePosition;
+  pMousePosition = glm::vec2(x,y);
 
   //notice that we reduce the sensitvity
-//  const float mouseX_Sensitivity = 0.0020f;
-//  const float mouseY_Sensitivity = 0.0020f;
-
+    
   pYaw   = pMouseX_sensitivity * mouse_delta.x;
   pPitch = pMouseY_sensitivity * mouse_delta.y;
 
@@ -80,9 +85,46 @@ glm::mat4 Camera::handleEvents()
 {
   uint32_t newTick = SDL_GetTicks();
   uint32_t deltaTick = newTick - pPrevTick;
-  float deltaTime = pPrevTick == 0 ? 0.0f : newTick / pPrevTick;
+  float deltaTime = pPrevTick == 0 ? 0.0f : (newTick*1.0f) / pPrevTick;
   pPrevTick = newTick;
 
+  SDL_Event e;
+  while (SDL_PollEvent(&e))
+  {
+    switch (e.type)
+    {
+      case SDL_QUIT:
+        //            running_ = false;
+        break;
+
+        /* Kameralle */
+      case SDL_MOUSEMOTION:
+      case SDL_MOUSEBUTTONDOWN:
+        switch (e.type)
+        {
+          case (SDL_MOUSEBUTTONDOWN):
+            pMousePosition = glm::vec2(e.motion.x,e.motion.y);
+//            Log::getDebug().log("SDL_MOUSEBUTTONDOWN: x,y = (%,%)",std::to_string(x),std::to_string(y));
+//            break;
+          case (SDL_MOUSEMOTION):
+            switch (e.motion.state)
+            {
+              case (SDL_BUTTON_LMASK):
+//                Log::getDebug().log("Rotating camera (%,%)",std::to_string(x),std::to_string(y));
+                //rotateCamera(e.motion.x * deltaTime ,e.motion.y * deltaTime,0,0,true);
+                rotateCamera(e.motion.x,e.motion.y,0,0,true);
+                //pLastX = e.motion.x; 
+                //pLastY = e.motion.y; 
+                break;
+            }
+        }
+        break;
+    }
+  }
+//  float movementInterp = (SDL_GetTicks() * 0.0005f) * deltaTime;
+
+  auto result = update();
+  
   auto keystate = SDL_GetKeyboardState(NULL); 
 
       /* Shift hidastaa liikkumisnopeutta */
@@ -110,41 +152,7 @@ glm::mat4 Camera::handleEvents()
     if(keystate[SDL_SCANCODE_C])
         pEyePosition -= glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
 
-  SDL_Event e;
-  while (SDL_PollEvent(&e))
-  {
-    switch (e.type)
-    {
-      case SDL_QUIT:
-        //            running_ = false;
-        break;
-
-        /* Kameralle */
-      case SDL_MOUSEMOTION:
-      case SDL_MOUSEBUTTONDOWN:
-        switch (e.type)
-        {
-          case (SDL_MOUSEBUTTONDOWN):
-            pMousePosition = glm::vec2(e.motion.x,e.motion.y);
-//            Log::getDebug().log("SDL_MOUSEBUTTONDOWN: x,y = (%,%)",std::to_string(x),std::to_string(y));
-//            break;
-          case (SDL_MOUSEMOTION):
-            switch (e.motion.state)
-            {
-              case (SDL_BUTTON_LMASK):
-//                Log::getDebug().log("Rotating camera (%,%)",std::to_string(x),std::to_string(y));
-                rotateCamera(e.motion.x * deltaTime ,e.motion.y * deltaTime,0,0,true);
-                //pLastX = e.motion.x; 
-                //pLastY = e.motion.y; 
-                break;
-            }
-        }
-        break;
-    }
-  }
-//  float movementInterp = (SDL_GetTicks() * 0.0005f) * deltaTime;
-
-    return update();
+    return result;
 }
 
 glm::vec3 Camera::getPosition() const

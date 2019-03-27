@@ -20,6 +20,7 @@
 #include "Graphics/camera.h"
 #include "Graphics/textureManager.h"
 #include "Graphics/shaderManager.h"
+#include "Graphics/model.h"
 #include "Utils/log.h"
 #include "Utils/kokeilu.h"
 
@@ -31,43 +32,34 @@
  */
 struct context
 {
-//    Window window = Window::getInstance();
     Renderer renderer;
-//    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
     Vertexbuffer vertexbuffer;
-//    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
     int triangleCount;
     Camera camera;
     std::vector<Model> models;
+    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
+    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
 };
 
 void loop_handler2(void *arg)
 {
     context* c = static_cast<context*>(arg);
-//    c->texture.bind();
+    //c->texture.bind();
     auto viewMatrix = c->camera.handleEvents();
     c->renderer.render(c->vertexbuffer,ShaderManager::getInstance().getShaderByName("my3Dshader"),c->triangleCount,viewMatrix,c->camera.getPosition());
+//    c->renderer.renderModels(c->models,viewMatrix);
     Window::getInstance().swapBuffers();
 }
 
 int main()
 {
-    Window window = Window::getInstance();
-    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
-    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
-    context c;
-//  c.window = std::move(w); 
-//  c.window.init(1200,800);
-//  Shader s;
-//  std::vector<std::string> shaderSources = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
+  Window window = Window::getInstance();
+//  Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
+//  Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
+  context c;
   std::vector<std::string> shaderSources = {"shaders/marching.vert", "shaders/marching.frag"};
   Vertexbuffer vb;
-//  vb.createExampleCube();
- // Indexbuffer ib;
- // Model m;
-//  VertexAttributes atr;
   Renderer r;
-//  int a = 0;
 
   c.camera = Camera();
 
@@ -81,17 +73,29 @@ int main()
 
 //  c.shader = s; 
 //  c.shader.init();
-  shader.build(shaderSources);
-  shader.bind();
+  c.shader.build(shaderSources);
+  c.shader.bind();
   
   //Texture t(TextureType::d3, 0);
   //c.texture = t;
   //c.texture.init();
   //c.texture.createExample2D();//("assets/rock.jpg");
-  texture.create3D();//("assets/rock.jpg");
+  c.texture.create3D();//("assets/rock.jpg");
   //c.texture.create("assets/rock.jpg");
 //  c.texture.use3D(0);
-  shader.setUniform("diffuse3DTexture",0);
+  c.shader.setUniform("diffuse3DTexture",0);
+////  Model m;
+//////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+////  Command command;
+////  command.vao = c.vertexbuffer.getVAO();
+////  command.textureName = "my3Dtexture";
+////  command.shaderName = "my3Dshader";
+////  command.startIndex = 0;
+////  command.count = 12;
+////  command.modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+////  m.addCommand(command);
+////  c.models.push_back(m);
+
 ////////  auto tData = exampleData2();
 ////////
 //////////std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
