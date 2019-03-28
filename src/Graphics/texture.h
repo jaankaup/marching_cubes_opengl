@@ -23,7 +23,8 @@ class Texture
         /// before the use method. @param unit is the texture unit to use.
         void use(const GLuint unit) const;
 
-        GLuint getID() const;
+        //GLuint getID() const;
+        TextureType getTextureType() const;
         void create(const std::string& fileloc);
         void create3D();
         void createExample2D();

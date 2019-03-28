@@ -23,8 +23,8 @@ struct Light {
        float attentuationFactor;
 };
 
-//uniform sampler2D diffuseTexture;
-uniform sampler3D diffuse3DTexture;
+uniform sampler2D diffuseTexture;
+//uniform sampler3D diffuse3DTexture;
 uniform mat4 M;
 //uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
@@ -69,7 +69,7 @@ void main(){
 
         // Pinnan vä.
 	//vec3 surfaceColor = texture3D(diffuseTexture,vec3(tFrag_in,1.0f)).rgb;
-	vec3 surfaceColor = texture(diffuse3DTexture,vec3(tFrag_in,0.5)).rgb;
+	vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
 //	vec3 surfaceColor = texture(diffuse3DTexture,vFrag_in.xyz).rgb;
 	//vec3 surfaceColor = vec3(0.5,0.5,0.5);
 

@@ -12,7 +12,7 @@ Camera::Camera()
 //    pPitch = -40.0f;
 //    pYaw = -90.0f;
     pRoll = 0.0f;
-    pCamera_quat = glm::quat(glm::vec3(1.0f, 1.0f, 1.0f));
+    pCamera_quat = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
     pMousePosition =  glm::vec2(0.0f,0.0f); 
     pPrevTick = SDL_GetTicks();
     float pMouseX_sensitivity = 0.2f;

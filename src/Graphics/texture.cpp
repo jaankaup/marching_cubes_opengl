@@ -103,9 +103,14 @@ void Texture::use(const GLuint unit) const
   bind();
 }
 
-GLuint Texture::getID() const
+//GLuint Texture::getID() const
+//{
+//    return pId;
+//}
+
+TextureType Texture::getTextureType() const
 {
-    return pId;
+  return pType;
 }
 
 void Texture::createExample2D()

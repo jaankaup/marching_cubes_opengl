@@ -18,6 +18,7 @@
 #include "textureManager.h"
 #include "shaderManager.h"
 #include "../Utils/log.h"
+#include "../Utils/misc.h"
 
 //#include "misc.h"
 

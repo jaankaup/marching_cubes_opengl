@@ -44,7 +44,7 @@ set(graphics_src
 
 set(util_src 
       ${util_dir}/log.cpp
-      ${util_dir}/kokeilu.cpp
+      ${util_dir}/misc.cpp
       )
 
 set (soil_src
