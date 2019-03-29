@@ -26,8 +26,8 @@ void Renderer::init()
 
 void Renderer::renderModels(const std::vector<Model>& models, const Camera& camera)
 {
-  //glClearColor(0.0f,0.0f,0.0f,1.0f);
-  glClearColor(0.5f,0.0f,0.0f,1.0f);
+  glClearColor(0.0f,0.0f,0.0f,1.0f);
+  //glClearColor(0.5f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   glm::vec3 eyePosition = camera.getPosition();
@@ -76,11 +76,20 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
         shader.setUniform("diffuse3DTexture",0);
         break;
     }
+
+    switch (com.draw)
+    {
+      case GL_TRIANGLES:
+        glDrawArrays(GL_TRIANGLES, com.startIndex, com.count);
+        break;
+      case GL_POINTS:
+        glDrawArrays(GL_POINTS, com.startIndex, com.count);
+        break;
+    }
 //    glBindVertexArray(c.vao);
 //    Log::getDebug().log("drawArrasy = (%,%)",std::to_string(c.startIndex),std::to_string(c.count));
  //   Log::getDebug().log("command = (%,%)",com.shaderName,com.textureName);
 
-    glDrawArrays(GL_TRIANGLES, com.startIndex, com.count);
   }
 //  glm::mat4 model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
   

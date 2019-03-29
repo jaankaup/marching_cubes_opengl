@@ -1,26 +1,24 @@
 #version 300 es
 precision highp float;
-//precision mediump float;
 
-layout(location = 0) in vec3 vert_in;
-layout(location = 1) in vec2 texture_in;
-layout(location = 2) in vec3 normal_in;
+layout(location = 0) in vec3 in_position;
 
-out vec3 vFrag_in;
-out vec2 tFrag_in;
-out vec3 nFrag_in;
+//out vec3 gl_in;
 
-//uniform mat4 P;
-//uniform mat4 V;
-//uniform mat4 M;
+#define MAX_TRIANGLES = 5;
+
 uniform mat4 MVP;
 
-void main(){
+struct marchingTriangles {
+       vec3 position;
+       vec3 color;
+       vec3 materialSpecularColor;
+       float ambientCoeffience;
+       float materialShininess;
+       float attentuationFactor;
+};
 
-	//gl_Position =  P * V * M * vec4(vert_in,1);
-	//gl_Position =  vec4(vert_in,1.0f);
-	gl_Position =  MVP * vec4(vert_in,1);
-        vFrag_in = vert_in;
-        tFrag_in = texture_in;
-        nFrag_in = normal_in;
+void main()
+{
+  gl_Position =  MVP * vec4(in_position,1);
 }

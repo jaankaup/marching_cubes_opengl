@@ -10,6 +10,7 @@
 struct Command
 {
   GLuint vao;
+  GLenum draw;
   std::string textureName;
   std::string shaderName;
   uint32_t startIndex = 0;

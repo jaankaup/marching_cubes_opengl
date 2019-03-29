@@ -88,6 +88,7 @@ bool Window::init(int width, int height)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 
+
     /* Luodaan opengl conteksti ikkunalle. */
     pContext = SDL_GL_CreateContext(pWindow);
     if (pContext == NULL)
@@ -98,7 +99,6 @@ bool Window::init(int width, int height)
 
     glewExperimental = GL_TRUE;
 
-    Log::getDebug().log("%","Window::init. Initializing glew.");
 
     GLenum error = glewInit();
     if (error != GLEW_NO_ERROR) {
@@ -106,6 +106,19 @@ bool Window::init(int width, int height)
         Log::getError().log("%","Window::init. Failed to initialize glew.");
         return false;
      }
+
+    Log::getDebug().log("GL_Version: %", glGetString(GL_VERSION));
+    Log::getDebug().log("Vendor: %", glGetString(GL_VENDOR));
+    Log::getDebug().log("Renderer: %", glGetString(GL_RENDERER));
+//    //if (GLEW_ARB_geometry_shader4) {
+//    if (GLEW_EXT_geometry_shader) {
+//      Log::getDebug().log("juuuuuuuuh!");
+//    }
+//    else
+//    {
+//      Log::getDebug().log("eiiiiiiiih!");
+//    }
+//    Log::getDebug().log("%","Window::init. Initializing glew.");
 
     return true;
 }

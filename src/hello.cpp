@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <GL/glew.h>
 #include <emscripten.h>
 #include <math.h>
 #include <vector>
@@ -23,6 +24,7 @@
 #include "Graphics/model.h"
 #include "Utils/log.h"
 #include "Utils/misc.h"
+#include "Utils/myrandom.h"
 
 //struct SDL_Window;
 //enum TextureType : int32_t;
@@ -33,7 +35,8 @@
 struct context
 {
     Renderer renderer;
-    Vertexbuffer vertexbuffer;
+//    Vertexbuffer vertexbuffer;
+    Vertexbuffer vertexbuffer2;
     int triangleCount;
     Camera camera;
     std::vector<Model> models;
@@ -51,7 +54,7 @@ void loop_handler2(void *arg)
     auto viewMatrix = c->camera.getViewMatrix();
     if (heko)
     {
-      c->renderer.render(c->vertexbuffer,ShaderManager::getInstance().getShaderByName("my3Dshader"),c->triangleCount,viewMatrix,c->camera.getPosition());
+      c->renderer.render(c->vertexbuffer2,ShaderManager::getInstance().getShaderByName("my3Dshader"),c->triangleCount,viewMatrix,c->camera.getPosition());
     }
     else {
       c->renderer.renderModels(c->models,c->camera);
@@ -68,7 +71,7 @@ int main()
   Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
   Texture textureCube = TextureManager::getInstance().create2D("cubeTexture");//{TextureType::d2,0};
   context c;
-  std::vector<std::string> shaderSources = {"shaders/marching.vert", "shaders/marching.frag"};
+  std::vector<std::string> shaderSources = {"shaders/marching.vert", "shaders/marching.geom", "shaders/marching.frag"};
   std::vector<std::string> shaderSourcesCube = {"shaders/default.vert", "shaders/default.frag"};
 //  Vertexbuffer vb;
 //  Renderer r;
@@ -79,10 +82,12 @@ int main()
   c.renderer.init();
 
 //  c.vertexbuffer = std::move(vb); 
-  c.vertexbuffer.init();
-  c.vertexbuffer.createExampleCube();
+ // c.vertexbuffer.init();
+ // c.vertexbuffer.createExampleCube();
   c.triangleCount = 6*2*3;
 
+  c.vertexbuffer2.init();
+  c.vertexbuffer2.createExamplePoints();
 //  c.shader = s; 
 //  c.shader.init();
 //  c.shader.build(shaderSources);
@@ -102,10 +107,23 @@ int main()
 //  c.texture.use3D(0);
 //  c.shader.setUniform("diffuse3DTexture",0);
 //  shader.setUniform("diffuse3DTexture",0);
+////  Model m;
+//////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+////  Command command;
+////  command.vao = c.vertexbuffer.getVAO();
+////  command.textureName = "my3Dtexture";
+////  command.shaderName = "my3Dshader";
+////  command.startIndex = 0;
+////  command.count = 12*3;
+////  command.modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
+////  m.addCommand(command);
+////  c.models.push_back(m);
+
+
   Model m;
-//  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
   Command command;
-  command.vao = c.vertexbuffer.getVAO();
+  command.vao = c.vertexbuffer2.getVAO();
+  command.draw = GL_POINTS;
   command.textureName = "my3Dtexture";
   command.shaderName = "my3Dshader";
   command.startIndex = 0;
@@ -114,21 +132,24 @@ int main()
   m.addCommand(command);
   c.models.push_back(m);
 
-  Model m2;
-//  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-  Command command2;
-  command2.vao = c.vertexbuffer.getVAO();
-  command2.textureName = "cubeTexture";
-  command2.shaderName = "cubeShader";
-  command2.startIndex = 0;
-  command2.count = 12*3;
-  glm::mat4 original = glm::mat4(1.0f);
-  auto scale = glm::scale(original,glm::vec3(2.0f));
-  auto rotate = glm::rotate(original,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate = glm::translate(original,glm::vec3(3.0f,3.0f,0.0f));
-  command2.modelMatrix = scale * translate * rotate;
-  m2.addCommand(command2);
-  c.models.push_back(m2);
+//  Model m2;
+////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+//  Command command2;
+//  command2.vao = c.vertexbuffer.getVAO();
+//  command2.draw = GL_TRIANGLES;
+//  command2.textureName = "cubeTexture";
+//  command2.shaderName = "cubeShader";
+//  command2.startIndex = 0;
+//  command2.count = 12*3;
+//  glm::mat4 original = glm::mat4(1.0f);
+//  auto scale = glm::scale(original,glm::vec3(2.0f));
+//  auto rotate = glm::rotate(original,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  auto translate = glm::translate(original,glm::vec3(3.0f,3.0f,0.0f));
+//  command2.modelMatrix = scale * translate * rotate;
+//  m2.addCommand(command2);
+//  c.models.push_back(m2);
+  Log::getDebug().log("GL_GEOMETRY_SHADER = %", std::to_string(GL_GEOMETRY_SHADER));
+  
 ////////  auto tData = exampleData2();
 ////////
 //////////std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)

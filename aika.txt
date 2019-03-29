@@ -108,3 +108,15 @@
 ### 25.3.2019 12:00 -> 20:00 (8h) ### 
 
 > 3d teksturointi onnistuu.
+
+### 26.3.2019 12:00 -> 20:00 (8h) ### 
+
+> Tappelua cameran kanssa. Yritan saada toimimaan myos useamman eri kappaleen renderoinnin yhta aikaa.
+
+### 27.3.2019 11:30 -> 19:30 (8h) ### 
+
+> Camera edelleen hieman buginen. Nyt onnistuu useamman eri kappaleen renderointi. Tosin tuo kaipaa viela optimointia. 
+
+### 28.3.2019 10:00 -> 13:00 (3h) ### 
+
+> Geometry shaderin opiskelua. En olekaan aikaisemmin kayttanyt sellaista. 

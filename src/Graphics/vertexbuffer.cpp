@@ -32,14 +32,14 @@ GLuint Vertexbuffer::getHandle() const
   return pId;
 }
 
-void Vertexbuffer::addData(const void* data, unsigned int size) const
+void Vertexbuffer::addData(const void* data, unsigned int size, const std::vector<std::string>& types) const
 {
   Log::getDebug().log("Vertexbuffer::addData: %", std::to_string(size));
   bind();
   glBindBuffer(pTarget, pId);
   glBufferData(pTarget,size, data, pUsage);
   VertexAttributes vas;
-  std::vector<std::string> types = {"3f","2f","3f"};
+//  std::vector<std::string> types = {"3f","2f","3f"};
 //  std::vector<std::string> types = {"3f","3f"};
   vas.create_interleaved_attributes(types, false);
   vas.registerAttributes();
@@ -254,10 +254,23 @@ void Vertexbuffer::createExampleCube()
     pData.push_back(vn[i][1]); 
     pData.push_back(vn[i][2]); 
   }
-  addData(&pData[0], pData.size() * sizeof(GL_FLOAT));
+  std::vector<std::string> types = {"3f","2f","3f"};
+  addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
 }
 
 GLuint Vertexbuffer::getVAO() const
 {
   return pVAO;
+}
+
+void Vertexbuffer::createExamplePoints()
+{
+  std::vector<glm::vec3> blah;
+  for (int i=0 ; i<50 ; ++i)
+  {
+    blah.push_back(glm::vec3(0.1f*i , 0.2f*i , 0.1f*i));
+  }
+
+  std::vector<std::string> types = {"1f"};
+  addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
 }
