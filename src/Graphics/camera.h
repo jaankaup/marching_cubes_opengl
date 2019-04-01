@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "programstate.h"
 #include "../Utils/log.h"
 
 /** A simple shader class with basic shader operations. */

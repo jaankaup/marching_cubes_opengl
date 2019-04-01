@@ -265,10 +265,11 @@ GLuint Vertexbuffer::getVAO() const
 
 void Vertexbuffer::createExamplePoints()
 {
-  std::vector<glm::vec3> blah;
   for (int i=0 ; i<50 ; ++i)
   {
-    blah.push_back(glm::vec3(0.1f*i , 0.2f*i , 0.1f*i));
+    pData.push_back(1.5f*i);
+    pData.push_back(1.8f*i);
+    pData.push_back(-2.3f*i);
   }
 
   std::vector<std::string> types = {"1f"};

@@ -103,7 +103,7 @@ void Camera::handleEvents()
     switch (e.type)
     {
       case SDL_QUIT:
-        //            running_ = false;
+        ProgramState::getInstance().setAppRunning(false);
         break;
 
         /* Kameralle */
@@ -144,7 +144,7 @@ void Camera::handleEvents()
       /* Shift hidastaa liikkumisnopeutta */
     float speedMultiplier = pCamspeed;
     if(keystate[SDL_SCANCODE_LSHIFT])
-        speedMultiplier *= 0.1f;
+        speedMultiplier *= 0.001f;
 
     /* WASD-nappaimet */
     if(keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
@@ -167,6 +167,9 @@ void Camera::handleEvents()
 
     if(keystate[SDL_SCANCODE_C])
         pEyePosition -= glm::normalize(glm::vec3(0.0f,1.0f,0.0f)) * speedMultiplier * deltaTime;
+
+    if(keystate[SDL_SCANCODE_Q])
+        ProgramState::getInstance().setAppRunning(false);
 //  auto result = update();
 //  
 //

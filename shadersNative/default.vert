@@ -1,5 +1,6 @@
-#version 300 es
-precision highp float;
+#version 430
+//precision highp float;
+//precision mediump float;
 
 layout(location = 0) in vec3 vert_in;
 layout(location = 1) in vec2 texture_in;

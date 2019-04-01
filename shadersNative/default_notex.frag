@@ -1,13 +1,13 @@
 #version 300 es
-precision highp sampler3D;
-precision mediump float;
+precision highp float;
+//precision mediump float;
 
 // #define MAX_LIGHTS = 8;
 
 // Interpolated values from the vertex shaders
 in vec3 vFrag_in;
-in vec2 tFrag_in;
 in vec3 nFrag_in;
+in vec3 vPositionCamera;
 
 // Ouput data
 out vec3 color;
@@ -22,7 +22,6 @@ struct Light {
 };
 
 uniform sampler2D diffuseTexture;
-//uniform sampler3D diffuse3DTexture;
 uniform mat4 M;
 //uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
@@ -30,14 +29,15 @@ uniform mat3 normalMatrix;
 uniform Light lights[8];
 
 void main(){
-        //color = vec3(0.2f,0.3f,0.9f);
+        //color = vFrag_in;
+        //vec3(0.2f,0.3f,0.9f);
         //color = vec3(vFrag_in);
         // Verteksin paikka maailmassa.
 	vec3 vPositionCamera = (M * vec4(vFrag_in,1.0f)).xyz;
 
 	// Normaali. Jos mallia on venytetty ja liikuteltu, niin normaali täyy kertoa normaali matriisilla.
-	//vec3 normal = normalize(nFrag_in);
 	vec3 normal = normalize(normalMatrix * nFrag_in);
+	normal = nFrag_in;
 
 	// Valon suunta verteksiin näen.
 	vec3 lightDirection = normalize(lights[0].position - vPositionCamera);
@@ -66,10 +66,8 @@ void main(){
         vec3 specularComponent = specularCoeffient * lights[0].materialSpecularColor * lights[0].color;
 
         // Pinnan vä.
-	//vec3 surfaceColor = texture3D(diffuseTexture,vec3(tFrag_in,1.0f)).rgb;
-	vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
-//	vec3 surfaceColor = texture(diffuse3DTexture,vFrag_in.xyz).rgb;
-	//vec3 surfaceColor = vec3(0.5,0.5,0.5);
+	//vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
+	vec3 surfaceColor = vec3(0.9,0.1,0.1);
 
 	// Ambient vä.
         vec3 ambient = lights[0].ambientCoeffience * lights[0].color * surfaceColor;

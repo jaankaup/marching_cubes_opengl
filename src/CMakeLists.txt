@@ -36,6 +36,7 @@ set(graphics_src
       ${graphics_dir}/camera.cpp
       ${graphics_dir}/textureManager.cpp
       ${graphics_dir}/shaderManager.cpp
+      ${graphics_dir}/programstate.cpp
       )
 
 set(util_src 
@@ -60,7 +61,6 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
     message("EMSCRITPEN build.")
     set(CMAKE_EXECUTABLE_SUFFIX ".html")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s ALLOW_MEMORY_GROWTH=1 -s TOTAL_MEMORY=1000MB -O2 -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='[\"png\"]'") 
-    set_target_properties(hello PROPERTIES LINK_FLAGS "-s DISABLE_EXCEPTION_CATCHING=2 -s DEMANGLE_SUPPORT=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s GL_ASSERTIONS=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES2=1 --bind --preload-file ${CMAKE_SOURCE_DIR}/shaders@shaders/ --preload-file ${CMAKE_SOURCE_DIR}/assets/rock.jpg@assets/ ")
 endif()
 
 # Luodaan perinteinen ohjelma.
@@ -100,6 +100,14 @@ if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 		message("found GLEW (${GLEW_LIBRARIES}:${GLEW_INCLUDE_DIRS})")
 	endif ()
 
+	# Copy the native shaders to the build directory.
+	#add_custom_command(TARGET hello POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/shadersNative $<TARGET_FILE_DIR:hello>/shaders)
+	add_custom_command(TARGET hello 
+		           POST_BUILD
+			   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/shadersNative ${CMAKE_BINARY_DIR}/bin/shaders
+			   COMMENT "Copying shaders."
+			   VERBATIM)
+
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}") 
 endif()
 #
@@ -109,7 +117,7 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Library output path.
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
 # Tanne alki-kirjastot
 #add_subdirectory(lib/math)
@@ -122,7 +130,10 @@ set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
 add_executable(hello ${src_dir}/hello.cpp ${util_src} ${graphics_src} ${soil_src})
 
 #Tanne linkitykset
-if (NOT ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+
+   set_target_properties(hello PROPERTIES LINK_FLAGS "-s DISABLE_EXCEPTION_CATCHING=2 -s DEMANGLE_SUPPORT=1 -s ERROR_ON_UNDEFINED_SYMBOLS=0 -s GL_ASSERTIONS=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s FULL_ES2=1 --bind --preload-file ${CMAKE_SOURCE_DIR}/shaders@shaders/ --preload-file ${CMAKE_SOURCE_DIR}/assets/rock.jpg@assets/ ")
+
+else ()
 	target_link_libraries(hello ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
-	#target_link_libraries(hello ${SDL2_LIBRARIES} ${GLEW_LIBRARIES})
 endif()

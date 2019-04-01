@@ -26,8 +26,8 @@ void Renderer::init()
 
 void Renderer::renderModels(const std::vector<Model>& models, const Camera& camera)
 {
-  glClearColor(0.0f,0.0f,0.0f,1.0f);
-  //glClearColor(0.5f,0.0f,0.0f,1.0f);
+  //glClearColor(0.0f,0.0f,0.0f,1.0f);
+  glClearColor(0.5f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   glm::vec3 eyePosition = camera.getPosition();
@@ -49,7 +49,7 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
 //  Log::getDebug().log("commands.size = %",std::to_string(commands.size()));
   for (const auto& com : commands)
   {
-//    Log::getDebug().log("drawing = (%)",std::to_string(c.vao));
+//    Log::getDebug().log("drawing = (%)",std::to_string(com.vao));
     glm::mat4 mx = com.modelMatrix;
 //    logGLM("modelMatrixModels",mx);
     Shader shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
