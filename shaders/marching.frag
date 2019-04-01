@@ -1,8 +1,4 @@
-#version 300 es
-precision highp float;
-//precision highp vec3;
-precision highp sampler3D;
-//precision mediump float;
+#version 430
 
 // #define MAX_LIGHTS = 8;
 

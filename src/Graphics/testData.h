@@ -78,10 +78,11 @@ static VoxelData<float> exampleData4()
     float gx = 0.0f;
     float gy = 0.0f;
     float gz = 0.0f;
-    for (int a=1 ; a<sampleCount+1 ; a++) {
-    gx += randomData.getValue(i+a ,j   ,k) - randomData.getValue(i-a, j, k);
-    gy += randomData.getValue(i   ,j+a ,k) - randomData.getValue(i, j-a, k);
-    gz += randomData.getValue(i   ,j   ,k+a) - randomData.getValue(i, j, k-a);
+    for (int a=1 ; a<sampleCount+1 ; a++)
+    {
+      gx += randomData.getValue(i+a ,j   ,k) - randomData.getValue(i-a, j, k);
+      gy += randomData.getValue(i   ,j+a ,k) - randomData.getValue(i, j-a, k);
+      gz += randomData.getValue(i   ,j   ,k+a) - randomData.getValue(i, j, k-a);
     }
     float neightbours =  ((gx + gy + gz)/3.0f) / sampleCount;
     float finalValue = neightbours + initialValue / 2.0f;

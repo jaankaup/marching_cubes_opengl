@@ -1,4 +1,7 @@
 *.sh
+bak
+buildNative
+lib/sdl2
 build
 CMakeLists.txt.user
 CMakeCache.txt

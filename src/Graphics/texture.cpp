@@ -53,7 +53,7 @@ void Texture::create3D()
 /* For more information: https://open.gl/textures */
 void Texture::create(const std::string& fileloc)
 {
-    Log::getDebug().log("%","Texture::create(%): Creating texture from file.",fileloc);
+    Log::getDebug().log("Texture::create(%): Creating texture from file.",fileloc);
     int width, height;
     unsigned char* image = SOIL_load_image(fileloc.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
 

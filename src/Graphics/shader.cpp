@@ -207,7 +207,7 @@ GLuint Shader::getShaderType(const std::string& fileLoc)
     static std::array<GLuint, 5> GLStageEnums = {GL_VERTEX_SHADER,
                                                  GL_TESS_CONTROL_SHADER,
                                                  GL_TESS_EVALUATION_SHADER,
-                                                 GL_GEOMETRY_SHADER,
+                                                 GL_GEOMETRY_SHADER, // 0x8dd9,
                                                  GL_FRAGMENT_SHADER
                                                  //GL_COMPUTE_SHADER
                                                 };

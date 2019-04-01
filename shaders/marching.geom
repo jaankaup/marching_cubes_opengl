@@ -1,9 +1,4 @@
-#version 300 es
-//#extension GL_EXT_geometry_shader : enable
-//#extension GL_ARB_geometry_shader4 : enable
-//#extension OES_shader_io_blocks : enable
-#extension OES_geometry_shader : enable
-precision highp float;
+#version 430
 
 // The input data is a point. A coordinate for base cube corner. 
 layout(points) in;
