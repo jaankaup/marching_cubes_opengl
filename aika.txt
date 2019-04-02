@@ -120,3 +120,17 @@
 ### 28.3.2019 10:00 -> 13:00 (3h) ### 
 
 > Geometry shaderin opiskelua. En olekaan aikaisemmin kayttanyt sellaista. 
+
+### 28.3.2019 10:00 -> 13:00 (3h) ### 
+
+> Geometry shaderin opiskelua. En olekaan aikaisemmin kayttanyt sellaista. 
+
+### 29.3.2019 12:00 -> 20:00 (8h) ### 
+
+> Webgl 2.0 ei tue geometry shaderia. Tutkiskelua olisiko mahdollista saada opengl:n uudenpia ominaisuuksia kayttoon selaimessa. 
+
+### 1.4.2019 12:00 -> 20:00 (8h) ### 
+
+> Ei tunnu olevan jarkevaa tapaa saada uutta gl:aa selaimeen. Muutin projektia niin etta se kaantyy myos nyt linuksille 
+> natiiviksi cpp ohjelmaksi. Sama ohjelma on ainakain 10 kertaa nopeampi binaarina kuin webassemblyna. 
+> Nyt toimii myos geometry shader, tosin binaarina ohjelmana.

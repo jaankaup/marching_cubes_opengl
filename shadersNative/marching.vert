@@ -8,15 +8,6 @@ layout(location = 0) in vec3 in_position;
 
 uniform mat4 MVP;
 
-struct marchingTriangles {
-       vec3 position;
-       vec3 color;
-       vec3 materialSpecularColor;
-       float ambientCoeffience;
-       float materialShininess;
-       float attentuationFactor;
-};
-
 void main()
 {
   gl_Position =  MVP * vec4(in_position,1);

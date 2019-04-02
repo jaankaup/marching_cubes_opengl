@@ -265,7 +265,7 @@ GLuint Vertexbuffer::getVAO() const
 
 void Vertexbuffer::createExamplePoints()
 {
-  for (int i=0 ; i<50 ; ++i)
+  for (int i=0 ; i<36 ; ++i)
   {
     pData.push_back(1.5f*i);
     pData.push_back(1.8f*i);

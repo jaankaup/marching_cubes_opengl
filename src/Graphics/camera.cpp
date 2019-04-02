@@ -144,7 +144,7 @@ void Camera::handleEvents()
       /* Shift hidastaa liikkumisnopeutta */
     float speedMultiplier = pCamspeed;
     if(keystate[SDL_SCANCODE_LSHIFT])
-        speedMultiplier *= 0.001f;
+        speedMultiplier *= 0.1f;
 
     /* WASD-nappaimet */
     if(keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])

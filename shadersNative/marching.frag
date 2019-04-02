@@ -3,7 +3,7 @@
 // #define MAX_LIGHTS = 8;
 
 // Interpolated values from the vertex shaders
-in vec3 gFrag_in;
+in vec3 fColorIn;
 //in vec2 tFrag_in;
 //in vec3 nFrag_in;
 
@@ -28,8 +28,8 @@ uniform mat3 normalMatrix;
 uniform Light lights[8];
 
 void main(){
-//        color = vec3(0.2f,0.3f,0.9f);
-        color = gFrag_in;
+        //color = vec3(0.2f,0.3f,0.9f);
+        color = fColorIn;
         //color = vec3(vFrag_in);
 ////        // Verteksin paikka maailmassa.
 ////	vec3 vPositionCamera = (M * vec4(vFrag_in,1.0f)).xyz;
