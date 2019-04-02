@@ -7,6 +7,7 @@
 #include <SOIL.h>
 #include "textureManager.h"
 #include "../Utils/log.h"
+#include "../Utils/myrandom.h"
 
 //enum textureType : int32_t;
 enum class TextureType {d2,d3};

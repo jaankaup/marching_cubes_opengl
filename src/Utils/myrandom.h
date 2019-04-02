@@ -57,6 +57,4 @@ inline void MyRandom<T>::setDistribution(T a, T b)
     dist_ = dist_type(a,b);
 }
 
-
-
 #endif // MYRANDOM_H

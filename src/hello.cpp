@@ -156,10 +156,10 @@ int main()
   command.vao = c.vertexbuffer2.getVAO();
   command.draw = GL_POINTS;
   //command.textureName = "my3Dtexture";
-  command.textureName = "cubeTexture";
+  command.textureName = "my3Dtexture";
   command.shaderName = "marchingShader";
   command.startIndex = 0;
-  command.count = 12*3;
+  command.count = 3;
   glm::mat4 original = glm::mat4(1.0f);
   auto scale = glm::scale(original,glm::vec3(4.0f));
   auto rotate = glm::rotate(original,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));

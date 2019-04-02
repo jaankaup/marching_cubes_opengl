@@ -41,6 +41,7 @@ void Camera::update()
 
   //order matters,update camera_quat
   pCamera_quat = key_quat * pCamera_quat;
+  pCamera_quat.z = 0.0f;   
   pCamera_quat = glm::normalize(pCamera_quat);
   glm::mat4 rotate = glm::mat4_cast(pCamera_quat);
 

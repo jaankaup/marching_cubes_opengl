@@ -32,11 +32,16 @@ void Texture::create3D()
 
   auto texels = new unsigned char[size];
   bool hah = false;
-  for (int i=0 ; i<size ; i = (i+1)*3)
+
+  MyRandom<int> mr;
+  mr.setDistribution(0,255);
+  
+  for (int i=0 ; i<size ; i = (i+1)*4)
   {
     texels[i] = 66;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     texels[i+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
     texels[i+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    texels[i+3] = mr(); 
     hah = !hah;
   }
   use(0);
@@ -46,7 +51,7 @@ void Texture::create3D()
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
-  glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, width, height, depth, 0, GL_RGB, GL_UNSIGNED_BYTE, texels);
+  glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, width, height, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE, texels);
   delete[] texels;
 }
 

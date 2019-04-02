@@ -6,9 +6,10 @@ layout(location = 0) in vec3 in_position;
 
 #define MAX_TRIANGLES = 5;
 
-uniform mat4 MVP;
+//uniform mat4 MVP;
 
 void main()
 {
-  gl_Position =  MVP * vec4(in_position,1);
+  //gl_Position =  MVP * vec4(in_position,1);
+  gl_Position =  vec4(in_position,1);
 }
