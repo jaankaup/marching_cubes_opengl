@@ -1,7 +1,7 @@
 #include "cell.h"
 
 Cell::Cell() {}
-
+/*
 Cell::Cell(const std::array<glm::vec3, 8>& positions, const std::array<float,8>& isovalues)
 {
 //  pPositions = std::move(positions);
@@ -9,6 +9,7 @@ Cell::Cell(const std::array<glm::vec3, 8>& positions, const std::array<float,8>&
   pPositions = positions;
   pIsovalues = isovalues;
 }
+*/
 
 Cell::~Cell()
 {

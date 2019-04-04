@@ -10,7 +10,7 @@
 #include "../Utils/myrandom.h"
 
 //enum textureType : int32_t;
-enum class TextureType {d2,d3};
+enum class TextureType {d1,d2,d3};
 
 class Texture
 {
@@ -29,6 +29,7 @@ class Texture
         void create(const std::string& fileloc);
         void create3D();
         void createExample2D();
+        void create_tritable_texture();
 
         /// The destructor doesn't release the texture. Use dispose()
         /// memberfuction to destory texture object.

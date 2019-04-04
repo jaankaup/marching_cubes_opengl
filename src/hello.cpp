@@ -82,6 +82,10 @@ int main()
   // 3D texture.
   Texture texture = TextureManager::getInstance().create3D("my3Dtexture");
 
+  // The tri_table data .
+  Texture tritable = TextureManager::getInstance().create1D("tri_table_texture");
+  tritable.create_tritable_texture();
+
   // Creates a default texture for rendering the cube.
   Texture textureCube = TextureManager::getInstance().create2D("cubeTexture");
 
@@ -159,12 +163,13 @@ int main()
   command.textureName = "my3Dtexture";
   command.shaderName = "marchingShader";
   command.startIndex = 0;
-  command.count = 3;
+  command.count = 4*4*4 ;
   glm::mat4 original = glm::mat4(1.0f);
-  auto scale = glm::scale(original,glm::vec3(4.0f));
-  auto rotate = glm::rotate(original,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate = glm::translate(original,glm::vec3(3.0f,3.0f,0.0f));
-  command.modelMatrix = scale * translate * rotate;
+//  auto scale = glm::scale(original,glm::vec3(1.0f));
+//  auto rotate = glm::rotate(original,glm::radians(130.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  auto translate = glm::translate(original,glm::vec3(3.0f,3.0f,0.0f));
+//  command.modelMatrix = scale * translate * rotate;
+  command.modelMatrix = original;
   m.addCommand(command);
   c.models.push_back(m);
   #endif

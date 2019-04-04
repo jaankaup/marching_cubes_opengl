@@ -20,14 +20,15 @@ void Renderer::init()
 //    glDisable(GL_CULL_FACE);
 //    glCullFace(GL_FRONT);
     glCullFace(GL_BACK);
+    glEnable(GL_PROGRAM_POINT_SIZE);
 //    glEnable(GL_MULTISAMPLE);
 //    glEnable(GL_TEXTURE_3D);
 }
 
 void Renderer::renderModels(const std::vector<Model>& models, const Camera& camera)
 {
-  //glClearColor(0.0f,0.0f,0.0f,1.0f);
-  glClearColor(0.5f,0.0f,0.0f,1.0f);
+  glClearColor(0.0f,0.0f,0.0f,1.0f);
+//  glClearColor(0.5f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   glm::vec3 eyePosition = camera.getPosition();
@@ -67,7 +68,10 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
     shader.setUniform("lights[0].attentuationFactor", 0.00009f);
     shader.setUniform("cameraPosition", eyePosition);
     shader.setUniform("lights[0].position", glm::vec3(12.0f,12.0f,12.0f));/* eyePosition);*/
-    shader.setUniform("voxels_per_block", 16);/* eyePosition);*/
+    shader.setUniform("voxels_per_block", 2.0f);/* eyePosition);*/
+    Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
+    tritable.use(1);
+    shader.setUniform("tri_table", 1);/* eyePosition);*/
     switch (texture.getTextureType())
     {
       case TextureType::d2:

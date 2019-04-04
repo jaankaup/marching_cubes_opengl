@@ -76,6 +76,7 @@ bool Window::init(int width, int height)
       return false;
     }
 
+
     //SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     //SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     //SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -118,6 +119,8 @@ bool Window::init(int width, int height)
     Log::getDebug().log("GL_Version: %", glGetString(GL_VERSION));
     Log::getDebug().log("Vendor: %", glGetString(GL_VENDOR));
     Log::getDebug().log("Renderer: %", glGetString(GL_RENDERER));
+
+    SDL_GL_SetSwapInterval(true);
 //    //if (GLEW_ARB_geometry_shader4) {
 //    if (GLEW_EXT_geometry_shader) {
 //      Log::getDebug().log("juuuuuuuuh!");

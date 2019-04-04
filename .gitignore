@@ -1,4 +1,7 @@
 *.sh
+*.swp
+.project
+buildEclipse
 bak
 buildNative
 lib/sdl2

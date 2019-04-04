@@ -18,6 +18,9 @@ class TextureManager
   public:
     static TextureManager& getInstance();
 
+    /// Creates a 1D textrure.
+    Texture create1D(const std::string& name);
+
     /// Creates a 2D textrure.
     Texture create2D(const std::string& name);
   

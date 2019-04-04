@@ -31,6 +31,15 @@ Texture TextureManager::create3D(const std::string& name)
   return t;
 }
 
+Texture TextureManager::create1D(const std::string& name)
+{
+  Texture t;
+  t.init(TextureType::d1);
+  auto textureData = std::make_tuple(name,t);
+  pTextures.push_back(textureData);
+  return t;
+}
+
 TextureManager& TextureManager::getInstance()
 {
     static TextureManager instance;

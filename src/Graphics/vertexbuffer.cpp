@@ -265,13 +265,21 @@ GLuint Vertexbuffer::getVAO() const
 
 void Vertexbuffer::createExamplePoints()
 {
-  for (int i=0 ; i<3 ; ++i)
-  {
-    pData.push_back(1.5f*i);
-    pData.push_back(1.8f*i);
-    pData.push_back(-2.3f*i);
-  }
+  int size = 4;
+  for (int i=0 ; i<size ; ++i) {
+  for (int j=0 ; j<size ; ++j) {
+  for (int k=0 ; k<size ; ++k) {
+//    for (int b=0 ; b<size ; b++)
+//    {
+//    pData.push_back((float)b);
+//    pData.push_back(0.0f);
+//    pData.push_back(0.0f);
+//    }
+    pData.push_back((float)i);
+    pData.push_back((float)j);
+    pData.push_back((float)k);
+  }}};
 
-  std::vector<std::string> types = {"1f"};
+  std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
 }

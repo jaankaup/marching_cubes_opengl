@@ -171,6 +171,7 @@ void Camera::handleEvents()
 
     if(keystate[SDL_SCANCODE_Q])
         ProgramState::getInstance().setAppRunning(false);
+    update();
 //  auto result = update();
 //  
 //
