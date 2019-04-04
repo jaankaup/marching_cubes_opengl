@@ -163,7 +163,7 @@ int main()
   command.textureName = "my3Dtexture";
   command.shaderName = "marchingShader";
   command.startIndex = 0;
-  command.count = 4*4*4 ;
+  command.count = 16*16*16 ;
   glm::mat4 original = glm::mat4(1.0f);
 //  auto scale = glm::scale(original,glm::vec3(1.0f));
 //  auto rotate = glm::rotate(original,glm::radians(130.0f),glm::vec3(1.0f,0.0f,0.0f));

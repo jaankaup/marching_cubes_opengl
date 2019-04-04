@@ -68,10 +68,8 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
     shader.setUniform("lights[0].attentuationFactor", 0.00009f);
     shader.setUniform("cameraPosition", eyePosition);
     shader.setUniform("lights[0].position", glm::vec3(12.0f,12.0f,12.0f));/* eyePosition);*/
-    shader.setUniform("voxels_per_block", 2.0f);/* eyePosition);*/
+    shader.setUniform("voxels_per_block", 6.0f);/* eyePosition);*/
     Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
-    tritable.use(1);
-    shader.setUniform("tri_table", 1);/* eyePosition);*/
     switch (texture.getTextureType())
     {
       case TextureType::d2:
@@ -81,6 +79,8 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
         shader.setUniform("diffuse3DTexture",0);
         break;
     }
+    tritable.use(1);
+    shader.setUniform("tri_table", 1);/* eyePosition);*/
 
     switch (com.draw)
     {

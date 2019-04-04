@@ -166,7 +166,8 @@ void Texture::dispose() const
 void Texture::create_tritable_texture()
 {
     Log::getDebug().log("Texture::create_tritable_texture()");
-    int width =  3840;
+    int width =  1280;
+//    int width =  3840;
     //const uint8_t tritable[3840] = { 
     auto data = new uint8_t[3840] {
    255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255 ,
@@ -431,10 +432,12 @@ void Texture::create_tritable_texture()
 
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAX_LEVEL, 0);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
 //    glTexImage1D(GL_TEXTURE_2D, 0, GL_R8, width, 0, GL_RED, GL_UNSIGNED_BYTE, data);
-    glTexImage1D(GL_TEXTURE_2D, 0, GL_RGB8, width, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB8, width, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
     delete[] data;
 }
