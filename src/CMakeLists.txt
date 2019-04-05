@@ -37,6 +37,7 @@ set(graphics_src
       ${graphics_dir}/textureManager.cpp
       ${graphics_dir}/shaderManager.cpp
       ${graphics_dir}/programstate.cpp
+      ${graphics_dir}/textureData.cpp
       )
 
 set(util_src 

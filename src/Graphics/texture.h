@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <SOIL.h>
 #include "textureManager.h"
+#include "textureData.h"
 #include "../Utils/log.h"
 #include "../Utils/myrandom.h"
 
@@ -27,7 +28,7 @@ class Texture
         //GLuint getID() const;
         TextureType getTextureType() const;
         void create(const std::string& fileloc);
-        void create3D();
+        void create3D(const TextureData& td);
         void createExample2D();
         void create_tritable_texture();
 
