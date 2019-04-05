@@ -213,19 +213,19 @@ Cube createCube()
   return cube; 
 }
 
-int calculateCase(Cube c)
+float calculateCase(Cube c)
 {
-  int result = 0;
+  float result = 0.0;
   const float offset = 0.5;
   
-  if (c.v7.w - offset < 0.0) { result += 128;} 
-  if (c.v6.w - offset < 0.0) { result += 64;}
-  if (c.v5.w - offset < 0.0) { result += 32;} 
-  if (c.v4.w - offset < 0.0) { result += 16;} 
-  if (c.v3.w - offset < 0.0) { result += 8; }
-  if (c.v2.w - offset < 0.0) { result += 4; }
-  if (c.v1.w - offset < 0.0) { result += 2; }
-  if (c.v0.w - offset < 0.0) { result += 1; }
+  if (c.v7.w - offset < 0.0) { result += 128.0;} 
+  if (c.v6.w - offset < 0.0) { result += 64.0;}
+  if (c.v5.w - offset < 0.0) { result += 32.0;} 
+  if (c.v4.w - offset < 0.0) { result += 16.0;} 
+  if (c.v3.w - offset < 0.0) { result += 8.0; }
+  if (c.v2.w - offset < 0.0) { result += 4.0; }
+  if (c.v1.w - offset < 0.0) { result += 2.0; }
+  if (c.v0.w - offset < 0.0) { result += 1.0; }
   
   return result;
 
@@ -558,169 +558,130 @@ void printCube(Cube c, int mask, bool printMask)
     EndPrimitive();
 }
 
+void createVertex(float edgeValue, Cube c)
+{
+    float iterator = 1.0 / 255.0;
+    if (edgeValue < 0.000001 )
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v0, c.v1),1.0);
+      fColorIn = vec3(1.0,0.0,0.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v1, c.v2),1.0);
+      fColorIn = vec3(0.0,1.0,0.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*2.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v2, c.v3),1.0);
+      fColorIn = vec3(0.0,0.0,1.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*3.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v0, c.v3),1.0);
+      fColorIn = vec3(0.0,0.3,0.3);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*4.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v4, c.v5),1.0);
+      fColorIn = vec3(0.3,0.3,0.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*5.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v5, c.v6),1.0);
+      fColorIn = vec3(0.0,0.7,0.2);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*6.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v6, c.v7),1.0);
+      fColorIn = vec3(1.0,0.0,1.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*7.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v4, c.v7),1.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*8.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v0, c.v4),1.0);
+      fColorIn = vec3(0.0,1.0,1.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*9.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v1, c.v5),1.0);
+      fColorIn = vec3(0.0,0.5,1.0);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*10.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v2, c.v6),1.0);
+      fColorIn = vec3(0.1,0.1,0.1);
+      EmitVertex();
+    }           
+    else if (edgeValue <= iterator*11.0)
+    {
+      gl_Position =  MVP * vec4(interPolateV(c.v3, c.v7),1.0);
+      fColorIn = vec3(0.5,0.5,0.5);
+      EmitVertex();
+    }           
+    else
+    {
+      printError2(255);
+    }
+}
+
 void main(){
 
         //Cube c = createCube(gl_in[0].gl_Position.xyz);
         Cube c = createCube();
-        int mask = calculateCase(c); 
-        int polyCount = calculate_polys(mask); 
-//        printCubeCorners(c);
-/*        printCube(c, mask, true); */ /* draw lines! */
-//        printError(mask,255);
+        float mask = calculateCase(c); 
 
-//        for (int i=0 ; i<polyCount ; i++) {
-//        for (int j=0 ; j<3 ; j++) {
-//            int index = 3*i+j;
-//            if (tri_table[mask][index] == 0)
-//            {}
-//        }} 
-//        if (mask > 255)
-//        {
-//          printError();
-//        }
-//         printError();
-   
-//        EndPrimitive();          
-//
-//          printError();
-        for (int i=0 ; i<polyCount ; i++)
-        {
-          for (int j=0 ; j<3 ; j++)
-          {
-            //printError2(255);
-            int index = mask*15+i;
-            float normalizedIndex = (float(index)+0.5)/float(1280);
-            //float normalizedIndex = float(index)/float(1280);
-            int actualIndex = 0;
-            if (j == 0)  actualIndex = int(texture(tri_table,normalizedIndex).r * 255.0);
-            if (j == 1)  actualIndex = int(texture(tri_table,normalizedIndex).g * 255.0);
-            if (j == 2)  actualIndex = int(texture(tri_table,normalizedIndex).b * 255.0);
+        // Check if cube is totally inside or outside of the surface.
+        if (mask == 0.0) return;
+        if (mask == 255.0) return;
 
-//// //           if (actualIndex < 11)
-//// //           {
-//// //             printError();
-//// //           }
-////             
-            if (actualIndex == 0)
-            {
-//              printError2(255);
-//                printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v0, c.v1),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); // c.n0;
-              fColorIn = vec3(1.0,0.0,0.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 1)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v1, c.v2),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); // c.n1;
-              fColorIn = vec3(0.0,1.0,0.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 2)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v2, c.v3),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n2;
-              fColorIn = vec3(0.0,0.0,1.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 3)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v0, c.v3),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n3;
-              fColorIn = vec3(0.0,0.3,0.3);
-              EmitVertex();
-            }           
-            else if (actualIndex == 4)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v4, c.v5),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n4;
-              fColorIn = vec3(0.3,0.3,0.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 5)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v5, c.v6),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n5;
-              fColorIn = vec3(0.0,0.7,0.2);
-              EmitVertex();
-            }           
-            else if (actualIndex == 6)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v6, c.v7),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n1;
-              fColorIn = vec3(1.0,0.0,1.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 7)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v4, c.v7),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n1;
-              fColorIn = vec3(1.0,1.0,0.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 8)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v0, c.v4),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n1;
-              fColorIn = vec3(0.0,1.0,1.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 9)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v1, c.v5),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n1;
-              fColorIn = vec3(0.0,0.5,1.0);
-              EmitVertex();
-            }           
-            else if (actualIndex == 10)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v2, c.v6),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n1;
-              fColorIn = vec3(0.1,0.1,0.1);
-              EmitVertex();
-            }           
-            else if (actualIndex == 11)
-            {
-//              printError2(255);
-//              printError(actualIndex,11);
-	            gl_Position =  MVP * vec4(interPolateV(c.v3, c.v7),1.0);
-              //fNormalIn = vec3(1.0,0.0,0.0); //c.n1;
-              fColorIn = vec3(0.5,0.5,0.5);
-              EmitVertex();
-            }           
-//            else if (actualIndex > 11)
-//            {
-//              printError2(255);
-//              //printError2(actualIndex);
-//            }
-            else
-            {
-              printError2(255);
-            }
+        // Find the center of the texel which has the information of the first ende vertices.
+        // The pixel has the followin format: r = first edge, g = second edge, b = third edge.
+        // Check the tri_table. The tri_table is now 1D texture. Index is the "pointer" to the 
+        // first possible triable information. We move the poiter 0.5 forward to access the center
+        // of the texel.
 
-          }
-          EndPrimitive();          
-        }
+        //        mask + 0.5 / 1280
+        //         |
+        //         V
+        // +----+----+----+----+----+----+----+----+----
+        // |rgb |rgb |rgb |rgb |rgb |rgb |rgb |rgb |rgb|
+        // +----+----+----+----+----+----+----+----+----
+        //        1.   2.   3.   4.   5.
+        //         
 
+        float index = (mask * 15.0 + 0.5) / 1280.0;
+
+        // The first edge. 
+        vec3 edges1 = texture(tri_table,index).rgb;
+
+        // Create the first triable.
+        createVertex(edges1.r, c);
+        createVertex(edges1.g, c);
+        createVertex(edges1.b, c);
+
+        EndPrimitive();
+
+        // The second edge. 
+        vec3 edges2 = texture(tri_table,index).rgb;
+
+        // Create the first triable.
+        createVertex(edges1.r, c);
+        createVertex(edges1.g, c);
+        createVertex(edges1.b, c);
+
+        EndPrimitive();
 }

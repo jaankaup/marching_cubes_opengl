@@ -67,10 +67,10 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
 //  Log::getDebug().log("% ",std::to_string(mr()));
   for (int i=0 ; i<width*height*depth ; i++)
   {
-    data[i] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
-    data[i+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i+3] = mr();// (int)((i/float(size))*255); // mr(); 
+    data[i*4] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
+    data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    data[i*4+3] = mr();// (int)((i/float(size))*255); // mr(); 
     hah = !hah;
   }
   return std::move(td);
