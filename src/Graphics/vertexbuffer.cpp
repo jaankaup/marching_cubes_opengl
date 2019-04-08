@@ -263,9 +263,9 @@ GLuint Vertexbuffer::getVAO() const
   return pVAO;
 }
 
-void Vertexbuffer::createExamplePoints()
+void Vertexbuffer::createExamplePoints(const int dimension)
 {
-  int size = 16;
+  int size = dimension;
   for (int i=0 ; i<size ; ++i) {
   for (int j=0 ; j<size ; ++j) {
   for (int k=0 ; k<size ; ++k) {

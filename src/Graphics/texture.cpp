@@ -25,12 +25,34 @@ void Texture::init(const TextureType t)
 
 void Texture::create3D(const TextureData& td)
 {
+  auto d = td.getData();
+   Log::getDebug().log("DATASIZE = %", std::to_string(td.getDataSize()));
+   Log::getDebug().log("WIDTH = %", std::to_string(td.getWidth()));
+   Log::getDebug().log("HEIGHT = %", std::to_string(td.getHeight()));
+   Log::getDebug().log("DEPTH = %", std::to_string(td.getDepth()));
+  for (int i=0 ; i<td.getDataSize()/4 ; i++)
+  {
+     //auto valR = (int) *(d + 4*i);
+     //auto valG = (int) *(d + 4*i+1);
+     //auto valB = (int) *(d + 4*i+2);
+     //auto valA = (int) *(d + 4*i+3);
+     auto valR = d[4*i];
+     auto valG = d[4*i+1];
+     auto valB = d[4*i+2];
+     auto valA = d[4*i+3];
+     Log::getDebug().log("Texture::create3D: (%,%,%,%)", std::to_string(valR),std::to_string(valG),std::to_string(valB),std::to_string(valA));
+  }
   use(0);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  //glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  //glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
   glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, td.getWidth(), td.getHeight(), td.getDepth(), 0, GL_RGBA, GL_UNSIGNED_BYTE, td.getData());
 }
 
@@ -411,6 +433,7 @@ void Texture::create_tritable_texture()
 
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//    glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAX_LEVEL, 0);
 //    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);

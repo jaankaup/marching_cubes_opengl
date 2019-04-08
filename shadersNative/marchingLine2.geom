@@ -4,9 +4,9 @@
 layout(points) in;
 
 // The output will be a triangle. 
-layout(triangle_strip, max_vertices = 15) out;
+//layout(triangle_strip, max_vertices = 15) out;
 //layout(line_strip, max_vertices = 30) out;
-//layout(line_strip, max_vertices = 15) out;
+layout(points, max_vertices = 8) out;
 
 // Output vertex normal.
 //out vec3 fNormalIn;
@@ -101,6 +101,7 @@ e0 |    /                   |e2  /
 
 // https://github.com/QianMo/GPU-Gems-Book-Source-Code/blob/master/GPU-Gems-3-CD-Content/content/01/demo/models/tables.nma
 
+//	vec3 surfaceColor = texture(diffuse3DTexture,vec3(tFrag_in,0.5)).rgb;
 
 void printError(int index, int maxValue)
 {
@@ -181,10 +182,8 @@ vec3 calculateNormal(vec3 v)
 
 Cube createCube()
 {
-  // The length of a cube edge.
   float d = 1.0/voxels_per_block;
 
-  // Create cube corner coordinates.
   vec3 p0 = gl_in[0].gl_Position.xyz*d;
   vec3 p1 = gl_in[0].gl_Position.xyz*d + vec3(0.0 ,   d , 0.0);
   vec3 p2 = gl_in[0].gl_Position.xyz*d + vec3(d   ,   d , 0.0);
@@ -194,7 +193,7 @@ Cube createCube()
   vec3 p6 = gl_in[0].gl_Position.xyz*d + vec3(d   ,   d , d);
   vec3 p7 = gl_in[0].gl_Position.xyz*d + vec3(d   , 0.0 , d);
 
-  // xyz = position, w = density. The density value is taken from the the diffuse3DTexture alpha value. 
+  // xyz = position, w = density
   vec4 v0 = vec4(p0, texture(diffuse3DTexture,p0).w);  
   vec4 v1 = vec4(p1, texture(diffuse3DTexture,p1).w);  
   vec4 v2 = vec4(p2, texture(diffuse3DTexture,p2).w);  
@@ -204,7 +203,6 @@ Cube createCube()
   vec4 v6 = vec4(p6, texture(diffuse3DTexture,p6).w);  
   vec4 v7 = vec4(p7, texture(diffuse3DTexture,p7).w);  
 
-  // Normals.
   vec3 n0 = calculateNormal(p0);
   vec3 n1 = calculateNormal(p1);
   vec3 n2 = calculateNormal(p2);
@@ -240,27 +238,28 @@ float calculateCase(Cube c)
 {
   float result = 0.0;
   
-//  if (c.v7.w < 0.5) { result += 128.0;} 
-//  if (c.v6.w < 0.5) { result += 64.0;}
-//  if (c.v5.w < 0.5) { result += 32.0;} 
-//  if (c.v4.w < 0.5) { result += 16.0;} 
-//  if (c.v3.w < 0.5) { result += 8.0; }
-//  if (c.v2.w < 0.5) { result += 4.0; }
-//  if (c.v1.w < 0.5) { result += 2.0; }
-//  if (c.v0.w < 0.5) { result += 1.0; }
+  if (c.v7.w < 0.5) { result += 128.0;} 
+  if (c.v6.w < 0.5) { result += 64.0;}
+  if (c.v5.w < 0.5) { result += 32.0;} 
+  if (c.v4.w < 0.5) { result += 16.0;} 
+  if (c.v3.w < 0.5) { result += 8.0; }
+  if (c.v2.w < 0.5) { result += 4.0; }
+  if (c.v1.w < 0.5) { result += 2.0; }
+  if (c.v0.w < 0.5) { result += 1.0; }
   
-  if (c.v0.w < 0.5) { result += 128.0;} 
-  if (c.v1.w < 0.5) { result += 64.0;}
-  if (c.v2.w < 0.5) { result += 32.0;} 
-  if (c.v3.w < 0.5) { result += 16.0;} 
-  if (c.v4.w < 0.5) { result += 8.0; }
-  if (c.v5.w < 0.5) { result += 4.0; }
-  if (c.v6.w < 0.5) { result += 2.0; }
-  if (c.v7.w < 0.5) { result += 1.0; }
+//  if (c.v0.w < 0.5) { result += 128.0;} 
+//  if (c.v1.w < 0.5) { result += 64.0;}
+//  if (c.v2.w < 0.5) { result += 32.0;} 
+//  if (c.v3.w < 0.5) { result += 16.0;} 
+//  if (c.v4.w < 0.5) { result += 8.0; }
+//  if (c.v5.w < 0.5) { result += 4.0; }
+//  if (c.v6.w < 0.5) { result += 2.0; }
+//  if (c.v7.w < 0.5) { result += 1.0; }
   return result;
+
 } 
 
-vec3 interpolateV(vec4 va, vec4 vb)
+vec3 interPolateV(vec4 va, vec4 vb)
 {
 //  return va.xyz;
 //   if (va.w > 1.0) printError2(255);
@@ -270,14 +269,12 @@ vec3 interpolateV(vec4 va, vec4 vb)
    else if (abs(0.5 - vb.w) < 0.00001)
       return vb.xyz;
    else if (abs(va.w-vb.w) < 0.00001)
+   //else if (abs(va.w-vb.w) < 0.01)
       return va.xyz;
-//  return va.xyz;
-   
    else
    {
      vec3 p;
      float mu = (0.5 - va.w) / (vb.w - va.w);
-//     mu = clamp(mu, 0.0, 1.0);
 //     if (vb.w - va.w < 0.0001) printError2(255);
      p.x = va.x + mu * (vb.x - va.x);
      p.y = va.y + mu * (vb.y - va.y);
@@ -286,51 +283,65 @@ vec3 interpolateV(vec4 va, vec4 vb)
    }
 }
 
+          // e0 => v0 , v1 
+          // e1 => v1 , v2 
+          // e2 => v2 , v3 
+          // e3 => v0 , v3 
+          // e4 => v4 , v5 
+          // e5 => v5 , v6 
+          // e6 => v6 , v7 
+          // e7 => v4 , v7 
+          // e8 => v0 , v4 
+          // e9 => v1 , v5 
+          // e10 => v2 , v6 
+          // e11 => v3 , v7 
+
+
 void printCubeCorners(Cube c)
 {
-    float pSize = 2.0;
+    float pSize = 5.0;
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v0.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v0.r,c.v0.g,c.v0.b);
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v1.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v1.r,c.v1.g,c.v1.b);
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v2.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v2.r,c.v2.g,c.v2.b);
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v3.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v3.r,c.v3.g,c.v3.b);
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v4.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v4.r,c.v4.g,c.v4.b);
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v5.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v5.r,c.v5.g,c.v5.b);
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v6.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v6.r,c.v6.g,c.v6.b);
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v7.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
+          fColorIn = vec3(c.v7.r,c.v7.g,c.v7.b);
           EmitVertex();
  
           EndPrimitive();
 }
 
-void printCube(Cube c, int mask, bool printMask)
+void printCube(Cube c, float mask, bool printMask)
 {
     float pSize = 1.0;
-    float maskColor = float(mask) / float(255);
+    float maskColor = mask / 255.0;
 
     // FRONT sideFront = v0 v1 v2 v3
     gl_PointSize = pSize;
@@ -512,75 +523,74 @@ void printCube(Cube c, int mask, bool printMask)
 void createVertex(float edgeValue, Cube c)
 {
     float iterator = 1.0 / 255.0;
-    if (edgeValue == 0.0) // < 0.000001 )
+    if (edgeValue < 0.000001 )
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v0, c.v1),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v0, c.v1),1.0);
       fColorIn = vec3(1.0,0.0,0.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator) < 0.000001)
+    else if (edgeValue <= iterator)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v1, c.v2),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v1, c.v2),1.0);
       fColorIn = vec3(0.0,1.0,0.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 2.0) < 0.000001)
-    //else if (edgeValue == iterator*2.0)
+    else if (edgeValue <= iterator*2.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v2, c.v3),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v2, c.v3),1.0);
       fColorIn = vec3(0.0,0.0,1.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 3.0) < 0.000001)
+    else if (edgeValue <= iterator*3.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v3, c.v0),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v3, c.v0),1.0);
       fColorIn = vec3(0.0,0.3,0.3);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 4.0) < 0.000001)
+    else if (edgeValue <= iterator*4.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v4, c.v5),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v4, c.v5),1.0);
       fColorIn = vec3(0.3,0.3,0.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 5.0) < 0.000001)
+    else if (edgeValue <= iterator*5.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v5, c.v6),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v5, c.v6),1.0);
       fColorIn = vec3(0.0,0.7,0.2);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 6.0) < 0.000001)
+    else if (edgeValue <= iterator*6.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v6, c.v7),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v6, c.v7),1.0);
       fColorIn = vec3(1.0,0.0,1.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 7.0) < 0.000001)
+    else if (edgeValue <= iterator*7.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v7, c.v4),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v7, c.v4),1.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 8.0) < 0.000001)
+    else if (edgeValue <= iterator*8.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v0, c.v4),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v0, c.v4),1.0);
       fColorIn = vec3(0.0,1.0,1.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 9.0) < 0.000001)
+    else if (edgeValue <= iterator*9.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v1, c.v5),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v1, c.v5),1.0);
       fColorIn = vec3(0.0,0.5,1.0);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 10.0) < 0.000001)
+    else if (edgeValue <= iterator*10.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v2, c.v6),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v2, c.v6),1.0);
       fColorIn = vec3(0.1,0.1,0.1);
       EmitVertex();
     }           
-    else if (abs(edgeValue - iterator * 11.0) < 0.000001)
+    else if (edgeValue <= iterator*11.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v3, c.v7),1.0);
+      gl_Position =  MVP * vec4(interPolateV(c.v3, c.v7),1.0);
       fColorIn = vec3(0.5,0.5,0.5);
       EmitVertex();
     }           
@@ -615,66 +625,65 @@ void main(){
         //        1.   2.   3.   4.   5.
         //         
 
-        float index = (mask * 15.0 + 0.5) / 1280.0;
+        //float index = (mask * 15.0 + 0.5) / 1280.0;
+        //printCube(c, mask, false);
+        printCubeCorners(c);
 
-        // The first edge. 
-        vec3 edges = texture(tri_table,index).rgb;
-
-        // If the first edge is 1.0 (255), there is nothing to do.
-        if (abs(edges.r - 1.0) < 0.000001) return;
-
-        // Create 1. triable.
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
-
-        EndPrimitive();
-
-        float iterator = 1.0 / 1280;
-
-        // The 2. edge. 
-        edges = texture(tri_table,index+iterator).rgb;
-
-        // If the first vertex number is 1.0 (normalized from 255), there is no more triables.
-        if (abs(edges.r - 1.0) < 0.000001) return;
-
-        // Create the 2.0 triable.
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
-
-        EndPrimitive();
-
-        // The 3. edge. 
-        edges = texture(tri_table,index+iterator*2.0).rgb;
-
-        if (abs(edges.r - 1.0) < 0.000001) return;
-
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
-
-        EndPrimitive();
-
-        // The 4. edge. 
-        edges = texture(tri_table,index+iterator*3.0).rgb;
-
-        if (abs(edges.r - 1.0) < 0.000001) return;
-
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
-
-        EndPrimitive();
-
-        // The 5. edge. 
-        edges = texture(tri_table,index+iterator*4.0).rgb;
-
-        if (abs(edges.r - 1.0) < 0.000001) return;
-
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
-
-        EndPrimitive();
+//        // The first edge. 
+//        vec3 edges = texture(tri_table,index).rgb;
+//
+//        // Create 1. triable.
+//        createVertex(edges.r, c);
+//        createVertex(edges.g, c);
+//        createVertex(edges.b, c);
+//
+//        EndPrimitive();
+//
+//        float iterator = 1.0 / 1280;
+//
+//        // The 2. edge. 
+//        edges = texture(tri_table,index+iterator).rgb;
+//
+//        // If the first vertex number is 1.0 (normalized from 255), there is no more triables.
+//        if (edges.x == 1.0) return;
+//
+//        // Create the 2.0 triable.
+//        createVertex(edges.r, c);
+//        createVertex(edges.g, c);
+//        createVertex(edges.b, c);
+//
+//        EndPrimitive();
+//
+//        // The 3. edge. 
+//        edges = texture(tri_table,index+iterator*2.0).rgb;
+//
+//        if (edges.x == 1.0) return;
+//
+//        createVertex(edges.r, c);
+//        createVertex(edges.g, c);
+//        createVertex(edges.b, c);
+//
+//        EndPrimitive();
+//
+//        // The 4. edge. 
+//        edges = texture(tri_table,index+iterator*3.0).rgb;
+//
+//        if (edges.x == 1.0) return;
+//
+//        createVertex(edges.r, c);
+//        createVertex(edges.g, c);
+//        createVertex(edges.b, c);
+//
+//        EndPrimitive();
+//
+//        // The 5. edge. 
+//        edges = texture(tri_table,index+iterator*4.0).rgb;
+//
+//        if (edges.x == 1.0) return;
+//
+//        createVertex(edges.r, c);
+//        createVertex(edges.g, c);
+//        createVertex(edges.b, c);
+//
+//        EndPrimitive();
 }

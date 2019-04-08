@@ -1,7 +1,14 @@
 #include "textureData.h"
 
-TextureData::TextureData(const uint32_t dataSize, const int width, const int height, const int depth)
+TextureData::TextureData(const int dataSize, const int width, const int height, const int depth)
 {
+  if (dataSize < 0)
+  {
+    Log::getError().log("TextureData::TextureData(data,%,%,%,%).",std::to_string(dataSize),std::to_string(width),std::to_string(height),std::to_string(depth));
+    Log::getError().log("TextureData::TextureData: the dataSize < 0.");
+    return;
+  }
+
   if (! (setWidth(width) && setHeight(height) && setDepth(depth)) )
   {
     Log::getError().log("TextureData::TextureData(data,%,%,%,%).",std::to_string(dataSize),std::to_string(width),std::to_string(height),std::to_string(depth));
@@ -9,6 +16,7 @@ TextureData::TextureData(const uint32_t dataSize, const int width, const int hei
   } 
   else
   {
+    pSize = dataSize;
     pData = std::make_unique<unsigned char[]>(dataSize);   
   }
 }
@@ -81,4 +89,9 @@ int TextureData::getHeight() const
 int TextureData::getDepth() const
 {
   return pDepth;
+}
+
+int TextureData::getDataSize() const
+{
+  return pSize;
 }

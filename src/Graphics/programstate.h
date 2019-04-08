@@ -19,11 +19,13 @@ class ProgramState
     int getScreenWidth() const;
     int getScreenHeight() const;
     bool getAppRunning() const;
+    float getVoxelsPerBlock() const;
 
 
     void setScreenWidth(const int width);
     void setScreenHeight(const int height);
     void setAppRunning(const bool running);
+    void setVoxelsPerBlock(const float count);
 
 	private:
 
@@ -31,6 +33,7 @@ class ProgramState
     int pScreenWidth = 1200;
     int pScreenHeight = 800;
     bool pAppRunning = true;
+    float pVoxels_per_count = 1.0;
 
 };
 

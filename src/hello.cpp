@@ -70,9 +70,14 @@ void loop_handler2(void *arg)
 
 int main()
 {
+
+  const int BLOCK_SIZE = 4;
+
   // The program state must be created first.
   ProgramState::getInstance();
   
+  // Initialize the voxelsPerBlock count.
+  ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
   // Create the window.
   Window window = Window::getInstance();
 
@@ -105,7 +110,7 @@ int main()
     marchingShader.build(marchingShader_src);
 
     Shader marchingShaderLine = ShaderManager::getInstance().createShader("marchingShaderLine");
-    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingLine.geom", "shaders/marching.frag"};
+    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingLine2.geom", "shaders/marching.frag"};
     marchingShaderLine.build(marchingShaderLine_src);
   #endif
 
@@ -125,7 +130,7 @@ int main()
   c.triangleCount = 6*2*3;
 
   c.vertexbuffer2.init();
-  c.vertexbuffer2.createExamplePoints();
+  c.vertexbuffer2.createExamplePoints(BLOCK_SIZE);
 //  c.shader = s; 
 //  c.shader.init();
 //  c.shader.build(shaderSources);
@@ -138,13 +143,14 @@ int main()
   //c.texture.createExample2D();//("assets/rock.jpg");
 //  c.texture.create3D();//("assets/rock.jpg");
 //  auto hyh = createRandom3Ddata(32,32,32);
-  auto hyh = createChess3Ddata(32,32,32);
-  Log::getDebug().log("hyh = %,%,%", std::to_string(hyh.getWidth()),std::to_string(hyh.getHeight()),std::to_string(hyh.getDepth()));
+  auto hyh = createChess3Ddata(4,4,4);
+  //auto hyh = createRandom3Ddata(16,16,16);
+//  Log::getDebug().log("hyh = %,%,%", std::to_string(hyh.getWidth()),std::to_string(hyh.getHeight()),std::to_string(hyh.getDepth()));
   texture.create3D(hyh);//("assets/rock.jpg");
-  for (int i=0 ; i < 100 ; i = (i+4))
-  {
-    Log::getDebug().log("%,%,%,%", std::to_string(hyh.getData()[i]),std::to_string(hyh.getData()[i+1]),std::to_string(hyh.getData()[i+2]),std::to_string(hyh.getData()[i+3]));
-  }
+//  for (int i=0 ; i < 100 ; i = (i+4))
+//  {
+//    Log::getDebug().log("%,%,%,%", std::to_string(hyh.getData()[i]),std::to_string(hyh.getData()[i+1]),std::to_string(hyh.getData()[i+2]),std::to_string(hyh.getData()[i+3]));
+//  }
   textureCube.create("assets/rock.jpg");
 //  Log::getDebug().log("rock juttu luotu");
   //c.texture.create("assets/rock.jpg");
@@ -175,7 +181,7 @@ int main()
   command.textureName = "my3Dtexture";
   command.shaderName = "marchingShader";
   command.startIndex = 0;
-  command.count = 16*16*16 ;
+  command.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE ;
 //  glm::mat4 original = glm::mat4(1.0f);
 //  auto scale = glm::scale(original,glm::vec3(1.0f));
 //  auto rotate = glm::rotate(original,glm::radians(130.0f),glm::vec3(1.0f,0.0f,0.0f));
@@ -193,10 +199,10 @@ int main()
   command3.textureName = "my3Dtexture";
   command3.shaderName = "marchingShaderLine";
   command3.startIndex = 0;
-  command3.count = 16*16*16 ;
+  command3.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE;
   auto scale = glm::scale(original,glm::vec3(1.0f));
   auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate = glm::translate(original,glm::vec3(3.0f,0.0f,0.0f));
+  auto translate = glm::translate(original,glm::vec3(2.0f,0.0f,0.0f));
   command3.modelMatrix = scale * translate * rotate;
 //  command.modelMatrix = original;
   m3.addCommand(command3);

@@ -17,6 +17,7 @@
 #include "camera.h"
 #include "textureManager.h"
 #include "shaderManager.h"
+#include "programstate.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
 

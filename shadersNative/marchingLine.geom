@@ -236,7 +236,7 @@ int calculate_polys(int mask)
   return case_to_numpolys[mask];
 }
 
-vec3 interPolateV(vec4 va, vec4 vb)
+vec3 interPolateV(vec4 vb, vec4 va)
 {
    return va.xyz;
 //   float mu;

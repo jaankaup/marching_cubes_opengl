@@ -50,6 +50,7 @@ void logGLM(const std::string& name, const glm::mat4& object)
   Log::getDebug().log("%   (%,%,%,%)",padded ,std::to_string(object[3][0]),std::to_string(object[3][1]),std::to_string(object[3][2]),std::to_string(object[3][3]));
 }
 
+// Plug; fzf
 TextureData createRandom3Ddata(const int width, const int height, const int depth)
 {
   int size = width*height*depth*4;
@@ -59,7 +60,7 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
   bool hah = false;
 
   MyRandom<int> mr;
-  mr.setDistribution(0,255);
+  mr.setDistribution(0,155);
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
@@ -84,13 +85,27 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
 //  auto texels = new unsigned char[size];
   bool hah = false;
 
+  MyRandom<int> mr;
+  mr.setDistribution(0,155);
+
   for (int i=0 ; i<width*height*depth ; i++)
   {
+    auto value = mr();
+    Log::getDebug().log("index %: value == % ",std::to_string(i),std::to_string(mr()));
     data[i*4] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
     data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
+    data[i*4+3] = mr(); // hah ? 5 : 250;// (int)((i/float(size))*255); // mr(); 
     hah = !hah;
   }
+//  for (int i=0 ; i<width*height*depth ; i++)
+//  {
+//    if (width*height*i 
+//    data[i*4] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+//    data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
+//    data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+//    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
+//    hah = !hah;
+//  }
   return std::move(td);
 }
