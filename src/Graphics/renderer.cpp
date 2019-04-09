@@ -14,9 +14,9 @@ void Renderer::init()
 {
     glEnable(GL_DEPTH_TEST); // Enable depth test
     glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one
-    glFrontFace(GL_CW);
+//    glFrontFace(GL_CW);
     glFrontFace(GL_CCW);
-//    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
 //    glDisable(GL_CULL_FACE);
 //    glCullFace(GL_FRONT);
     glCullFace(GL_BACK);
@@ -27,8 +27,8 @@ void Renderer::init()
 
 void Renderer::renderModels(const std::vector<Model>& models, const Camera& camera)
 {
-  //glClearColor(0.0f,0.0f,0.0f,1.0f);
-  glClearColor(0.2f,0.0f,0.0f,1.0f);
+  glClearColor(0.0f,0.0f,0.0f,1.0f);
+  //glClearColor(0.2f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   glm::vec3 eyePosition = camera.getPosition();
@@ -67,8 +67,8 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
     shader.setUniform("lights[0].materialShininess", 70.0f);
     shader.setUniform("lights[0].attentuationFactor", 0.00009f);
     shader.setUniform("cameraPosition", eyePosition);
-    shader.setUniform("lights[0].position", glm::vec3(12.0f,12.0f,12.0f));/* eyePosition);*/
-    shader.setUniform("voxels_per_block",  ProgramState::getInstance().getVoxelsPerBlock());/* eyePosition);*/
+    shader.setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
+    shader.setUniform("voxels_per_block",  ProgramState::getInstance().getVoxelsPerBlock());
     Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
     switch (texture.getTextureType())
     {

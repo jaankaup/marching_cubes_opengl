@@ -15,6 +15,7 @@ out vec3 fNormalIn;
 uniform sampler3D diffuse3DTexture;
 uniform sampler1D tri_table;
 uniform float voxels_per_block;
+uniform vec3 startPoint;
 uniform mat4 MVP;
 
 struct Cube
@@ -110,8 +111,8 @@ vec3 calculateNormal(vec3 v)
   grad.x = texture(diffuse3DTexture,v + vec3(d,0,0)).w - texture(diffuse3DTexture,v + vec3(-d,0,0)).w;
   grad.y = texture(diffuse3DTexture,v + vec3(0,d,0)).w - texture(diffuse3DTexture,v + vec3(0,-d,0)).w;
   grad.z = texture(diffuse3DTexture,v + vec3(0,0,d)).w - texture(diffuse3DTexture,v + vec3(0,0,-d)).w;
-  //return normalize(grad); 
-  return -normalize(grad); 
+  return normalize(grad); 
+  //return -normalize(grad); 
 }
 
 Cube createCube()

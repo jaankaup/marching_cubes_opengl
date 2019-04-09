@@ -60,20 +60,32 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
   bool hah = false;
 
   MyRandom<int> mr;
-  mr.setDistribution(0,155);
+  mr.setDistribution(0,42);
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
-  for (int i=0 ; i<width*height*depth ; i++)
-  {
-    data[i*4] = 22;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
-    data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i*4+3] = mr();// (int)((i/float(size))*255); // mr(); 
+//  for (int i=0 ; i<width*height*depth ; i++)
+//  {
+//    data[i*4] = i;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+//    data[i*4+1] = 33; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
+//    data[i*4+2] = 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+//    data[i*4+3] = mr();// (int)((i/float(size))*255); // mr(); 
     hah = !hah;
-  }
+//  }
+  for (int z = 0; z < depth ; z++) {
+  for (int y = 0; y < height ; y++) {
+  for (int x = 0; x < width ; x++) {
+    int index = 4 * x + height*4 *  y + 4 * depth * depth * z; 
+    data[index] = 100; // mr();   
+    data[index+1] = 200.0 ;   
+    data[index+2] = 5;   
+    if (0.8 > 255.0f / (y+1.0)) data[index+3] = 255 ;
+    else data[index+3] = static_cast<uint8_t>(std::clamp(centerY(y)  + 34.0 * sin(index*0.3) + 40.0 * cos(index*0.8) ,0.0,255.0));  
+//    data[index+3] = std::clamp(( 255.0f / (height*height)) * y + 10 * sin(1.0f * index / 3.5f),0.0,255.0);  ; // hah ? 255 : 0;   
+    hah = !hah;
+  }}};
   return std::move(td);
 }
 
@@ -88,11 +100,11 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
 //  MyRandom<int> mr;
 //  mr.setDistribution(0,155);
 
-  for (unsigned int i=0 ; i<width*height*depth ; i++)
+  for (int i=0 ; i<width*height*depth ; i++)
   {
  //   auto value = mr();
 //    Log::getDebug().log("index %: value == % ",std::to_string(i),std::to_string(mr()));
-    data[i*4] =  150;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    data[i*4] =  static_cast<uint8_t>(240);// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     data[i*4+1] = 0; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
     data[i*4+2] = 0; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
@@ -174,3 +186,16 @@ TextureData create2x2()
 
   return std::move(td);
 }
+
+
+// y ~= 128
+inline double centerY(int y)
+{
+    //return static_cast<uint8_t>(std::clamp(exp(0.02 * y*y),0.0, 255.0)) ;   
+    return exp(0.005 * y*y) ;   
+}
+
+/*
+ *  Set y = 128
+    data[index+3] = static_cast<uint8_t>(std::clamp(exp(0.02 * y*y),0.0, 255.0)) ;   
+    */

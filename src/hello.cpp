@@ -71,13 +71,14 @@ void loop_handler2(void *arg)
 int main()
 {
 
-  const int BLOCK_SIZE = 16 ;
+  const int BLOCK_SIZE = 64 ;
 
   // The program state must be created first.
   ProgramState::getInstance();
   
   // Initialize the voxelsPerBlock count.
   ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
+//  ProgramState::getInstance().setVoxelsPerBlock(8.0f); 
   // Create the window.
   Window window = Window::getInstance();
 
@@ -142,7 +143,6 @@ int main()
   //c.texture.init();
   //c.texture.createExample2D();//("assets/rock.jpg");
 //  c.texture.create3D();//("assets/rock.jpg");
-//  auto hyh = createRandom3Ddata(32,32,32);
 //  auto hyh = createChess3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
   auto hyh = createRandom3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
 //    auto hyh = create2x2();
@@ -183,12 +183,11 @@ int main()
   command.shaderName = "marchingShader";
   command.startIndex = 0;
   command.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE ;
-//  glm::mat4 original = glm::mat4(1.0f);
-//  auto scale = glm::scale(original,glm::vec3(1.0f));
-//  auto rotate = glm::rotate(original,glm::radians(130.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  auto translate = glm::translate(original,glm::vec3(3.0f,3.0f,0.0f));
-//  command.modelMatrix = scale * translate * rotate;
-  command.modelMatrix = original;
+  auto scale = glm::scale(original,glm::vec3(58.0f));
+  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+  auto translate = glm::translate(original,glm::vec3(0.0f,-1.0f,-1.0f));
+  command.modelMatrix = scale * translate * rotate;
+//  command.modelMatrix = original;
   m.addCommand(command);
   c.models.push_back(m);
 
@@ -201,31 +200,31 @@ int main()
   command3.shaderName = "marchingShaderLine";
   command3.startIndex = 0;
   command3.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE;
-  auto scale = glm::scale(original,glm::vec3(1.0f));
-  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate = glm::translate(original,glm::vec3(2.0f,0.0f,0.0f));
+  scale = glm::scale(original,glm::vec3(1.0f));
+  rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+  translate = glm::translate(original,glm::vec3(2.0f,0.0f,0.0f));
   command3.modelMatrix = scale * translate * rotate;
 //  command.modelMatrix = original;
   m3.addCommand(command3);
   c.models.push_back(m3);
   #endif
 
-//  Model m2;
-////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-//  Command command2;
-//  command2.vao = c.vertexbuffer.getVAO();
-//  command2.draw = GL_TRIANGLES;
-//  command2.textureName = "cubeTexture";
-//  command2.shaderName = "cubeShader";
-//  command2.startIndex = 0;
-//  command2.count = 12*3;
-//  glm::mat4 original2 = glm::mat4(1.0f);
-//  auto scale2 = glm::scale(original2,glm::vec3(2.0f));
-//  auto rotate2 = glm::rotate(original2,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  auto translate2 = glm::translate(original2,glm::vec3(3.0f,3.0f,0.0f));
-//  command2.modelMatrix = scale2 * translate2 * rotate2;
-//  m2.addCommand(command2);
-//  c.models.push_back(m2);
+  Model m2;
+//  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+  Command command2;
+  command2.vao = c.vertexbuffer.getVAO();
+  command2.draw = GL_TRIANGLES;
+  command2.textureName = "cubeTexture";
+  command2.shaderName = "cubeShader";
+  command2.startIndex = 0;
+  command2.count = 12*3;
+  glm::mat4 original2 = glm::mat4(1.0f);
+  auto scale2 = glm::scale(original2,glm::vec3(1.0f));
+  auto rotate2 = glm::rotate(original2,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
+  auto translate2 = glm::translate(original2,glm::vec3(8.0f,8.0f,8.0f));
+  command2.modelMatrix = scale2 * translate2 * rotate2;
+  m2.addCommand(command2);
+  c.models.push_back(m2);
 
 //  Log::getDebug().log("GL_GEOMETRY_SHADER = %", std::to_string(GL_GEOMETRY_SHADER));
   

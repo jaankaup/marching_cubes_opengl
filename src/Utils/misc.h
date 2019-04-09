@@ -2,6 +2,8 @@
 #define MISC_H
 
 #include <iostream>
+#include <cmath>
+#include <algorithm>
 //#include <type_traits>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -24,7 +26,7 @@ extern TextureData createChess3Ddata(const  int width, const int height, const i
 
 extern TextureData create2x2();
 
-
+extern double centerY(int y);
 
 
 #endif //MISC_H

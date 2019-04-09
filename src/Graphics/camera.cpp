@@ -171,6 +171,21 @@ void Camera::handleEvents()
 
     if(keystate[SDL_SCANCODE_Q])
         ProgramState::getInstance().setAppRunning(false);
+
+    if(keystate[SDL_SCANCODE_KP_PLUS])
+    {
+        float vpb = ProgramState::getInstance().getVoxelsPerBlock() + 0.1f;
+        ProgramState::getInstance().setVoxelsPerBlock(vpb);
+        Log::getInfo().log("voxels_per_block = (%)",std::to_string(vpb));
+    }
+
+    if(keystate[SDL_SCANCODE_KP_MINUS])
+    {
+        float vpb = ProgramState::getInstance().getVoxelsPerBlock() - 0.1f;
+        ProgramState::getInstance().setVoxelsPerBlock(vpb);
+        Log::getInfo().log("voxels_per_block = (%)",std::to_string(vpb));
+    }
+
     update();
 //  auto result = update();
 //  

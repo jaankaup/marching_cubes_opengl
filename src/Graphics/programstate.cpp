@@ -53,7 +53,7 @@ void ProgramState::setVoxelsPerBlock(const float count)
   {
 
     Log::getError().log("ProgramState::setVoxelsPerBlock(%)",std::to_string(count));
-    Log::getError().log("ProgramState::setVoxelsPerBlock: count must be >= 1.0. Omittng changes.",std::to_string(count));
+    Log::getError().log("ProgramState::setVoxelsPerBlock: count must be >= 1.0. Omitting changes.",std::to_string(count));
     return;
   }
   pVoxels_per_count = count;
