@@ -9,8 +9,9 @@ layout(triangle_strip, max_vertices = 15) out;
 //layout(line_strip, max_vertices = 15) out;
 
 // Output vertex normal.
-//out vec3 fNormalIn;
-out vec3 fColorIn;
+out vec3 fPosIn;
+out vec3 fNormalIn;
+//out vec3 fColorIn;
 uniform sampler3D diffuse3DTexture;
 uniform sampler1D tri_table;
 uniform float voxels_per_block;
@@ -102,72 +103,6 @@ e0 |    /                   |e2  /
 // https://github.com/QianMo/GPU-Gems-Book-Source-Code/blob/master/GPU-Gems-3-CD-Content/content/01/demo/models/tables.nma
 
 
-void printError(int index, int maxValue)
-{
-
-    vec3 actColor = vec3(float(index)/float(maxValue));
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.0,float(index)/voxels_per_block,0.0,0.0));
-          fColorIn = actColor;
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(float(index)/voxels_per_block,0.0,0.0,0.0));
-          fColorIn = actColor;
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.0,0.0,float(index)/voxels_per_block,0.0));
-          fColorIn = actColor;
-          EmitVertex();
- 
-          EndPrimitive();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.1,float(index)/voxels_per_block,0.1,0.0));
-          fColorIn = vec3(0.0,0.0,0.0);
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(float(index)/voxels_per_block,0.1,0.1,0.0));
-          fColorIn = vec3(0.0,0.0,0.0);
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.1,0.1,float(index)/voxels_per_block,0.0));
-          fColorIn = vec3(0.0,0.0,0.0);
-          EmitVertex();
- 
-          EndPrimitive();
-}
-
-void printError2(int index)
-{
-
-    //vec3 actColor = vec3(float(index)/float(maxValue));
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.0,float(index)/voxels_per_block,0.0,0.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(float(index)/voxels_per_block,0.0,0.0,0.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.0,0.0,float(index)/voxels_per_block,0.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
- 
-          EndPrimitive();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.1,float(index)/voxels_per_block,0.1,0.0));
-          fColorIn = vec3(0.0,0.0,0.0);
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(float(index)/voxels_per_block,0.1,0.1,0.0));
-          fColorIn = vec3(0.0,0.0,0.0);
-          EmitVertex();
-
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(0.1,0.1,float(index)/voxels_per_block,0.0));
-          fColorIn = vec3(0.0,0.0,0.0);
-          EmitVertex();
- 
-          EndPrimitive();
-}
-
 vec3 calculateNormal(vec3 v)
 {
   float d = 1.0/voxels_per_block;
@@ -249,261 +184,24 @@ float calculateCase(Cube c)
   if (c.v1.w < 0.5) { result += 2.0; }
   if (c.v0.w < 0.5) { result += 1.0; }
   
-//  if (c.v0.w < 0.5) { result += 128.0;} 
-//  if (c.v1.w < 0.5) { result += 64.0;}
-//  if (c.v2.w < 0.5) { result += 32.0;} 
-//  if (c.v3.w < 0.5) { result += 16.0;} 
-//  if (c.v4.w < 0.5) { result += 8.0; }
-//  if (c.v5.w < 0.5) { result += 4.0; }
-//  if (c.v6.w < 0.5) { result += 2.0; }
-//  if (c.v7.w < 0.5) { result += 1.0; }
   return result;
 } 
 
 vec3 interpolateV(vec4 va, vec4 vb)
 {
-//  return va.xyz;
-//   if (va.w > 1.0) printError2(255);
-//   if (vb.w > 1.0) printError2(255);
    if (abs(0.5 - va.w) < 0.00001) { return va.xyz; }
    else if (abs(0.5 - vb.w) < 0.00001) { return vb.xyz; }
    else if (abs(va.w-vb.w) < 0.00001) { return va.xyz; }
-//  return va.xyz;
    
    else
    {
      vec3 p;
      float mu = (0.5 - va.w) / (vb.w - va.w);
-//     mu = clamp(mu, 0.0, 1.0);
-//     if (vb.w - va.w < 0.0001) printError2(255);
      p.x = va.x + mu * (vb.x - va.x);
      p.y = va.y + mu * (vb.y - va.y);
      p.z = va.z + mu * (vb.z - va.z);
      return p;
    }
-}
-
-void printCubeCorners(Cube c)
-{
-    float pSize = 2.0;
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v0.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v1.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v2.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v3.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v4.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v5.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v6.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v7.xyz,1.0));
-          fColorIn = vec3(0.0,0.5,0.0);
-          EmitVertex();
- 
-          EndPrimitive();
-}
-
-void printCube(Cube c, int mask, bool printMask)
-{
-    float pSize = 1.0;
-    float maskColor = float(mask) / float(255);
-
-    // FRONT sideFront = v0 v1 v2 v3
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v2.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v2.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    EndPrimitive();
-
-    // TOP sideFront = v0 v5 v6 v2
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v5.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v5.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v6.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v6.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v2.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v2.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    EndPrimitive();
-
-    // RIGHT sideRight = v3 v2 v6 v7
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v2.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v2.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v6.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v6.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v7.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v7.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    EndPrimitive();
-
-    // LEFT sideLeft = v0 v1 v5 v4
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v5.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v5.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    EndPrimitive();
-
-    // BACK sideBack = v4 v5 v6 v7
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v5.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v5.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v6.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v6.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v7.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v7.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    EndPrimitive();
-
-    // BOTTOM sideBottom = v0 v4 v7 v3
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v7.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v7.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    gl_PointSize = pSize;
-	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
-    if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
-          EmitVertex();
-    EndPrimitive();
 }
 
 void createVertex(float edgeValue, Cube c)
@@ -512,79 +210,99 @@ void createVertex(float edgeValue, Cube c)
     if (edgeValue == 0.0) // < 0.000001 )
     {
       gl_Position =  MVP * vec4(interpolateV(c.v0, c.v1),1.0);
-      fColorIn = vec3(1.0,0.0,0.0);
+//      fColorIn = vec3(1.0,0.0,0.0);
+        fPosIn = interpolateV(c.v0, c.v1);
+        fNormalIn = c.n0;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v1, c.v2),1.0);
-      fColorIn = vec3(0.0,1.0,0.0);
+      //fColorIn = vec3(0.0,1.0,0.0);
+      fPosIn = interpolateV(c.v1, c.v2);
+      fNormalIn = c.n1;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 2.0) < 0.000001)
     //else if (edgeValue == iterator*2.0)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v2, c.v3),1.0);
-      fColorIn = vec3(0.0,0.0,1.0);
+      fPosIn = interpolateV(c.v2, c.v3);
+      //fColorIn = vec3(0.0,0.0,1.0);
+      fNormalIn = c.n2;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 3.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v3, c.v0),1.0);
-      fColorIn = vec3(0.0,0.3,0.3);
+      fPosIn = interpolateV(c.v3, c.v0);
+      //fColorIn = vec3(0.0,0.3,0.3);
+      fNormalIn = c.n3;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 4.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v4, c.v5),1.0);
-      fColorIn = vec3(0.3,0.3,0.0);
+      fPosIn = interpolateV(c.v4, c.v5);
+      //fColorIn = vec3(0.3,0.3,0.0);
+      fNormalIn = c.n4;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 5.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v5, c.v6),1.0);
-      fColorIn = vec3(0.0,0.7,0.2);
+      fPosIn = interpolateV(c.v5, c.v6);
+      //fColorIn = vec3(0.0,0.7,0.2);
+      fNormalIn = c.n5;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 6.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v6, c.v7),1.0);
-      fColorIn = vec3(1.0,0.0,1.0);
+      fPosIn = interpolateV(c.v6, c.v7);
+      fNormalIn = c.n6;
+      //fColorIn = vec3(1.0,0.0,1.0);
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 7.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v7, c.v4),1.0);
+      fPosIn = interpolateV(c.v7, c.v4);
+      fNormalIn = c.n7;
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 8.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v0, c.v4),1.0);
-      fColorIn = vec3(0.0,1.0,1.0);
+      fNormalIn = c.n0;
+      fPosIn = interpolateV(c.v0, c.v4);
+      //fColorIn = vec3(0.0,1.0,1.0);
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 9.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v1, c.v5),1.0);
-      fColorIn = vec3(0.0,0.5,1.0);
+      fPosIn = interpolateV(c.v1, c.v5);
+      fNormalIn = c.n1;
+      //fColorIn = vec3(0.0,0.5,1.0);
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 10.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v2, c.v6),1.0);
-      fColorIn = vec3(0.1,0.1,0.1);
+      fPosIn = interpolateV(c.v2, c.v6);
+      fNormalIn = c.n2;
+      //fColorIn = vec3(0.1,0.1,0.1);
       EmitVertex();
     }           
     else if (abs(edgeValue - iterator * 11.0) < 0.000001)
     {
       gl_Position =  MVP * vec4(interpolateV(c.v3, c.v7),1.0);
-      fColorIn = vec3(0.5,0.5,0.5);
+      fPosIn = interpolateV(c.v3, c.v7);
+      fNormalIn = c.n3;
+      //fColorIn = vec3(0.5,0.5,0.5);
       EmitVertex();
     }           
-    else
-    {
-      printError2(255);
-    }
 }
 
 void main(){

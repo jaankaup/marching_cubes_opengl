@@ -110,7 +110,7 @@ int main()
     marchingShader.build(marchingShader_src);
 
     Shader marchingShaderLine = ShaderManager::getInstance().createShader("marchingShaderLine");
-    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingLine2.geom", "shaders/marching.frag"};
+    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingLine2.geom", "shaders/marchingLine2.frag"};
     marchingShaderLine.build(marchingShaderLine_src);
   #endif
 
