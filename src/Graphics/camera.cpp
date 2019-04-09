@@ -89,7 +89,7 @@ void Camera::rotateCamera(float x, float y, int width, int height, bool isMouseP
 void Camera::handleEvents()
 {
   uint32_t newTick = SDL_GetTicks();
-  uint32_t deltaTick = newTick - pPrevTick;
+//  uint32_t deltaTick = newTick - pPrevTick;
   float deltaTime = pPrevTick == 0 ? 0.0f : (newTick*1.0f) / pPrevTick;
   pPrevTick = newTick;
 
@@ -136,7 +136,7 @@ void Camera::handleEvents()
   update();
 
   glm::vec3 lookAt = getLookAt();
-  glm::vec3 stafe = getStafe();
+//  glm::vec3 stafe = getStafe();
 //  Log::getDebug().log("lookAt = (%,%,%)",std::to_string(lookAt.x),std::to_string(lookAt.y),std::to_string(lookAt.z));
 //  Log::getDebug().log("**********************");
   auto keystate = SDL_GetKeyboardState(NULL); 

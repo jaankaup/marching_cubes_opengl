@@ -22,16 +22,23 @@ class TextureData
       pHeight = other.pHeight;
       pDepth = other.pDepth;
       pSize = other.pSize;
+//      std::swap(pData,other.pData);
+//      std::swap(pWidth,other.pWidth);
+//      std::swap(pHeight,other.pHeight);
+//      std::swap(pDepth,other.pDepth);
+//      std::swap(pSize,other.pSize);
       return *this;
     }
 
+    // remember to add the members in the initializer list in the same order as
+    // they appear in the class.
     TextureData(TextureData&& o) : pData(std::move(o.pData)),
                                    pWidth(std::exchange(o.pWidth,0)),
                                    pHeight(std::exchange(o.pHeight,0)),
                                    pDepth(std::exchange(o.pDepth,0)), 
                                    pSize(std::exchange(o.pSize,0)) {}
 
-    unsigned char* getData() const;
+    uint8_t* getData() const;
 //    const std::vector<unsigned char>& getData() const;
 //    const std::vector<char>& getData() const;
 //    std::vector<char>& getData();
@@ -44,11 +51,12 @@ class TextureData
     int getDataSize() const;
     
 	private:
+    std::unique_ptr<uint8_t[]> pData; 
     int pWidth = 0;
     int pHeight = 0;
     int pDepth = 0;
     int pSize = 0;
-    std::unique_ptr<unsigned char[]> pData; 
+//    std::unique_ptr<unsigned char[]> pData; 
 
     bool setWidth(const int w);
     bool setHeight(const int w);

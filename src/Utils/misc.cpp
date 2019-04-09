@@ -68,7 +68,7 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
 //  Log::getDebug().log("% ",std::to_string(mr()));
   for (int i=0 ; i<width*height*depth ; i++)
   {
-    data[i*4] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    data[i*4] = 22;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
     data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     data[i*4+3] = mr();// (int)((i/float(size))*255); // mr(); 
@@ -84,18 +84,20 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
   auto data = td.getData();
 //  auto texels = new unsigned char[size];
   bool hah = false;
+//
+//  MyRandom<int> mr;
+//  mr.setDistribution(0,155);
 
-  MyRandom<int> mr;
-  mr.setDistribution(0,155);
-
-  for (int i=0 ; i<width*height*depth ; i++)
+  for (unsigned int i=0 ; i<width*height*depth ; i++)
   {
-    auto value = mr();
-    Log::getDebug().log("index %: value == % ",std::to_string(i),std::to_string(mr()));
-    data[i*4] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
-    data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i*4+3] = mr(); // hah ? 5 : 250;// (int)((i/float(size))*255); // mr(); 
+ //   auto value = mr();
+//    Log::getDebug().log("index %: value == % ",std::to_string(i),std::to_string(mr()));
+    data[i*4] =  150;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    data[i*4+1] = 0; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
+    data[i*4+2] = 0; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
+//    data[i*4+2] = (uint8_t)(i*3); // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
+//    data[i*4+3] = (uint8_t)(i*3); // mr(); // hah ? 5 : 250;// (int)((i/float(size))*255); // mr(); 
     hah = !hah;
   }
 //  for (int i=0 ; i<width*height*depth ; i++)
@@ -107,5 +109,68 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
 //    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
 //    hah = !hah;
 //  }
+  //return std::move(td);
+  return td;
+}
+
+TextureData create2x2()
+{
+
+  TextureData td(2*2*2*4,2,2,2);
+  auto data = td.getData();
+
+  unsigned char r0 = 255;
+  unsigned char g0 = 255;
+  unsigned char b0 = 255;
+  unsigned char a0 = 255;
+
+  unsigned char r1 = 255;
+  unsigned char g1 = 255;
+  unsigned char b1 = 255;
+  unsigned char a1 = 0;
+
+  unsigned char r2 = 255;
+  unsigned char g2 = 255;
+  unsigned char b2 = 255;
+  unsigned char a2 = 255;
+
+  unsigned char r3 = 255;
+  unsigned char g3 = 255;
+  unsigned char b3 = 255;
+  unsigned char a3 = 0;
+
+  unsigned char r4 = 255;
+  unsigned char g4 = 255;
+  unsigned char b4 = 255;
+  unsigned char a4 = 255;
+
+  unsigned char r5 = 255;
+  unsigned char g5 = 255;
+  unsigned char b5 = 255;
+  unsigned char a5 = 0;
+
+  unsigned char r6 = 255;
+  unsigned char g6 = 255;
+  unsigned char b6 = 255;
+  unsigned char a6 = 255;
+
+  unsigned char r7 = 255;
+  unsigned char g7 = 255;
+  unsigned char b7 = 255;
+  unsigned char a7 = 0;
+
+  //        R                G              B                  A                 
+  data[0] = r0  ; data[1] = g0  ; data[2] = b0   ; data[3]  = a0;  
+  data[4] = r1  ; data[5] = g1  ; data[6] = b1   ; data[7]  = a1;
+
+  data[8]  = r2 ; data[9]  = g2 ; data[10] = b2  ; data[11] = a2;  
+  data[12] = r3 ; data[13] = g3 ; data[14] = b3  ; data[15] = a3;
+  
+  data[16] = r4 ; data[17] = g4 ; data[18] = b4  ; data[19] = a4;  
+  data[20] = r5 ; data[21] = g5 ; data[22] = b5  ; data[23] = a5;
+
+  data[24] = r6 ; data[25] = g6 ; data[26] = b6  ; data[27] = a6;  
+  data[28] = r7 ; data[29] = g7 ; data[30] = b7  ; data[31] = a7;
+
   return std::move(td);
 }

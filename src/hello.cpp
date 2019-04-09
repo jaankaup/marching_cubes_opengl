@@ -71,7 +71,7 @@ void loop_handler2(void *arg)
 int main()
 {
 
-  const int BLOCK_SIZE = 4;
+  const int BLOCK_SIZE = 2 ;
 
   // The program state must be created first.
   ProgramState::getInstance();
@@ -143,8 +143,9 @@ int main()
   //c.texture.createExample2D();//("assets/rock.jpg");
 //  c.texture.create3D();//("assets/rock.jpg");
 //  auto hyh = createRandom3Ddata(32,32,32);
-  auto hyh = createChess3Ddata(4,4,4);
-  //auto hyh = createRandom3Ddata(16,16,16);
+//  auto hyh = createChess3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+//  auto hyh = createRandom3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+    auto hyh = create2x2();
 //  Log::getDebug().log("hyh = %,%,%", std::to_string(hyh.getWidth()),std::to_string(hyh.getHeight()),std::to_string(hyh.getDepth()));
   texture.create3D(hyh);//("assets/rock.jpg");
 //  for (int i=0 ; i < 100 ; i = (i+4))

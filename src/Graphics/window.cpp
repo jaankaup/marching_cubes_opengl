@@ -59,8 +59,10 @@ bool Window::init(int width, int height)
     Log::getDebug().log("%","Window::Window. initializing SDL.");
     //if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0)
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    {
       Log::getError().log("%","Window::Window. Failed to initialize SDL.");
       return false;
+    }
   }
   Log::getDebug().log("%","Window::Window. window created.");
     int x = SDL_WINDOWPOS_UNDEFINED;
@@ -77,9 +79,9 @@ bool Window::init(int width, int height)
     }
 
 
-    //SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-    //SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-    //SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     //SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
 
     #ifdef EMSCRIPTEN
@@ -119,7 +121,9 @@ bool Window::init(int width, int height)
     Log::getDebug().log("GL_Version: %", glGetString(GL_VERSION));
     Log::getDebug().log("Vendor: %", glGetString(GL_VENDOR));
     Log::getDebug().log("Renderer: %", glGetString(GL_RENDERER));
-
+    int a;
+    SDL_GL_GetAttribute(SDL_GL_RED_SIZE,&a);
+    Log::getError().log("Alpha-size: %", std::to_string(a));
     SDL_GL_SetSwapInterval(true);
 //    //if (GLEW_ARB_geometry_shader4) {
 //    if (GLEW_EXT_geometry_shader) {

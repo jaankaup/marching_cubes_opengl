@@ -25,35 +25,94 @@ void Texture::init(const TextureType t)
 
 void Texture::create3D(const TextureData& td)
 {
-  auto d = td.getData();
-   Log::getDebug().log("DATASIZE = %", std::to_string(td.getDataSize()));
-   Log::getDebug().log("WIDTH = %", std::to_string(td.getWidth()));
-   Log::getDebug().log("HEIGHT = %", std::to_string(td.getHeight()));
-   Log::getDebug().log("DEPTH = %", std::to_string(td.getDepth()));
-  for (int i=0 ; i<td.getDataSize()/4 ; i++)
-  {
-     //auto valR = (int) *(d + 4*i);
-     //auto valG = (int) *(d + 4*i+1);
-     //auto valB = (int) *(d + 4*i+2);
-     //auto valA = (int) *(d + 4*i+3);
-     auto valR = d[4*i];
-     auto valG = d[4*i+1];
-     auto valB = d[4*i+2];
-     auto valA = d[4*i+3];
-     Log::getDebug().log("Texture::create3D: (%,%,%,%)", std::to_string(valR),std::to_string(valG),std::to_string(valB),std::to_string(valA));
-  }
+//  auto d = td.getData();
+//   Log::getDebug().log("DATASIZE = %", std::to_string(td.getDataSize()));
+//   Log::getDebug().log("WIDTH = %", std::to_string(td.getWidth()));
+//   Log::getDebug().log("HEIGHT = %", std::to_string(td.getHeight()));
+//   Log::getDebug().log("DEPTH = %", std::to_string(td.getDepth()));
+//  for (int i=0 ; i<td.getDataSize()/4 ; i++)
+//  {
+//     //auto valR = (int) *(d + 4*i);
+//     //auto valG = (int) *(d + 4*i+1);
+//     //auto valB = (int) *(d + 4*i+2);
+//     //auto valA = (int) *(d + 4*i+3);
+//     auto valR = d[4*i];
+//     auto valG = d[4*i+1];
+//     auto valB = d[4*i+2];
+//     auto valA = d[4*i+3];
+//     Log::getDebug().log("Texture::create3D: (%,%,%,%)", std::to_string(valR),std::to_string(valG),std::to_string(valB),std::to_string(valA));
+//  }
+//  uint8_t* data = new uint8_t[8*4];
+//
+//  uint8_t r0 = static_cast<uint8_t>(255);
+//  uint8_t g0 = static_cast<uint8_t>(255);
+//  uint8_t b0 = static_cast<uint8_t>(255);
+//  uint8_t a0 = static_cast<uint8_t>(255);
+//
+//  uint8_t r1 = static_cast<uint8_t>(255);
+//  uint8_t g1 = static_cast<uint8_t>(255);
+//  uint8_t b1 = static_cast<uint8_t>(255);
+//  uint8_t a1 = static_cast<uint8_t>(255);
+//
+//  uint8_t r2 = static_cast<uint8_t>(255);
+//  uint8_t g2 = static_cast<uint8_t>(255);
+//  uint8_t b2 = static_cast<uint8_t>(255);
+//  uint8_t a2 = static_cast<uint8_t>(255);
+//
+//  uint8_t r3 = static_cast<uint8_t>(255);
+//  uint8_t g3 = static_cast<uint8_t>(255);
+//  uint8_t b3 = static_cast<uint8_t>(255);
+//  uint8_t a3 = static_cast<uint8_t>(255);
+//
+//  uint8_t r4 = static_cast<uint8_t>(255);
+//  uint8_t g4 = static_cast<uint8_t>(255);
+//  uint8_t b4 = static_cast<uint8_t>(255);
+//  uint8_t a4 = static_cast<uint8_t>(255);
+//
+//  uint8_t r5 = static_cast<uint8_t>(255);
+//  uint8_t g5 = static_cast<uint8_t>(255);
+//  uint8_t b5 = static_cast<uint8_t>(255);
+//  uint8_t a5 = static_cast<uint8_t>(255);
+//
+//  uint8_t r6 = static_cast<uint8_t>(255);
+//  uint8_t g6 = static_cast<uint8_t>(255);
+//  uint8_t b6 = static_cast<uint8_t>(255);
+//  uint8_t a6 = static_cast<uint8_t>(255);
+//
+//  uint8_t r7 = static_cast<uint8_t>(255);
+//  uint8_t g7 = static_cast<uint8_t>(255);
+//  uint8_t b7 = static_cast<uint8_t>(255);
+//  uint8_t a7 = static_cast<uint8_t>(255);
+
+  //        R                G              B                  A                 
+//  data[0] = r0  ; data[1] = g0  ; data[2] = b0   ; data[3]  = a0;  
+//  data[4] = r1  ; data[5] = g1  ; data[6] = b1   ; data[7]  = a1;
+//
+//  data[8]  = r2 ; data[9]  = g2 ; data[10] = b2  ; data[11] = a2;  
+//  data[12] = r3 ; data[13] = g3 ; data[14] = b3  ; data[15] = a3;
+//  
+//  data[16] = r4 ; data[17] = g4 ; data[18] = b4  ; data[19] = a4;  
+//  data[20] = r5 ; data[21] = g5 ; data[22] = b5  ; data[23] = a5;
+//
+//  data[24] = r6 ; data[25] = g6 ; data[26] = b6  ; data[27] = a6;  
+//  data[28] = r7 ; data[29] = g7 ; data[30] = b7  ; data[31] = a7;
   use(0);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  //glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  //glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
   glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+//  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 //  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 //  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 //  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
   glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, td.getWidth(), td.getHeight(), td.getDepth(), 0, GL_RGBA, GL_UNSIGNED_BYTE, td.getData());
+  //glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+//  delete data;
 }
 
 /* For more information: https://open.gl/textures */

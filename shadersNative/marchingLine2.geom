@@ -203,14 +203,49 @@ Cube createCube()
   vec4 v6 = vec4(p6, texture(diffuse3DTexture,p6).w);  
   vec4 v7 = vec4(p7, texture(diffuse3DTexture,p7).w);  
 
-  vec3 n0 = calculateNormal(p0);
-  vec3 n1 = calculateNormal(p1);
-  vec3 n2 = calculateNormal(p2);
-  vec3 n3 = calculateNormal(p3);
-  vec3 n4 = calculateNormal(p4);
-  vec3 n5 = calculateNormal(p5);
-  vec3 n6 = calculateNormal(p6);
-  vec3 n7 = calculateNormal(p7);
+//  if (v0.w > 1.0) { printError2(123); }
+//  if (v0.w < 0.0) { printError2(123); }
+//  if (v1.w > 1.0) { printError2(123); }
+//  if (v1.w < 0.0) { printError2(123); }
+//  if (v2.w > 1.0) { printError2(123); }
+//  if (v2.w < 0.0) { printError2(123); }
+//  if (v3.w > 1.0) { printError2(123); }
+//  if (v3.w < 0.0) { printError2(123); }
+//  if (v4.w > 1.0) { printError2(123); }
+//  if (v4.w < 0.0) { printError2(123); }
+//  if (v5.w > 1.0) { printError2(123); }
+//  if (v5.w < 0.0) { printError2(123); }
+//  if (v6.w > 1.0) { printError2(123); }
+//  if (v6.w < 0.0) { printError2(123); }
+//  if (v7.w > 1.0) { printError2(123); }
+//  if (v7.w < 0.0) { printError2(123); }
+//
+//  if (v0.w < 0.00001) { printError2(123); }
+//  if (v1.w < 0.00001) { printError2(123); }
+//  if (v2.w < 0.00001) { printError2(123); }
+//  if (v3.w < 0.00001) { printError2(123); }
+//  if (v4.w < 0.00001) { printError2(123); }
+//  if (v5.w < 0.00001) { printError2(123); }
+//  if (v6.w < 0.00001) { printError2(123); }
+//  if (v7.w < 0.00001) { printError2(123); }
+
+//  vec3 n0 = calculateNormal(p0);
+//  vec3 n1 = calculateNormal(p1);
+//  vec3 n2 = calculateNormal(p2);
+//  vec3 n3 = calculateNormal(p3);
+//  vec3 n4 = calculateNormal(p4);
+//  vec3 n5 = calculateNormal(p5);
+//  vec3 n6 = calculateNormal(p6);
+//  vec3 n7 = calculateNormal(p7);
+
+  vec3 n0 = vec3(1.0);
+  vec3 n1 = vec3(1.0);
+  vec3 n2 = vec3(1.0);
+  vec3 n3 = vec3(1.0);
+  vec3 n4 = vec3(1.0);
+  vec3 n5 = vec3(1.0);
+  vec3 n6 = vec3(1.0);
+  vec3 n7 = vec3(1.0);
 
   // Create the cube.
   Cube cube;
@@ -297,42 +332,74 @@ vec3 interPolateV(vec4 va, vec4 vb)
           // e11 => v3 , v7 
 
 
-void printCubeCorners(Cube c)
+void printCubeCorners(Cube c, bool densityValue)
 {
     float pSize = 5.0;
 
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v0.xyz,1.0));
-          fColorIn = vec3(c.v0.r,c.v0.g,c.v0.b);
+	  gl_Position =  MVP * (vec4(c.v0.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v0.xyz).w);
+          }
+          else { fColorIn = texture(diffuse3DTexture,c.v0.xyz).xyz; }
           EmitVertex();
 
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v1.xyz,1.0));
-          fColorIn = vec3(c.v1.r,c.v1.g,c.v1.b);
+	  gl_Position =  MVP * (vec4(c.v1.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v1.xyz).w);
+          }
+          else { fColorIn = texture(diffuse3DTexture,c.v1.xyz).xyz; }
           EmitVertex();
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v2.xyz,1.0));
-          fColorIn = vec3(c.v2.r,c.v2.g,c.v2.b);
+	  gl_Position =  MVP * (vec4(c.v2.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v2.xyz).w);
+          }
+          else { fColorIn = texture(diffuse3DTexture,c.v2.xyz).xyz; }
           EmitVertex();
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v3.xyz,1.0));
-          fColorIn = vec3(c.v3.r,c.v3.g,c.v3.b);
+	  gl_Position =  MVP * (vec4(c.v3.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v3.xyz).w);
+          }
+          else { fColorIn = texture(diffuse3DTexture,c.v3.xyz).xyz; }
           EmitVertex();
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v4.xyz,1.0));
-          fColorIn = vec3(c.v4.r,c.v4.g,c.v4.b);
+	  gl_Position =  MVP * (vec4(c.v4.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v4.xyz).w);
+          }
+          else { fColorIn = texture(diffuse3DTexture,c.v4.xyz).xyz; }
           EmitVertex();
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v5.xyz,1.0));
-          fColorIn = vec3(c.v5.r,c.v5.g,c.v5.b);
+	  gl_Position =  MVP * (vec4(c.v5.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v5.xyz).w);
+          }
+          else { fColorIn = texture(diffuse3DTexture,c.v5.xyz).xyz; }
           EmitVertex();
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v6.xyz,1.0));
-          fColorIn = vec3(c.v6.r,c.v6.g,c.v6.b);
+	  gl_Position =  MVP * (vec4(c.v6.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v6.xyz).w);
+          }
+          else {fColorIn = texture(diffuse3DTexture,c.v6.xyz).xyz; }
           EmitVertex();
     gl_PointSize = pSize;
-	  gl_Position =  MVP * (gl_in[0].gl_Position + vec4(c.v7.xyz,1.0));
-          fColorIn = vec3(c.v7.r,c.v7.g,c.v7.b);
+	  gl_Position =  MVP * (vec4(c.v7.xyz,1.0));
+          if (densityValue)
+          {
+            fColorIn = vec3(texture(diffuse3DTexture,c.v7.xyz).w);
+          }
+          else {fColorIn = texture(diffuse3DTexture,c.v7.xyz).xyz; }
           EmitVertex();
  
           EndPrimitive();
@@ -604,11 +671,11 @@ void main(){
 
         //Cube c = createCube(gl_in[0].gl_Position.xyz);
         Cube c = createCube();
-        float mask = calculateCase(c); 
+//        float mask = calculateCase(c); 
 
         // Check if cube is totally inside or outside of the surface.
-        if (mask == 0.0) return;
-        if (mask == 255.0) return;
+//        if (mask == 0.0) return;
+//        if (mask == 255.0) return;
 
         // Find the center of the texel which has the information of the first ende vertices.
         // The pixel has the followin format: r = first edge, g = second edge, b = third edge.
@@ -626,8 +693,8 @@ void main(){
         //         
 
         //float index = (mask * 15.0 + 0.5) / 1280.0;
-        //printCube(c, mask, false);
-        printCubeCorners(c);
+        //printCube(c, mask, true);
+        printCubeCorners(c,true);
 
 //        // The first edge. 
 //        vec3 edges = texture(tri_table,index).rgb;

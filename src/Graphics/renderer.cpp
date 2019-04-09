@@ -15,8 +15,8 @@ void Renderer::init()
     glEnable(GL_DEPTH_TEST); // Enable depth test
     glDepthFunc(GL_LESS); // Accept fragment if it closer to the camera than the former one
     glFrontFace(GL_CW);
-//    glFrontFace(GL_CCW);
-    glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
+//    glEnable(GL_CULL_FACE);
 //    glDisable(GL_CULL_FACE);
 //    glCullFace(GL_FRONT);
     glCullFace(GL_BACK);

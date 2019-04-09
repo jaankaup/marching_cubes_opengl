@@ -22,6 +22,7 @@ extern void logGLM(const std::string& name, const glm::mat4& object);
 extern TextureData createRandom3Ddata(const int width, const int height, const int depth);
 extern TextureData createChess3Ddata(const  int width, const int height, const int depth);
 
+extern TextureData create2x2();
 
 
 

@@ -1,4 +1,5 @@
 #include "textureData.h"
+// UBSan
 
 TextureData::TextureData(const int dataSize, const int width, const int height, const int depth)
 {
@@ -17,7 +18,7 @@ TextureData::TextureData(const int dataSize, const int width, const int height, 
   else
   {
     pSize = dataSize;
-    pData = std::make_unique<unsigned char[]>(dataSize);   
+    pData = std::make_unique<uint8_t[]>(dataSize);   
   }
 }
 
@@ -27,8 +28,9 @@ TextureData::~TextureData()
 }
 
 //const std::vector<unsigned char>& TextureData::getData() const
-unsigned char* TextureData::getData() const
+uint8_t* TextureData::getData() const
 {
+  //return *pData;
   return pData.get();
 }
 

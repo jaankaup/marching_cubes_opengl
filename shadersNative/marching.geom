@@ -240,23 +240,23 @@ float calculateCase(Cube c)
 {
   float result = 0.0;
   
-//  if (c.v7.w < 0.5) { result += 128.0;} 
-//  if (c.v6.w < 0.5) { result += 64.0;}
-//  if (c.v5.w < 0.5) { result += 32.0;} 
-//  if (c.v4.w < 0.5) { result += 16.0;} 
-//  if (c.v3.w < 0.5) { result += 8.0; }
-//  if (c.v2.w < 0.5) { result += 4.0; }
-//  if (c.v1.w < 0.5) { result += 2.0; }
-//  if (c.v0.w < 0.5) { result += 1.0; }
+  if (c.v7.w < 0.5) { result += 128.0;} 
+  if (c.v6.w < 0.5) { result += 64.0;}
+  if (c.v5.w < 0.5) { result += 32.0;} 
+  if (c.v4.w < 0.5) { result += 16.0;} 
+  if (c.v3.w < 0.5) { result += 8.0; }
+  if (c.v2.w < 0.5) { result += 4.0; }
+  if (c.v1.w < 0.5) { result += 2.0; }
+  if (c.v0.w < 0.5) { result += 1.0; }
   
-  if (c.v0.w < 0.5) { result += 128.0;} 
-  if (c.v1.w < 0.5) { result += 64.0;}
-  if (c.v2.w < 0.5) { result += 32.0;} 
-  if (c.v3.w < 0.5) { result += 16.0;} 
-  if (c.v4.w < 0.5) { result += 8.0; }
-  if (c.v5.w < 0.5) { result += 4.0; }
-  if (c.v6.w < 0.5) { result += 2.0; }
-  if (c.v7.w < 0.5) { result += 1.0; }
+//  if (c.v0.w < 0.5) { result += 128.0;} 
+//  if (c.v1.w < 0.5) { result += 64.0;}
+//  if (c.v2.w < 0.5) { result += 32.0;} 
+//  if (c.v3.w < 0.5) { result += 16.0;} 
+//  if (c.v4.w < 0.5) { result += 8.0; }
+//  if (c.v5.w < 0.5) { result += 4.0; }
+//  if (c.v6.w < 0.5) { result += 2.0; }
+//  if (c.v7.w < 0.5) { result += 1.0; }
   return result;
 } 
 
@@ -265,12 +265,9 @@ vec3 interpolateV(vec4 va, vec4 vb)
 //  return va.xyz;
 //   if (va.w > 1.0) printError2(255);
 //   if (vb.w > 1.0) printError2(255);
-   if (abs(0.5 - va.w) < 0.00001)
-      return va.xyz;
-   else if (abs(0.5 - vb.w) < 0.00001)
-      return vb.xyz;
-   else if (abs(va.w-vb.w) < 0.00001)
-      return va.xyz;
+   if (abs(0.5 - va.w) < 0.00001) { return va.xyz; }
+   else if (abs(0.5 - vb.w) < 0.00001) { return vb.xyz; }
+   else if (abs(va.w-vb.w) < 0.00001) { return va.xyz; }
 //  return va.xyz;
    
    else
