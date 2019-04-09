@@ -594,8 +594,8 @@ void main(){
         float mask = calculateCase(c); 
 
         // Check if cube is totally inside or outside of the surface.
-        if (mask == 0.0) return;
-        if (mask == 255.0) return;
+        //if (mask == 0.0) return;
+        //if (mask == 255.0) return;
 
         // Find the center of the texel which has the information of the first ende vertices.
         // The pixel has the followin format: r = first edge, g = second edge, b = third edge.
@@ -612,7 +612,8 @@ void main(){
         //        1.   2.   3.   4.   5.
         //         
 
-        float index = (mask * 15.0 + 0.5) / 1280.0;
+        //float index = (mask * 15.0 + 0.5) / 1280.0;
+        float index = (mask * 5.0) / 1280.0;
 
         // The first edge. 
         vec3 edges = texture(tri_table,index).rgb;
