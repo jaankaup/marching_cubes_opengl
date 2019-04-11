@@ -60,7 +60,10 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
   bool hah = false;
 
   MyRandom<int> mr;
-  mr.setDistribution(0,42);
+  mr.setDistribution(0,28);
+
+  MyRandom<int> mr2;
+  mr2.setDistribution(0,255);
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));
@@ -78,11 +81,13 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
   for (int y = 0; y < height ; y++) {
   for (int x = 0; x < width ; x++) {
     int index = 4 * x + height*4 *  y + 4 * depth * depth * z; 
-    data[index] = 100; // mr();   
-    data[index+1] = 200.0 ;   
-    data[index+2] = 5;   
-    if (0.8 > 255.0f / (y+1.0)) data[index+3] = 255 ;
-    else data[index+3] = static_cast<uint8_t>(std::clamp(centerY(y)  + 34.0 * sin(index*0.3) + 40.0 * cos(index*0.8) ,0.0,255.0));  
+    data[index] = mr2();   
+    data[index+1] = mr2() ;   
+    data[index+2] = mr2();   
+    data[index+3] = mr();   
+//    if (0.8 > 255.0f / (y+1.0)) data[index+3] = 255 ;
+//    else data[index+3] = static_cast<uint8_t>(std::clamp(centerY(y)  + 34.0 * sin(index*0.3) + 40.0 * cos(index*0.8) ,0.0,255.0));  
+//    if (height / (y+1.0f) < 0.5) data[index+3] = 0; 
 //    data[index+3] = std::clamp(( 255.0f / (height*height)) * y + 10 * sin(1.0f * index / 3.5f),0.0,255.0);  ; // hah ? 255 : 0;   
     hah = !hah;
   }}};

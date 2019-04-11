@@ -31,6 +31,11 @@ bool ProgramState::getAppRunning() const
     return pAppRunning;
 }
 
+bool ProgramState::getWireframe() const
+{
+  return pWireframe;
+}
+ 
 void ProgramState::setScreenWidth(const int width)
 {
   if (width > 0) pScreenWidth = width;
@@ -57,6 +62,11 @@ void ProgramState::setVoxelsPerBlock(const float count)
     return;
   }
   pVoxels_per_count = count;
+}
+
+void ProgramState::setWireframe(const bool enableWireframe)
+{
+  pWireframe = enableWireframe;
 }
 
 float ProgramState::getVoxelsPerBlock() const

@@ -20,12 +20,14 @@ class ProgramState
     int getScreenHeight() const;
     bool getAppRunning() const;
     float getVoxelsPerBlock() const;
+    bool getWireframe() const;
 
 
     void setScreenWidth(const int width);
     void setScreenHeight(const int height);
     void setAppRunning(const bool running);
     void setVoxelsPerBlock(const float count);
+    void setWireframe(const bool wireframeEnabled);
 
 	private:
 
@@ -34,6 +36,7 @@ class ProgramState
     int pScreenHeight = 800;
     bool pAppRunning = true;
     float pVoxels_per_count = 1.0;
+    bool pWireframe = false;
 
 };
 

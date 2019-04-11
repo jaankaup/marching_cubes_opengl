@@ -185,6 +185,11 @@ void Camera::handleEvents()
         ProgramState::getInstance().setVoxelsPerBlock(vpb);
         Log::getInfo().log("voxels_per_block = (%)",std::to_string(vpb));
     }
+    if(keystate[SDL_SCANCODE_SPACE])
+    {
+        bool wireframe = ProgramState::getInstance().getWireframe();
+        ProgramState::getInstance().setWireframe(!wireframe);
+    }
 
     update();
 //  auto result = update();

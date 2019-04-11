@@ -111,7 +111,7 @@ int main()
     marchingShader.build(marchingShader_src);
 
     Shader marchingShaderLine = ShaderManager::getInstance().createShader("marchingShaderLine");
-    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingLine2.geom", "shaders/marchingLine2.frag"};
+    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame.geom", "shaders/marchingLine2.frag"};
     marchingShaderLine.build(marchingShaderLine_src);
   #endif
 
@@ -185,7 +185,7 @@ int main()
   command.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE ;
   auto scale = glm::scale(original,glm::vec3(58.0f));
   auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate = glm::translate(original,glm::vec3(0.0f,-1.0f,-1.0f));
+  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
   command.modelMatrix = scale * translate * rotate;
 //  command.modelMatrix = original;
   m.addCommand(command);
@@ -200,9 +200,10 @@ int main()
   command3.shaderName = "marchingShaderLine";
   command3.startIndex = 0;
   command3.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE;
-  scale = glm::scale(original,glm::vec3(1.0f));
-  rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-  translate = glm::translate(original,glm::vec3(2.0f,0.0f,0.0f));
+//  scale = glm::scale(original,glm::vec3(1.0f));
+//  rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  translate = glm::translate(original,glm::vec3(2.0f,0.0f,0.0f));
+//  command3.modelMatrix = scale * translate * rotate;
   command3.modelMatrix = scale * translate * rotate;
 //  command.modelMatrix = original;
   m3.addCommand(command3);
