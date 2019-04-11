@@ -24,7 +24,7 @@ class Vertexbuffer
     void bind() const;
     void addData(const void* data, unsigned int size, const std::vector<std::string>& types) const;
     void createExampleCube();
-    void createExamplePoints(const int dimension);
+    void createExamplePoints(const int dimensionX, const int dimensionY, const int dimensionZ);
     GLuint getHandle() const;
     GLuint getVAO() const;
 

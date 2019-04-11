@@ -5,10 +5,12 @@ layout(points) in;
 layout(line_strip, max_vertices = 30) out;
 
 out vec3 fColorIn;
+uniform vec3 startPoint;
 uniform sampler3D diffuse3DTexture;
 uniform sampler1D tri_table;
 uniform float voxels_per_block;
 uniform mat4 MVP;
+uniform float cubeMask;
 
 struct Cube
 {
@@ -98,8 +100,25 @@ Cube createCube(vec4 position, float vpb)
   return cube; 
 }
 
-void printCube(Cube c, int mask, bool printMask)
+float calculateCase(Cube c)
 {
+  float result = 0.0;
+  
+  if (c.v7.w < 0.5) { result += 128.0;} 
+  if (c.v6.w < 0.5) { result += 64.0;}
+  if (c.v5.w < 0.5) { result += 32.0;} 
+  if (c.v4.w < 0.5) { result += 16.0;} 
+  if (c.v3.w < 0.5) { result += 8.0; }
+  if (c.v2.w < 0.5) { result += 4.0; }
+  if (c.v1.w < 0.5) { result += 2.0; }
+  if (c.v0.w < 0.5) { result += 1.0; }
+  
+  return result;
+} 
+
+void printCube(Cube c, float mask, bool printMask)
+{
+    if (!(mask == cubeMask)) return;
     float pSize = 1.0;
     float maskColor = float(mask) / float(255);
 
@@ -282,51 +301,7 @@ void printCube(Cube c, int mask, bool printMask)
 
 void main(){
 
-        Cube c = createCube(gl_in[0].gl_Position,voxels_per_block);
-        printCube(c,0,false);
-//        if (recursion)
-//        {
-//          float d = 1 / (voxels_per_block * 2.0);
-//
-//          vec3 p0 = c.v0.xyz;
-//          vec3 p1 = c.v0.xyz + vec3(0.0 ,   d , 0.0);
-//          vec3 p2 = c.v0.xyz + vec3(d   ,   d , 0.0);
-//          vec3 p3 = c.v0.xyz + vec3(d   , 0.0 , 0.0);
-//          vec3 p4 = c.v0.xyz + vec3(0.0 , 0.0 , d);
-//          vec3 p5 = c.v0.xyz + vec3(0.0 ,   d , d);
-//          vec3 p6 = c.v0.xyz + vec3(d   ,   d , d);
-//          vec3 p7 = c.v0.xyz + vec3(d   , 0.0 , d);
-// 
-//          Cube c0 = createCube(vec4(p0,1.0), voxels_per_block * 2.0);
-//          Cube c1 = createCube(vec4(p1,1.0), voxels_per_block * 2.0);
-//          Cube c2 = createCube(vec4(p2,1.0), voxels_per_block * 2.0);
-//          Cube c3 = createCube(vec4(p3,1.0), voxels_per_block * 2.0);
-//          Cube c4 = createCube(vec4(p4,1.0), voxels_per_block * 2.0);
-//          Cube c5 = createCube(vec4(p5,1.0), voxels_per_block * 2.0);
-//          Cube c6 = createCube(vec4(p6,1.0), voxels_per_block * 2.0);
-//          Cube c7 = createCube(vec4(p7,1.0), voxels_per_block * 2.0);
-//            
-//          bool recursion0 = marchCube(c0, voxels_per_block * 2.0);
-//          bool recursion1 = marchCube(c1, voxels_per_block * 2.0);
-//          bool recursion2 = marchCube(c2, voxels_per_block * 2.0);
-//          bool recursion3 = marchCube(c3, voxels_per_block * 2.0);
-//          bool recursion4 = marchCube(c4, voxels_per_block * 2.0);
-//          bool recursion5 = marchCube(c5, voxels_per_block * 2.0);
-//          bool recursion6 = marchCube(c6, voxels_per_block * 2.0);
-//          bool recursion7 = marchCube(c7, voxels_per_block * 2.0);
-//          float d2 = 1 / (voxels_per_block);
-
-//          bool recursion0 = marchCube(c0, voxels_per_block * 2.0);
-//          if (recursion0)
-//          {
-//
-//          }
-//          bool recursion1 = marchCube(c1, voxels_per_block * 2.0);
-//          bool recursion2 = marchCube(c2, voxels_per_block * 2.0);
-//          bool recursion3 = marchCube(c3, voxels_per_block * 2.0);
-//          bool recursion4 = marchCube(c4, voxels_per_block * 2.0);
-//          bool recursion5 = marchCube(c5, voxels_per_block * 2.0);
-//          bool recursion6 = marchCube(c6, voxels_per_block * 2.0);
-//          bool recursion7 = marchCube(c7, voxels_per_block * 2.0);
-//        }
+        Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position,voxels_per_block);
+        float theCase = calculateCase(c); 
+        printCube(c,theCase,false);
 }

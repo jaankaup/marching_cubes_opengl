@@ -69,6 +69,9 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
     shader.setUniform("cameraPosition", eyePosition);
     shader.setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
     shader.setUniform("voxels_per_block",  ProgramState::getInstance().getVoxelsPerBlock());
+    shader.setUniform("startPoint",  ProgramState::getInstance().getStartPoint());
+    shader.setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
+
     Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
 
     if (com.shaderName == "marchingShaderLine" && !ProgramState::getInstance().getWireframe()) return; 

@@ -59,10 +59,10 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
 //  auto texels = new unsigned char[size];
   bool hah = false;
 
-  MyRandom<int> mr;
+  MyRandom<int> mr("kisuli");
   mr.setDistribution(0,28);
 
-  MyRandom<int> mr2;
+  MyRandom<int> mr2 ("hauveli");
   mr2.setDistribution(0,255);
 //  Log::getDebug().log("% ",std::to_string(mr()));
 //  Log::getDebug().log("% ",std::to_string(mr()));

@@ -72,12 +72,19 @@ int main()
 {
 
   const int BLOCK_SIZE = 64 ;
+  const int BLOCK_DIV_Y = 8 ;
+  const int SAMPLE_POINTS_Y = 8;
 
   // The program state must be created first.
   ProgramState::getInstance();
   
   // Initialize the voxelsPerBlock count.
   ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
+
+//  auto ratio = static_cast<float>(BLOCK_SIZE)/static_cast<float>(BLOCK_DIV_Y);
+  auto y_start = static_cast<float>(25);  
+  ProgramState::getInstance().setStartPoint(glm::vec3(0.0f,y_start,0.0f));
+
 //  ProgramState::getInstance().setVoxelsPerBlock(8.0f); 
   // Create the window.
   Window window = Window::getInstance();
@@ -131,33 +138,14 @@ int main()
   c.triangleCount = 6*2*3;
 
   c.vertexbuffer2.init();
-  c.vertexbuffer2.createExamplePoints(BLOCK_SIZE);
-//  c.shader = s; 
-//  c.shader.init();
-//  c.shader.build(shaderSources);
-//  c.shader.bind();
-//  shader.bind();
-  
-  //Texture t(TextureType::d3, 0);
-  //c.texture = t;
-  //c.texture.init();
-  //c.texture.createExample2D();//("assets/rock.jpg");
-//  c.texture.create3D();//("assets/rock.jpg");
+  c.vertexbuffer2.createExamplePoints(BLOCK_SIZE, SAMPLE_POINTS_Y, BLOCK_SIZE);
+
 //  auto hyh = createChess3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
   auto hyh = createRandom3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
 //    auto hyh = create2x2();
-//  Log::getDebug().log("hyh = %,%,%", std::to_string(hyh.getWidth()),std::to_string(hyh.getHeight()),std::to_string(hyh.getDepth()));
-  texture.create3D(hyh);//("assets/rock.jpg");
-//  for (int i=0 ; i < 100 ; i = (i+4))
-//  {
-//    Log::getDebug().log("%,%,%,%", std::to_string(hyh.getData()[i]),std::to_string(hyh.getData()[i+1]),std::to_string(hyh.getData()[i+2]),std::to_string(hyh.getData()[i+3]));
-//  }
+  texture.create3D(hyh);
   textureCube.create("assets/rock.jpg");
-//  Log::getDebug().log("rock juttu luotu");
-  //c.texture.create("assets/rock.jpg");
-//  c.texture.use3D(0);
-//  c.shader.setUniform("diffuse3DTexture",0);
-//  shader.setUniform("diffuse3DTexture",0);
+
 ////  Model m;
 //////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 ////  Command command;
@@ -200,12 +188,7 @@ int main()
   command3.shaderName = "marchingShaderLine";
   command3.startIndex = 0;
   command3.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE;
-//  scale = glm::scale(original,glm::vec3(1.0f));
-//  rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  translate = glm::translate(original,glm::vec3(2.0f,0.0f,0.0f));
-//  command3.modelMatrix = scale * translate * rotate;
   command3.modelMatrix = scale * translate * rotate;
-//  command.modelMatrix = original;
   m3.addCommand(command3);
   c.models.push_back(m3);
   #endif

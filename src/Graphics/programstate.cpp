@@ -73,3 +73,32 @@ float ProgramState::getVoxelsPerBlock() const
 {
   return pVoxels_per_count;
 }
+
+void ProgramState::setStartPoint(const glm::vec3& point)
+{
+  pStartPoint = point;
+}
+
+glm::vec3 ProgramState::getStartPoint() const
+{
+  return pStartPoint;
+}
+
+float ProgramState::getCubeMask() const
+{
+  return pCubeMask;
+}
+
+void ProgramState::setCubeMask(const float cubeMask)
+{
+  if (cubeMask < 256.0f && cubeMask > 0.0f) pCubeMask = cubeMask; 
+  else return;
+  
+//  Log::getError().log("ProgramState::setCubeMask(%)",std::to_string(cubeMask));
+//  Log::getError().log("Illegal argument '%'", std::to_string(cubeMask));
+}
+
+float ProgramState::getCubeMaskCeil() const
+{
+  return std::floor(pCubeMask);
+}

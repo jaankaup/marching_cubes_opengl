@@ -378,7 +378,6 @@ bool marchCube(Cube c, float vpb)
         //        1.   2.   3.   4.   5.
         //         
 
-        //float index = (mask * 15.0 + 0.5) / 1280.0;
         float index = (mask * 5.0) / 1280.0;
 
         // The first edge. 
@@ -402,10 +401,10 @@ bool marchCube(Cube c, float vpb)
 
         EndPrimitive();
 
-        float iterator = 1.0 / 1280;
+//        float iterator = 1.0 / 1280;
 
         // The 2. edge. 
-        edges = texture(tri_table,index+iterator).rgb;
+        edges = texture(tri_table,index + 1.0/1280.0).rgb;
 
         // If the first vertex number is 1.0 (normalized from 255), there is no more triables.
         if (abs(edges.r - 1.0) < 0.000001) return false;
@@ -418,7 +417,7 @@ bool marchCube(Cube c, float vpb)
         EndPrimitive();
 
         // The 3. edge. 
-        edges = texture(tri_table,index+iterator*2.0).rgb;
+        edges = texture(tri_table,index+2.0/1280.0).rgb;
 
         if (abs(edges.r - 1.0) < 0.000001) return false;
 
@@ -429,7 +428,7 @@ bool marchCube(Cube c, float vpb)
         EndPrimitive();
 
         // The 4. edge. 
-        edges = texture(tri_table,index+iterator*3.0).rgb;
+        edges = texture(tri_table,index+3.0/1280.0).rgb;
 
         if (abs(edges.r - 1.0) < 0.000001) return false;
 
@@ -440,7 +439,7 @@ bool marchCube(Cube c, float vpb)
         EndPrimitive();
 
         // The 5. edge. 
-        edges = texture(tri_table,index+iterator*4.0).rgb;
+        edges = texture(tri_table,index+4.0/1280.0).rgb;
 
         if (abs(edges.r - 1.0) < 0.000001) return false;
         createVertex(edges.r, c);
@@ -454,9 +453,9 @@ bool marchCube(Cube c, float vpb)
 
 void main(){
 
-        Cube c = createCube(gl_in[0].gl_Position,voxels_per_block);
+        Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position,voxels_per_block);
         bool recursion = marchCube(c, voxels_per_block);
-//        if (recursion)
+//        if (recursion) { }
 //        {
 //          float d = 1 / (voxels_per_block * 2.0);
 //
@@ -486,6 +485,7 @@ void main(){
 //          bool recursion5 = marchCube(c5, voxels_per_block * 2.0);
 //          bool recursion6 = marchCube(c6, voxels_per_block * 2.0);
 //          bool recursion7 = marchCube(c7, voxels_per_block * 2.0);
+//          }
 //          float d2 = 1 / (voxels_per_block);
 
 //          bool recursion0 = marchCube(c0, voxels_per_block * 2.0);

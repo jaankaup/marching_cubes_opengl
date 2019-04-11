@@ -190,6 +190,20 @@ void Camera::handleEvents()
         bool wireframe = ProgramState::getInstance().getWireframe();
         ProgramState::getInstance().setWireframe(!wireframe);
     }
+    if(keystate[SDL_SCANCODE_KP_MULTIPLY])
+    {
+        float cubeMask = ProgramState::getInstance().getCubeMask();
+        if (cubeMask == 255.0f) return;
+        ProgramState::getInstance().setCubeMask(cubeMask + 0.1f);
+        Log::getInfo().log("CubeMask = (%)",std::to_string(ProgramState::getInstance().getCubeMaskCeil()));
+    }
+    if(keystate[SDL_SCANCODE_KP_DIVIDE])
+    {
+        float cubeMask = ProgramState::getInstance().getCubeMask();
+        if (cubeMask == 0.0f) return;
+        ProgramState::getInstance().setCubeMask(cubeMask - 0.1f);
+        Log::getInfo().log("CubeMask = (%)",std::to_string(ProgramState::getInstance().getCubeMaskCeil()));
+    }
 
     update();
 //  auto result = update();

@@ -4,7 +4,8 @@
 //#include <vector>
 //#include <array>
 //#include <GL/glew.h>
-//#include <glm/glm.hpp>
+#include <cmath>
+#include <glm/glm.hpp>
 //#include <glm/gtc/type_ptr.hpp>
 #include "../Utils/log.h"
 
@@ -21,6 +22,9 @@ class ProgramState
     bool getAppRunning() const;
     float getVoxelsPerBlock() const;
     bool getWireframe() const;
+    glm::vec3 getStartPoint() const;
+    float getCubeMask() const;
+    float getCubeMaskCeil() const;
 
 
     void setScreenWidth(const int width);
@@ -28,6 +32,8 @@ class ProgramState
     void setAppRunning(const bool running);
     void setVoxelsPerBlock(const float count);
     void setWireframe(const bool wireframeEnabled);
+    void setStartPoint(const glm::vec3& point);
+    void setCubeMask(const float cubeMask);
 
 	private:
 
@@ -37,6 +43,8 @@ class ProgramState
     bool pAppRunning = true;
     float pVoxels_per_count = 1.0;
     bool pWireframe = false;
+    glm::vec3 pStartPoint = glm::vec3(0.0,0.0,0.0);
+    float pCubeMask = 0.1f;
 
 };
 
