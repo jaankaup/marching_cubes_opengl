@@ -4,7 +4,8 @@
 
 Camera::Camera()
 {
-    pEyePosition = glm::vec3(0.0f,0.0f,0.0f);
+  pEyePosition = glm::vec3(0.0f,1.5f,1.5f);
+//    pEyePosition = glm::vec3(00.0f,50.0f,0.0f);
 //    glm::vec3 pUp = glm::vec3(0.0f,1.0f, 0.0f);
 //    glm::vec3 pLookat = glm::vec3(0.0f,0.0f,0.0f);
     pPitch = 0.0f;
@@ -15,8 +16,8 @@ Camera::Camera()
     pCamera_quat = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
     pMousePosition =  glm::vec2(0.0f,0.0f); 
     pPrevTick = SDL_GetTicks();
-    float pMouseX_sensitivity = 0.2f;
-    float pMouseY_sensitivity = 0.2f;
+    float pMouseX_sensitivity = 1.5f;
+    float pMouseY_sensitivity = 1.5f;
 }
 
 Camera::~Camera()
@@ -194,15 +195,21 @@ void Camera::handleEvents()
     {
         float cubeMask = ProgramState::getInstance().getCubeMask();
         if (cubeMask == 255.0f) return;
-        ProgramState::getInstance().setCubeMask(cubeMask + 0.1f);
+        ProgramState::getInstance().setCubeMask(cubeMask + 0.5f);
         Log::getInfo().log("CubeMask = (%)",std::to_string(ProgramState::getInstance().getCubeMaskCeil()));
     }
     if(keystate[SDL_SCANCODE_KP_DIVIDE])
     {
         float cubeMask = ProgramState::getInstance().getCubeMask();
         if (cubeMask == 0.0f) return;
-        ProgramState::getInstance().setCubeMask(cubeMask - 0.1f);
+        ProgramState::getInstance().setCubeMask(cubeMask - 0.5f);
         Log::getInfo().log("CubeMask = (%)",std::to_string(ProgramState::getInstance().getCubeMaskCeil()));
+    }
+    if(keystate[SDL_SCANCODE_RETURN])
+    {
+        bool debugMask = ProgramState::getInstance().getDebugCube();
+        ProgramState::getInstance().setDebugCube(!debugMask);
+        Log::getInfo().log("Debuggin cube = (%)", !debugMask ? "True" : "False" );
     }
 
     update();

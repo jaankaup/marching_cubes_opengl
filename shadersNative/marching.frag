@@ -5,9 +5,6 @@
 // Interpolated values from the vertex shaders
 in vec3 vPosIn;
 in vec3 fNormalIn;
-//in vec3 fColorIn;
-//in vec2 tFrag_in;
-//in vec3 nFrag_in;
 
 // Ouput data
 out vec3 color;
@@ -21,10 +18,8 @@ struct Light {
        float attentuationFactor;
 };
 
-//uniform sampler2D diffuseTexture;
 uniform sampler3D diffuse3DTexture;
 uniform mat4 M;
-//uniform vec3 lightPosition;
 uniform vec3 cameraPosition;
 uniform mat3 normalMatrix;
 uniform Light lights[8];
@@ -69,7 +64,9 @@ void main(){
 
         // Pinnan vä.
 	//vec3 surfaceColor = texture3D(diffuseTexture,vec3(tFrag_in,1.0f)).rgb;
-	vec3 surfaceColor = texture(diffuse3DTexture,vPosIn).rgb;
+  vec3 surfaceColor;
+  //vec4 sampled3D = texture(diffuse3DTexture,vPosIn);
+	surfaceColor = texture(diffuse3DTexture,vPosIn).rgb;
 //	vec3 surfaceColor = texture(diffuse3DTexture,vFrag_in.xyz).rgb;
 	//vec3 surfaceColor = vec3(0.5,0.5,0.5);
 

@@ -23,30 +23,19 @@ struct Cube
   vec4 v6;
   vec4 v7;
 
-  vec3 n0;
-  vec3 n1;
-  vec3 n2;
-  vec3 n3;
-  vec3 n4;
-  vec3 n5;
-  vec3 n6;
-  vec3 n7;
 };
 
-vec3 calculateNormal(vec3 v, float d)
+float calculateDensity(vec3 v)
 {
-  vec3 grad;
-  grad.x = texture(diffuse3DTexture,v + vec3(d,0,0)).w - texture(diffuse3DTexture,v + vec3(-d,0,0)).w;
-  grad.y = texture(diffuse3DTexture,v + vec3(0,d,0)).w - texture(diffuse3DTexture,v + vec3(0,-d,0)).w;
-  grad.z = texture(diffuse3DTexture,v + vec3(0,0,d)).w - texture(diffuse3DTexture,v + vec3(0,0,-d)).w;
-  return normalize(grad); 
-  //return -normalize(grad); 
+  float noise = texture(diffuse3DTexture,v).w;
+  float circle = noise * pow(v.x*v.x + v.y*v.y, 0.5) - 1.0;
+  return v.y + noise + circle;
 }
 
-Cube createCube(vec4 position, float vpb)
+Cube createCube(vec4 position)
 {
   // The length of a cube edge.
-  float d = 1/vpb;
+  float d = 1/voxels_per_block;
 
   // Create cube corner coordinates.
   vec3 p0 = position.xyz*d;
@@ -58,25 +47,14 @@ Cube createCube(vec4 position, float vpb)
   vec3 p6 = position.xyz*d + vec3(d   ,   d , d);
   vec3 p7 = position.xyz*d + vec3(d   , 0.0 , d);
 
-  // xyz = position, w = density. The density value is taken from the the diffuse3DTexture alpha value. 
-  vec4 v0 = vec4(p0, p0.y + texture(diffuse3DTexture,p0).w);  
-  vec4 v1 = vec4(p1, p1.y + texture(diffuse3DTexture,p1).w);  
-  vec4 v2 = vec4(p2, p2.y + texture(diffuse3DTexture,p2).w);  
-  vec4 v3 = vec4(p3, p3.y + texture(diffuse3DTexture,p3).w);  
-  vec4 v4 = vec4(p4, p4.y + texture(diffuse3DTexture,p4).w);  
-  vec4 v5 = vec4(p5, p5.y + texture(diffuse3DTexture,p5).w);  
-  vec4 v6 = vec4(p6, p6.y + texture(diffuse3DTexture,p6).w);  
-  vec4 v7 = vec4(p7, p7.y + texture(diffuse3DTexture,p7).w);  
-
-  // Normals.
-  vec3 n0 = calculateNormal(p0, d);
-  vec3 n1 = calculateNormal(p1, d);
-  vec3 n2 = calculateNormal(p2, d);
-  vec3 n3 = calculateNormal(p3, d);
-  vec3 n4 = calculateNormal(p4, d);
-  vec3 n5 = calculateNormal(p5, d);
-  vec3 n6 = calculateNormal(p6, d);
-  vec3 n7 = calculateNormal(p7, d);
+  vec4 v0 = vec4(p0, calculateDensity(p0));  
+  vec4 v1 = vec4(p1, calculateDensity(p1));  
+  vec4 v2 = vec4(p2, calculateDensity(p2));  
+  vec4 v3 = vec4(p3, calculateDensity(p3));  
+  vec4 v4 = vec4(p4, calculateDensity(p4));  
+  vec4 v5 = vec4(p5, calculateDensity(p5));  
+  vec4 v6 = vec4(p6, calculateDensity(p6));  
+  vec4 v7 = vec4(p7, calculateDensity(p7));  
 
   // Create the cube.
   Cube cube;
@@ -89,14 +67,6 @@ Cube createCube(vec4 position, float vpb)
   cube.v6 = v6;
   cube.v7 = v7;
 
-  cube.n0 = n0;
-  cube.n1 = n1;
-  cube.n2 = n2;
-  cube.n3 = n3;
-  cube.n4 = n4;
-  cube.n5 = n5;
-  cube.n6 = n6;
-  cube.n7 = n7;
   return cube; 
 }
 
@@ -120,7 +90,8 @@ void printCube(Cube c, float mask, bool printMask)
 {
     if (!(mask == cubeMask)) return;
     float pSize = 1.0;
-    float maskColor = float(mask) / float(255);
+//    float maskColor = float(mask) / float(255);
+    float maskColor = 1.0;
 
     // FRONT sideFront = v0 v1 v2 v3
     gl_PointSize = pSize;
@@ -301,7 +272,7 @@ void printCube(Cube c, float mask, bool printMask)
 
 void main(){
 
-        Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position,voxels_per_block);
+        Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position);
         float theCase = calculateCase(c); 
-        printCube(c,theCase,false);
+        printCube(c,theCase,true);
 }

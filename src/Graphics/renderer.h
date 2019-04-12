@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <cmath>
 #include <GL/glew.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -33,7 +34,6 @@ class Renderer
 		~Renderer();
 
     void init();
-    void render(const Vertexbuffer& vb, const Shader& shader, int triangleCount, const glm::mat4& viewMatrix,const glm::vec3& eyePosition);
     void renderModels(const std::vector<Model>& models, const Camera& camera);
 
 	private:

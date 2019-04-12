@@ -56,41 +56,48 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
   int size = width*height*depth*4;
   TextureData td(size,width,height,depth);
   auto data = td.getData();
-//  auto texels = new unsigned char[size];
-  bool hah = false;
 
-  MyRandom<int> mr("kisuli");
-  mr.setDistribution(0,28);
+  // Reinterpret the one dimensional array as multi-dimensional array.
+  uint8_t (&multiArray)[width][height][depth][4] = *reinterpret_cast<uint8_t (*)[width][height][depth][4]>(data);
 
-  MyRandom<int> mr2 ("hauveli");
-  mr2.setDistribution(0,255);
-//  Log::getDebug().log("% ",std::to_string(mr()));
-//  Log::getDebug().log("% ",std::to_string(mr()));
-//  Log::getDebug().log("% ",std::to_string(mr()));
-//  Log::getDebug().log("% ",std::to_string(mr()));
-//  Log::getDebug().log("% ",std::to_string(mr()));
-//  for (int i=0 ; i<width*height*depth ; i++)
-//  {
-//    data[i*4] = i;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-//    data[i*4+1] = 33; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
-//    data[i*4+2] = 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-//    data[i*4+3] = mr();// (int)((i/float(size))*255); // mr(); 
-    hah = !hah;
-//  }
+  //MyRandom<int> mr("kisuli");
+  MyRandom<int> mr;
+  mr.setDistribution(0,16);
+
+//  MyRandom<int> mr2 ("hauveli");
+  MyRandom<int> mr2;
+  mr2.setDistribution(-12,12);
+
+//  MyRandom<int> mr3 ("ohari");
+  MyRandom<int> mr3;
+  mr3.setDistribution(-12,12);
+  bool dark = false;
+  
   for (int z = 0; z < depth ; z++) {
-  for (int y = 0; y < height ; y++) {
+  for (int y = 0; y < height ; y++){
   for (int x = 0; x < width ; x++) {
-    int index = 4 * x + height*4 *  y + 4 * depth * depth * z; 
-    data[index] = mr2();   
-    data[index+1] = mr2() ;   
-    data[index+2] = mr2();   
-    data[index+3] = mr();   
-//    if (0.8 > 255.0f / (y+1.0)) data[index+3] = 255 ;
-//    else data[index+3] = static_cast<uint8_t>(std::clamp(centerY(y)  + 34.0 * sin(index*0.3) + 40.0 * cos(index*0.8) ,0.0,255.0));  
-//    if (height / (y+1.0f) < 0.5) data[index+3] = 0; 
-//    data[index+3] = std::clamp(( 255.0f / (height*height)) * y + 10 * sin(1.0f * index / 3.5f),0.0,255.0);  ; // hah ? 255 : 0;   
-    hah = !hah;
+    int density = mr();
+    multiArray[z][y][x][0] = 5 + y*2;
+    multiArray[z][y][x][1] = 51; //  + mr3(); // * density*0.5f;
+    multiArray[z][y][x][2] = 0 ; //density / 5; // std::clamp(abs(mr3() * density / 20 ),0,255) ;
+    multiArray[z][y][x][3] = density ;
   }}};
+
+//  for (int z = 0; z < depth ; z++) {
+//  for (int y = 0; y < height ; y++) {
+//  for (int x = 0; x < width ; x++) {
+//    uint8_t density = mr();
+//    int index = 4 * x + height*4 *  y + 4 * depth * depth * z; 
+//    data[index] = 102;   
+//    data[index+1] = 51 ;   
+//    data[index+2] = 0;   
+//    data[index+3] = mr();   
+////    if (0.8 > 255.0f / (y+1.0)) data[index+3] = 255 ;
+////    else data[index+3] = static_cast<uint8_t>(std::clamp(centerY(y)  + 34.0 * sin(index*0.3) + 40.0 * cos(index*0.8) ,0.0,255.0));  
+////    if (height / (y+1.0f) < 0.5) data[index+3] = 0; 
+////    data[index+3] = std::clamp(( 255.0f / (height*height)) * y + 10 * sin(1.0f * index / 3.5f),0.0,255.0);  ; // hah ? 255 : 0;   
+//    hah = !hah;
+//  }}};
   return std::move(td);
 }
 
@@ -117,17 +124,8 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
 //    data[i*4+3] = (uint8_t)(i*3); // mr(); // hah ? 5 : 250;// (int)((i/float(size))*255); // mr(); 
     hah = !hah;
   }
-//  for (int i=0 ; i<width*height*depth ; i++)
-//  {
-//    if (width*height*i 
-//    data[i*4] = 65;// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-//    data[i*4+1] = i % 255; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
-//    data[i*4+2] = hah ? 13 : 99; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-//    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
-//    hah = !hah;
-//  }
-  //return std::move(td);
-  return td;
+  return std::move(td);
+  //return td;
 }
 
 TextureData create2x2()

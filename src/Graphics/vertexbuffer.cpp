@@ -267,6 +267,7 @@ void Vertexbuffer::createExamplePoints(const int dimensionX, const int dimension
 {
   int size = dimensionX * dimensionY * dimensionZ;
   pData.reserve(size);
+  Log::getDebug().log("DATASIZE: %", std::to_string(size));
   for (int i=0 ; i<dimensionX ; ++i) {
   for (int j=0 ; j<dimensionY ; ++j) {
   for (int k=0 ; k<dimensionZ ; ++k) {

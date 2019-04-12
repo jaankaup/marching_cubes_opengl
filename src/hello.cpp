@@ -31,8 +31,6 @@
 #include "Utils/misc.h"
 #include "Utils/myrandom.h"
 
-//struct SDL_Window;
-//enum TextureType : int32_t;
 
 /**
  * Context structure that will be passed to the loop handler
@@ -42,38 +40,30 @@ struct context
     Renderer renderer;
     Vertexbuffer vertexbuffer;
     Vertexbuffer vertexbuffer2;
-    int triangleCount;
     Camera camera;
     std::vector<Model> models;
-//    Shader shader = ShaderManager::getInstance().createShader("my3Dshader");
-//    Texture texture = TextureManager::getInstance().create3D("my3Dtexture");//{TextureType::d2,0};
 };
 
 void loop_handler2(void *arg)
 {
-    static bool heko = false;
     context* c = static_cast<context*>(arg);
-    //c->texture.bind();
-    
     c->camera.handleEvents();
-    auto viewMatrix = c->camera.getViewMatrix();
-    if (heko)
-    {
-      c->renderer.render(c->vertexbuffer,ShaderManager::getInstance().getShaderByName("my3Dshader"),c->triangleCount,viewMatrix,c->camera.getPosition());
-    }
-    else {
-      c->renderer.renderModels(c->models,c->camera);
-    }
-    //heko = !heko;
+    c->renderer.renderModels(c->models,c->camera);
     Window::getInstance().swapBuffers();
 }
 
 int main()
 {
 
-  const int BLOCK_SIZE = 64 ;
-  const int BLOCK_DIV_Y = 8 ;
-  const int SAMPLE_POINTS_Y = 8;
+  const int BLOCK_SIZE = 16 ;
+
+  // 3D texture height.
+  const int SAMPLE_POINTS_Y = BLOCK_SIZE ;
+
+  const int CUBE_COUNT_X = BLOCK_SIZE * 8;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 2;
+  const int CUBE_COUNT_Z = BLOCK_SIZE * 8;
+  const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
 
   // The program state must be created first.
   ProgramState::getInstance();
@@ -81,9 +71,11 @@ int main()
   // Initialize the voxelsPerBlock count.
   ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
 
-//  auto ratio = static_cast<float>(BLOCK_SIZE)/static_cast<float>(BLOCK_DIV_Y);
-  auto y_start = static_cast<float>(25);  
-  ProgramState::getInstance().setStartPoint(glm::vec3(0.0f,y_start,0.0f));
+  // Set the starting point to 0.25 height of the cube height.
+  auto y_start = static_cast<float>(SAMPLE_POINTS_Y);  
+  ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, 5.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
+  
+//  logGLM("sp",ProgramState::getInstance().getStartPoint());
 
 //  ProgramState::getInstance().setVoxelsPerBlock(8.0f); 
   // Create the window.
@@ -122,11 +114,6 @@ int main()
     marchingShaderLine.build(marchingShaderLine_src);
   #endif
 
-//  Vertexbuffer vb;
-//  Renderer r;
-
-//  c.camera = Camera();
-
   // The initialization of creation of renderer.
   c.renderer.init();
 
@@ -135,13 +122,13 @@ int main()
   c.vertexbuffer.createExampleCube();
 
   // The triangle count of the cube.
-  c.triangleCount = 6*2*3;
+//  c.triangleCount = 6*2*3;
 
   c.vertexbuffer2.init();
-  c.vertexbuffer2.createExamplePoints(BLOCK_SIZE, SAMPLE_POINTS_Y, BLOCK_SIZE);
+  c.vertexbuffer2.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
 
-//  auto hyh = createChess3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
-  auto hyh = createRandom3Ddata(BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+  // Create the 3D texture data.
+  auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,SAMPLE_POINTS_Y,CUBE_COUNT_Z*2);
 //    auto hyh = create2x2();
   texture.create3D(hyh);
   textureCube.create("assets/rock.jpg");
@@ -170,12 +157,12 @@ int main()
   command.textureName = "my3Dtexture";
   command.shaderName = "marchingShader";
   command.startIndex = 0;
-  command.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE ;
-  auto scale = glm::scale(original,glm::vec3(58.0f));
-  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
-  command.modelMatrix = scale * translate * rotate;
-//  command.modelMatrix = original;
+  command.count = CUBE_TOTAL_COUNT;
+//  auto scale = glm::scale(original,glm::vec3(58.0f));
+//  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
+//  command.modelMatrix = scale * translate * rotate;
+  command.modelMatrix = original;
   m.addCommand(command);
   c.models.push_back(m);
 
@@ -187,8 +174,9 @@ int main()
   command3.textureName = "my3Dtexture";
   command3.shaderName = "marchingShaderLine";
   command3.startIndex = 0;
-  command3.count = BLOCK_SIZE * BLOCK_SIZE * BLOCK_SIZE;
-  command3.modelMatrix = scale * translate * rotate;
+  command3.count = CUBE_TOTAL_COUNT;
+//  command3.modelMatrix = scale * translate * rotate;
+  command3.modelMatrix = original;
   m3.addCommand(command3);
   c.models.push_back(m3);
   #endif
@@ -250,21 +238,7 @@ int main()
 ////  c.vertexbuffer.addData(&marchingData[0], marchingData.size() * sizeof(glm::vec3));
 ////
 ////  c.triangleCount = vertices.size()/3;
-////  //ShaderManager::getInstance().createShader(shaderSources2, "pah");
-////  Log::getDebug().log("triangleCount = %", std::to_string(c.triangleCount));
-//    SDL_Window *window;
-//    struct context ctx;
 
-//    SDL_Init(SDL_INIT_VIDEO);
-//    SDL_CreateWindowAndRenderer(600, 400, 0, &window, &ctx.renderer);
-//    SDL_SetRenderDrawColor(ctx.renderer, 255, 255, 255, 255);
-//
-//    get_owl_texture(&ctx);
-//    ctx.active_state = NOTHING_PRESSED;
-//    ctx.dest.x = 200;
-//    ctx.dest.y = 100;
-//    ctx.owl_vx = 0;
-//    ctx.owl_vy = 0;
 
     /**
      * Schedule the main loop handler to get 

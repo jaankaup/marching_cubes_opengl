@@ -25,6 +25,7 @@ class ProgramState
     glm::vec3 getStartPoint() const;
     float getCubeMask() const;
     float getCubeMaskCeil() const;
+    bool getDebugCube() const;
 
 
     void setScreenWidth(const int width);
@@ -34,6 +35,7 @@ class ProgramState
     void setWireframe(const bool wireframeEnabled);
     void setStartPoint(const glm::vec3& point);
     void setCubeMask(const float cubeMask);
+    void setDebugCube(const bool debugCube);
 
 	private:
 
@@ -45,6 +47,7 @@ class ProgramState
     bool pWireframe = false;
     glm::vec3 pStartPoint = glm::vec3(0.0,0.0,0.0);
     float pCubeMask = 0.1f;
+    bool pDebugCube = false;
 
 };
 

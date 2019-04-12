@@ -102,3 +102,13 @@ float ProgramState::getCubeMaskCeil() const
 {
   return std::floor(pCubeMask);
 }
+
+void ProgramState::setDebugCube(const bool debugCube)
+{
+  pDebugCube = debugCube;
+}
+
+bool ProgramState::getDebugCube() const
+{
+  return pDebugCube;
+}

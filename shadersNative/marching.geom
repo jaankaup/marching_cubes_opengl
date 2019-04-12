@@ -3,20 +3,18 @@
 // The input data is a point. A coordinate for base cube corner. 
 layout(points) in;
 
-// The output will be a triangle. 
 layout(triangle_strip, max_vertices = 15) out;
-//layout(line_strip, max_vertices = 30) out;
-//layout(line_strip, max_vertices = 15) out;
 
 // Output vertex normal.
 out vec3 fPosIn;
 out vec3 fNormalIn;
-//out vec3 fColorIn;
 uniform sampler3D diffuse3DTexture;
 uniform sampler1D tri_table;
 uniform float voxels_per_block;
 uniform vec3 startPoint;
 uniform mat4 MVP;
+uniform float cubeMask;
+uniform float debugMask;
 
 struct Cube
 {
@@ -39,18 +37,6 @@ struct Cube
   vec3 n7;
 };
 
-/*
-in gl_PerVertex
-{
-  vec4 gl_position;
-  float gl_PointSize;
-  float gl_ClipDistance;
-} gl_in[];
-
-
-The size of gl_in in now 1 because we are using point as input element. 
-*/
-
 
 /*
         v5                        v6
@@ -72,6 +58,7 @@ v1 +------------------------+ v2  |
    |/                       |/
    +------------------------+
   v0                       v3
+
 
                    e5               
          +------------------------+
@@ -100,25 +87,34 @@ e0 |    /                   |e2  /
 
  */
 
-const float ambiquousCases[107] = float[107](5.0 , 10.0 , 18.0 , 21.0 , 22.0 , 24.0 , 26.0 , 28.0 , 30.0 , 33.0 , 37.0 , 41.0 , 42.0 , 45.0 , 53.0 , 56.0 , 58.0 , 60.0 , 62.0 , 66.0 , 67.0 , 69.0 , 72.0 , 73.0 , 74.0 , 75.0 , 80.0 , 81.0 , 82.0 , 83.0 , 84.0 , 85.0 , 86.0 , 87.0 , 88.0 , 89.0 , 90.0 , 91.0 , 92.0 , 93.0 , 94.0 , 95.0 , 97.0 , 101.0 , 104.0 , 105.0 , 106.0 , 107.0 , 109.0 , 117.0 , 120.0 , 121.0 , 122.0 , 123.0 , 124.0 , 126.0 , 129.0 , 131.0 , 133.0 , 135.0 , 138.0 , 146.0 , 149.0 , 150.0 , 154.0 , 158.0 , 160.0 , 161.0 , 162.0 , 163.0 , 164.0 , 165.0 , 166.0 , 167.0 , 168.0 , 169.0 , 170.0 , 171.0 , 172.0 , 173.0 , 174.0 , 175.0 , 181.0 , 186.0 , 193.0 , 194.0 , 195.0 , 197.0 , 199.0 , 202.0 , 203.0 , 210.0 , 211.0 , 213.0 , 214.0 , 218.0 , 219.0 , 222.0 , 225.0 , 227.0 , 229.0 , 231.0 , 233.0 , 234.0 , 237.0 , 245.0 , 250.0);
-
 // https://github.com/QianMo/GPU-Gems-Book-Source-Code/blob/master/GPU-Gems-3-CD-Content/content/01/demo/models/tables.nma
 
-
-vec3 calculateNormal(vec3 v, float d)
+float calculateDensity(vec3 v)
 {
-  vec3 grad;
-  grad.x = texture(diffuse3DTexture,v + vec3(d,0,0)).w - texture(diffuse3DTexture,v + vec3(-d,0,0)).w;
-  grad.y = texture(diffuse3DTexture,v + vec3(0,d,0)).w - texture(diffuse3DTexture,v + vec3(0,-d,0)).w;
-  grad.z = texture(diffuse3DTexture,v + vec3(0,0,d)).w - texture(diffuse3DTexture,v + vec3(0,0,-d)).w;
-  return normalize(grad); 
-  //return -normalize(grad); 
+//  vec3 again = vec3(mod(v.x,8.0) - 4.0,mod(v.y,15.0f),mod(v.z,2.0f));
+  float noise = texture(diffuse3DTexture,v).w;
+  float hils = 3.0*sin(v.x);
+  float hils2 = 2.0*sin(v.z);
+//  float circle = clamp(noise * pow(again.x*again.x + again.y*again.y, 3.5) - 2.0,-3.0,20.0) - 2.0;
+
+//  return clamp(v.y + noise + circle + hils + hils2,0.0,15.0) + 20.0*v.y + 3.0 * noise ; // + circle; // - circle2;
+    return v.y + noise + hils + hils2;
 }
 
-Cube createCube(vec4 position, float vpb)
+vec3 calculateNormal(vec3 v)
+{
+  float d = 1.0 / voxels_per_block;
+  vec3 grad;
+  grad.x = calculateDensity(v + vec3(d,0,0)) - calculateDensity(v + vec3(-d,0,0)); //texture(diffuse3DTexture,v + vec3(d,0,0)).w - texture(diffuse3DTexture,v + vec3(-d,0,0)).w;
+  grad.y = calculateDensity(v + vec3(0,d,0)) - calculateDensity(v + vec3(0,-d,0)); //texture(diffuse3DTexture,v + vec3(0,d,0)).w - texture(diffuse3DTexture,v + vec3(0,-d,0)).w;
+  grad.z = calculateDensity(v + vec3(0,0,d)) - calculateDensity(v + vec3(0,0,-d)); //texture(diffuse3DTexture,v + vec3(0,0,d)).w - texture(diffuse3DTexture,v + vec3(0,0,-d)).w;
+  return normalize(grad); 
+}
+
+Cube createCube(vec4 position)
 {
   // The length of a cube edge.
-  float d = 1/vpb;
+  float d = 1.0/voxels_per_block;
 
   // Create cube corner coordinates.
   vec3 p0 = position.xyz*d;
@@ -131,24 +127,14 @@ Cube createCube(vec4 position, float vpb)
   vec3 p7 = position.xyz*d + vec3(d   , 0.0 , d);
 
   // xyz = position, w = density. The density value is taken from the the diffuse3DTexture alpha value. 
-  vec4 v0 = vec4(p0, p0.y + texture(diffuse3DTexture,p0).w);  
-  vec4 v1 = vec4(p1, p1.y + texture(diffuse3DTexture,p1).w);  
-  vec4 v2 = vec4(p2, p2.y + texture(diffuse3DTexture,p2).w);  
-  vec4 v3 = vec4(p3, p3.y + texture(diffuse3DTexture,p3).w);  
-  vec4 v4 = vec4(p4, p4.y + texture(diffuse3DTexture,p4).w);  
-  vec4 v5 = vec4(p5, p5.y + texture(diffuse3DTexture,p5).w);  
-  vec4 v6 = vec4(p6, p6.y + texture(diffuse3DTexture,p6).w);  
-  vec4 v7 = vec4(p7, p7.y + texture(diffuse3DTexture,p7).w);  
-
-  // Normals.
-  vec3 n0 = calculateNormal(p0, d);
-  vec3 n1 = calculateNormal(p1, d);
-  vec3 n2 = calculateNormal(p2, d);
-  vec3 n3 = calculateNormal(p3, d);
-  vec3 n4 = calculateNormal(p4, d);
-  vec3 n5 = calculateNormal(p5, d);
-  vec3 n6 = calculateNormal(p6, d);
-  vec3 n7 = calculateNormal(p7, d);
+  vec4 v0 = vec4(p0, calculateDensity(p0));  
+  vec4 v1 = vec4(p1, calculateDensity(p1));  
+  vec4 v2 = vec4(p2, calculateDensity(p2));  
+  vec4 v3 = vec4(p3, calculateDensity(p3));  
+  vec4 v4 = vec4(p4, calculateDensity(p4));  
+  vec4 v5 = vec4(p5, calculateDensity(p5));  
+  vec4 v6 = vec4(p6, calculateDensity(p6));  
+  vec4 v7 = vec4(p7, calculateDensity(p7));  
 
   // Create the cube.
   Cube cube;
@@ -161,40 +147,8 @@ Cube createCube(vec4 position, float vpb)
   cube.v6 = v6;
   cube.v7 = v7;
 
-  cube.n0 = n0;
-  cube.n1 = n1;
-  cube.n2 = n2;
-  cube.n3 = n3;
-  cube.n4 = n4;
-  cube.n5 = n5;
-  cube.n6 = n6;
-  cube.n7 = n7;
   return cube; 
 }
-
-//        v5                        v6
-//         +------------------------+
-//        /|                       /|
-//       / |                      / |
-//      /  |                     /  |
-//     /   |                    /   |  
-//    /    |                   /    |
-//v1 +------------------------+ v2  |
-//   |     |                  |     |
-//   |     |                  |     |
-//   |     |                  |     |
-//   |  v4 +------------------|-----+ v7
-//   |    /                   |    /
-//   |   /                    |   /
-//   |  /                     |  /    
-//   | /                      | /
-//   |/                       |/
-//   +------------------------+
-//  v0                       v3
-//
-//ambiquous cases: v0, v2 = 1.0 + 4.0 = 5.0
-//                 v1, v3 = 2.0 + 8.0 = 10.0
-//                 v1, v3 = 2.0 + 8.0 = 10.0
 
 float calculateCase(Cube c)
 {
@@ -359,9 +313,24 @@ void createVertex(float edgeValue, Cube c)
     }           
 }
 
-bool marchCube(Cube c, float vpb)
+void marchCube(Cube c)
 {
         float mask = calculateCase(c); 
+
+        // Return if the cube doesn't create any triangles.
+        if (mask == 0.0) return;
+        if (mask == 255.0) return;
+
+        if (!(mask == cubeMask) && debugMask == 1.0) return; 
+
+        c.n0 = calculateNormal(c.v0.xyz);
+        c.n1 = calculateNormal(c.v1.xyz);
+        c.n2 = calculateNormal(c.v2.xyz);
+        c.n3 = calculateNormal(c.v3.xyz);
+        c.n4 = calculateNormal(c.v4.xyz);
+        c.n5 = calculateNormal(c.v5.xyz);
+        c.n6 = calculateNormal(c.v6.xyz);
+        c.n7 = calculateNormal(c.v7.xyz);
 
         // Find the center of the texel which has the information of the first ende vertices.
         // The pixel has the followin format: r = first edge, g = second edge, b = third edge.
@@ -378,127 +347,66 @@ bool marchCube(Cube c, float vpb)
         //        1.   2.   3.   4.   5.
         //         
 
-        float index = (mask * 5.0) / 1280.0;
+        float index = (mask * 5.0 + 0.5) / 1280.0;
 
         // The first edge. 
-        vec3 edges = texture(tri_table,index).rgb;
-
-        // If the first edge is 1.0 (255), there is nothing to do.
-        if (abs(edges.r - 1.0) < 0.000001) return false;
-
-        // Ambiquity cases?
-        
-//        for (int i=0 ; i<107 ; i++)
-//        {
-//          if (abs(mask - ambiquousCases[i]) < 0.001) return true;
-////          c.v0 = vec4(10.0,10.0,10.0,1.0);
-//        }
+        vec3 edges1 = texture(tri_table,index).rgb;
 
         // Create 1. triable.
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
+        createVertex(edges1.r, c);
+        createVertex(edges1.g, c);
+        createVertex(edges1.b, c);
 
         EndPrimitive();
 
-//        float iterator = 1.0 / 1280;
-
         // The 2. edge. 
-        edges = texture(tri_table,index + 1.0/1280.0).rgb;
+        vec3 edges2 = texture(tri_table,index + 1.0/1280.0).rgb;
 
         // If the first vertex number is 1.0 (normalized from 255), there is no more triables.
-        if (abs(edges.r - 1.0) < 0.000001) return false;
+        if (abs(edges2.r - 1.0) < 0.000001) return;
 
         // Create the 2. triable.
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
+        createVertex(edges2.r, c);
+        createVertex(edges2.g, c);
+        createVertex(edges2.b, c);
 
         EndPrimitive();
 
         // The 3. edge. 
-        edges = texture(tri_table,index+2.0/1280.0).rgb;
+        vec3 edges3 = texture(tri_table,index+2.0/1280.0).rgb;
 
-        if (abs(edges.r - 1.0) < 0.000001) return false;
+        if (abs(edges3.r - 1.0) < 0.000001) return;
 
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
+        createVertex(edges3.r, c);
+        createVertex(edges3.g, c);
+        createVertex(edges3.b, c);
 
         EndPrimitive();
 
         // The 4. edge. 
-        edges = texture(tri_table,index+3.0/1280.0).rgb;
+        vec3 edges4 = texture(tri_table,index+3.0/1280.0).rgb;
 
-        if (abs(edges.r - 1.0) < 0.000001) return false;
+        if (abs(edges4.r - 1.0) < 0.000001) return;
 
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
+        createVertex(edges4.r, c);
+        createVertex(edges4.g, c);
+        createVertex(edges4.b, c);
 
         EndPrimitive();
 
         // The 5. edge. 
-        edges = texture(tri_table,index+4.0/1280.0).rgb;
+        vec3 edges5 = texture(tri_table,index+4.0/1280.0).rgb;
 
-        if (abs(edges.r - 1.0) < 0.000001) return false;
-        createVertex(edges.r, c);
-        createVertex(edges.g, c);
-        createVertex(edges.b, c);
+        if (abs(edges5.r - 1.0) < 0.000001) return;
+        createVertex(edges5.r, c);
+        createVertex(edges5.g, c);
+        createVertex(edges5.b, c);
 
         EndPrimitive();
-        
-        return false;
 }
 
 void main(){
 
-        Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position,voxels_per_block);
-        bool recursion = marchCube(c, voxels_per_block);
-//        if (recursion) { }
-//        {
-//          float d = 1 / (voxels_per_block * 2.0);
-//
-//          vec3 p0 = c.v0.xyz;
-//          vec3 p1 = c.v0.xyz + vec3(0.0 ,   d , 0.0);
-//          vec3 p2 = c.v0.xyz + vec3(d   ,   d , 0.0);
-//          vec3 p3 = c.v0.xyz + vec3(d   , 0.0 , 0.0);
-//          vec3 p4 = c.v0.xyz + vec3(0.0 , 0.0 , d);
-//          vec3 p5 = c.v0.xyz + vec3(0.0 ,   d , d);
-//          vec3 p6 = c.v0.xyz + vec3(d   ,   d , d);
-//          vec3 p7 = c.v0.xyz + vec3(d   , 0.0 , d);
-// 
-//          Cube c0 = createCube(vec4(p0,1.0), voxels_per_block * 2.0);
-//          Cube c1 = createCube(vec4(p1,1.0), voxels_per_block * 2.0);
-//          Cube c2 = createCube(vec4(p2,1.0), voxels_per_block * 2.0);
-//          Cube c3 = createCube(vec4(p3,1.0), voxels_per_block * 2.0);
-//          Cube c4 = createCube(vec4(p4,1.0), voxels_per_block * 2.0);
-//          Cube c5 = createCube(vec4(p5,1.0), voxels_per_block * 2.0);
-//          Cube c6 = createCube(vec4(p6,1.0), voxels_per_block * 2.0);
-//          Cube c7 = createCube(vec4(p7,1.0), voxels_per_block * 2.0);
-//            
-//          bool recursion0 = marchCube(c0, voxels_per_block * 2.0);
-//          bool recursion1 = marchCube(c1, voxels_per_block * 2.0);
-//          bool recursion2 = marchCube(c2, voxels_per_block * 2.0);
-//          bool recursion3 = marchCube(c3, voxels_per_block * 2.0);
-//          bool recursion4 = marchCube(c4, voxels_per_block * 2.0);
-//          bool recursion5 = marchCube(c5, voxels_per_block * 2.0);
-//          bool recursion6 = marchCube(c6, voxels_per_block * 2.0);
-//          bool recursion7 = marchCube(c7, voxels_per_block * 2.0);
-//          }
-//          float d2 = 1 / (voxels_per_block);
-
-//          bool recursion0 = marchCube(c0, voxels_per_block * 2.0);
-//          if (recursion0)
-//          {
-//
-//          }
-//          bool recursion1 = marchCube(c1, voxels_per_block * 2.0);
-//          bool recursion2 = marchCube(c2, voxels_per_block * 2.0);
-//          bool recursion3 = marchCube(c3, voxels_per_block * 2.0);
-//          bool recursion4 = marchCube(c4, voxels_per_block * 2.0);
-//          bool recursion5 = marchCube(c5, voxels_per_block * 2.0);
-//          bool recursion6 = marchCube(c6, voxels_per_block * 2.0);
-//          bool recursion7 = marchCube(c7, voxels_per_block * 2.0);
-//        }
+        Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position);
+        marchCube(c);
 }
