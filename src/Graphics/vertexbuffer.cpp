@@ -306,10 +306,14 @@ int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimen
 //  for (int k=0 ; k<dimensionZ*2 ; ++k) {
     if ((i >= innerX_min && i < innerX_max) && (j >= innerY_min && j < innerY_max) && (k >= innerZ_min && k < innerZ_max)) // continue; 
     {
+      continue;
+//    pData.push_back((float)i);
+//    pData.push_back((float)j);
+//    pData.push_back((float)k);
+    }
     pData.push_back((float)i);
     pData.push_back((float)j);
     pData.push_back((float)k);
-    }
   }}};
 
   Log::getDebug().log("TIER2 : DATASIZE: %", std::to_string(pData.size()));

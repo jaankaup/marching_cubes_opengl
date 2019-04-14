@@ -159,37 +159,37 @@ int main()
 
   glm::mat4 original = glm::mat4(1.0f);
 
-//  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
-//  Model m;
-//  Command command;
-//  command.vao = c.vertexbuffer2.getVAO();
-//  command.draw = GL_POINTS;
-//  //command.textureName = "my3Dtexture";
-//  command.textureName = "my3Dtexture";
-//  command.shaderName = "marchingShader";
-//  command.startIndex = 0;
-//  command.count = vb2_count; // CUBE_TOTAL_COUNT;
-////  auto scale = glm::scale(original,glm::vec3(58.0f));
-////  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-////  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
-////  command.modelMatrix = scale * translate * rotate;
-//  command.modelMatrix = original;
-//  m.addCommand(command);
-//  c.models.push_back(m);
-//
-//  Model m3;
-//  Command command3;
-//  command3.vao = c.vertexbuffer2.getVAO();
-//  command3.draw = GL_POINTS;
-//  //command.textureName = "my3Dtexture";
-//  command3.textureName = "my3Dtexture";
-//  command3.shaderName = "marchingShaderLine";
-//  command3.startIndex = 0;
-//  command3.count = vb2_count; //CUBE_TOTAL_COUNT;
-////  command3.modelMatrix = scale * translate * rotate;
-//  command3.modelMatrix = original;
-//  m3.addCommand(command3);
-//  c.models.push_back(m3);
+  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
+  Model m;
+  Command command;
+  command.vao = c.vertexbuffer2.getVAO();
+  command.draw = GL_POINTS;
+  //command.textureName = "my3Dtexture";
+  command.textureName = "my3Dtexture";
+  command.shaderName = "marchingShader";
+  command.startIndex = 0;
+  command.count = vb2_count; // CUBE_TOTAL_COUNT;
+//  auto scale = glm::scale(original,glm::vec3(58.0f));
+//  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
+//  command.modelMatrix = scale * translate * rotate;
+  command.modelMatrix = original;
+  m.addCommand(command);
+  c.models.push_back(m);
+
+  Model m3;
+  Command command3;
+  command3.vao = c.vertexbuffer2.getVAO();
+  command3.draw = GL_POINTS;
+  //command.textureName = "my3Dtexture";
+  command3.textureName = "my3Dtexture";
+  command3.shaderName = "marchingShaderLine";
+  command3.startIndex = 0;
+  command3.count = vb2_count; //CUBE_TOTAL_COUNT;
+//  command3.modelMatrix = scale * translate * rotate;
+  command3.modelMatrix = original;
+  m3.addCommand(command3);
+  c.models.push_back(m3);
 
   Model m5;
   Command command5;
