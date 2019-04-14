@@ -4,7 +4,8 @@
 
 Camera::Camera()
 {
-  pEyePosition = glm::vec3(0.0f,1.5f,1.5f);
+  pEyePosition = glm::vec3(0.0f,0.5f,0.0f);
+//  pEyePosition = glm::vec3(0.0f,1.5f,1.5f);
 //    pEyePosition = glm::vec3(00.0f,50.0f,0.0f);
 //    glm::vec3 pUp = glm::vec3(0.0f,1.0f, 0.0f);
 //    glm::vec3 pLookat = glm::vec3(0.0f,0.0f,0.0f);
@@ -16,8 +17,8 @@ Camera::Camera()
     pCamera_quat = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
     pMousePosition =  glm::vec2(0.0f,0.0f); 
     pPrevTick = SDL_GetTicks();
-    float pMouseX_sensitivity = 1.5f;
-    float pMouseY_sensitivity = 1.5f;
+    float pMouseX_sensitivity = 350.2f;
+    float pMouseY_sensitivity = 350.2f;
 }
 
 Camera::~Camera()

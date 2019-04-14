@@ -45,9 +45,9 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
       commands.push_back(c);
     }
   }
-//  logGLM("eyePosition",eyePosition);
-  auto startPoint = ProgramState::getInstance().getStartPoint();
-  auto sumPoint = glm::vec3(std::floor(startPoint.x + 16.0f *eyePosition.x), startPoint.y, std::floor(startPoint.z + 16.0f * eyePosition.z));
+
+    float voxels_per_block = ProgramState::getInstance().getVoxelsPerBlock();
+  // Move the cubes with camera.
 //  logGLM("sumPoint",sumPoint);
 
 //  logGLM("startPopint",startPoint);
@@ -59,11 +59,31 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
 //  Log::getDebug().log("commands.size = %",std::to_string(commands.size()));
   for (const auto& com : commands)
   {
-//    Log::getDebug().log("drawing = (%)",std::to_string(com.vao));
-    glm::mat4 mx = com.modelMatrix;
-//    logGLM("modelMatrixModels",mx);
     Shader shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
     shader.bind();
+    auto startPoint = ProgramState::getInstance().getStartPoint();
+    logGLM("startPoint",startPoint);
+    glm::vec3 sumPoint = glm::vec3(std::floor(startPoint.x/2.0f + voxels_per_block/4.0f * eyePosition.x),
+                            std::floor(startPoint.y/2.0f + voxels_per_block/4.0f * eyePosition.y),
+                            std::floor(startPoint.z/2.0f + voxels_per_block/4.0f * eyePosition.z));
+    if (com.name == "marching_tier2" || com.name == "marching_tier2_wire")
+    {
+      startPoint = glm::vec3(-8.0f);
+      glm::vec3 sumPoint = glm::vec3(std::floor(startPoint.x + voxels_per_block/2.0f * eyePosition.x),
+                           std::floor(startPoint.y + voxels_per_block/2.0f * eyePosition.y),
+                           std::floor(startPoint.z + voxels_per_block/2.0f * eyePosition.z));
+      shader.setUniform("voxels_per_block", voxels_per_block/4.0f);
+    }
+    else
+    {
+      continue;
+      sumPoint = glm::vec3(std::floor(startPoint.x + voxels_per_block * eyePosition.x),
+                           std::floor(startPoint.y + voxels_per_block * eyePosition.y),
+                           std::floor(startPoint.z + voxels_per_block * eyePosition.z));
+      shader.setUniform("voxels_per_block", voxels_per_block);
+    }
+
+    glm::mat4 mx = com.modelMatrix;
     Texture texture = TextureManager::getInstance().getTextureByName(com.textureName);//{TextureType::d2,0};
     texture.use(0);
     glBindVertexArray(com.vao);
@@ -77,7 +97,7 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
     shader.setUniform("lights[0].attentuationFactor", 0.00009f);
     shader.setUniform("cameraPosition", eyePosition);
     shader.setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
-    shader.setUniform("voxels_per_block",  ProgramState::getInstance().getVoxelsPerBlock());
+//    shader.setUniform("voxels_per_block", voxels_per_block);
     shader.setUniform("startPoint", sumPoint /* sumPoint */); //  ProgramState::getInstance().getStartPoint());
     shader.setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
     shader.setUniform("debugMask", ProgramState::getInstance().getDebugCube() ? 1.0f : 0.0f);

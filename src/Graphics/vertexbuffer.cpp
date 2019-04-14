@@ -263,7 +263,7 @@ GLuint Vertexbuffer::getVAO() const
   return pVAO;
 }
 
-void Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY, const int dimensionZ)
+int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY, const int dimensionZ)
 {
   int size = dimensionX * dimensionY * dimensionZ;
   pData.reserve(size);
@@ -284,4 +284,36 @@ void Vertexbuffer::createExamplePoints(const int dimensionX, const int dimension
 
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
+  return pData.size();
+}
+
+int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ)
+{
+  int innerX_min = 0;
+  int innerX_max = dimensionX/2;
+  int innerY_min = 0;
+  int innerY_max = dimensionY/2;
+  int innerZ_min = 0; 
+  int innerZ_max = dimensionZ/2;
+
+  int size = dimensionX * dimensionY * dimensionZ * 4;
+  pData.reserve(size);
+  for (int i=-dimensionX ; i<dimensionX*2 ; ++i) {
+  for (int j=-dimensionY ; j<dimensionY*2 ; ++j) {
+  for (int k=-dimensionZ ; k<dimensionZ*2 ; ++k) {
+//  for (int i=0 ; i<dimensionX*2 ; ++i) {
+//  for (int j=0 ; j<dimensionY*2 ; ++j) {
+//  for (int k=0 ; k<dimensionZ*2 ; ++k) {
+    if ((i >= innerX_min && i < innerX_max) && (j >= innerY_min && j < innerY_max) && (k >= innerZ_min && k < innerZ_max)) // continue; 
+    {
+    pData.push_back((float)i);
+    pData.push_back((float)j);
+    pData.push_back((float)k);
+    }
+  }}};
+
+  Log::getDebug().log("TIER2 : DATASIZE: %", std::to_string(pData.size()));
+  std::vector<std::string> types = {"3f"};
+  addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
+  return pData.size();
 }

@@ -40,6 +40,7 @@ struct context
     Renderer renderer;
     Vertexbuffer vertexbuffer;
     Vertexbuffer vertexbuffer2;
+    Vertexbuffer vertexbuffer3;
     Camera camera;
     std::vector<Model> models;
 };
@@ -55,25 +56,28 @@ void loop_handler2(void *arg)
 int main()
 {
 
-  const int BLOCK_SIZE = 16 ;
+  const int BLOCK_SIZE = 16;
 
   // 3D texture height.
   const int SAMPLE_POINTS_Y = BLOCK_SIZE ;
 
-  const int CUBE_COUNT_X = BLOCK_SIZE * 8;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 2;
-  const int CUBE_COUNT_Z = BLOCK_SIZE * 8;
+  const int CUBE_COUNT_X = BLOCK_SIZE * 2;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 1;
+  const int CUBE_COUNT_Z = BLOCK_SIZE * 2;
   const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
 
   // The program state must be created first.
   ProgramState::getInstance();
   
+  // Set base cube dimension.
+//  ProgramState::getInstance().setCubeDimension(glm::ivec3(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2));
+
   // Initialize the voxelsPerBlock count.
   ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
 
   // Set the starting point to 0.25 height of the cube height.
   auto y_start = static_cast<float>(SAMPLE_POINTS_Y);  
-  ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, 5.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
+  ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, -CUBE_COUNT_Y/2.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
   
 //  logGLM("sp",ProgramState::getInstance().getStartPoint());
 
@@ -125,10 +129,15 @@ int main()
 //  c.triangleCount = 6*2*3;
 
   c.vertexbuffer2.init();
-  c.vertexbuffer2.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+  int vb2_count = c.vertexbuffer2.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+
+  c.vertexbuffer3.init();
+  int vb3_count = c.vertexbuffer3.createExamplePointsTier2(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+//  int vb3_count = c.vertexbuffer3.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
 
   // Create the 3D texture data.
-  auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,SAMPLE_POINTS_Y,CUBE_COUNT_Z*2);
+  auto hyh = createRandom3Ddata(BLOCK_SIZE*2,BLOCK_SIZE*2,BLOCK_SIZE*2);
+  //auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
 //    auto hyh = create2x2();
   texture.create3D(hyh);
   textureCube.create("assets/rock.jpg");
@@ -147,38 +156,74 @@ int main()
 
 
   #ifndef EMSCRIPTEN
-  glm::mat4 original = glm::mat4(1.0f);
-  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
-  Model m;
-  Command command;
-  command.vao = c.vertexbuffer2.getVAO();
-  command.draw = GL_POINTS;
-  //command.textureName = "my3Dtexture";
-  command.textureName = "my3Dtexture";
-  command.shaderName = "marchingShader";
-  command.startIndex = 0;
-  command.count = CUBE_TOTAL_COUNT;
-//  auto scale = glm::scale(original,glm::vec3(58.0f));
-//  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
-//  command.modelMatrix = scale * translate * rotate;
-  command.modelMatrix = original;
-  m.addCommand(command);
-  c.models.push_back(m);
 
-  Model m3;
-  Command command3;
-  command3.vao = c.vertexbuffer2.getVAO();
-  command3.draw = GL_POINTS;
+  glm::mat4 original = glm::mat4(1.0f);
+
+//  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
+//  Model m;
+//  Command command;
+//  command.vao = c.vertexbuffer2.getVAO();
+//  command.draw = GL_POINTS;
+//  //command.textureName = "my3Dtexture";
+//  command.textureName = "my3Dtexture";
+//  command.shaderName = "marchingShader";
+//  command.startIndex = 0;
+//  command.count = vb2_count; // CUBE_TOTAL_COUNT;
+////  auto scale = glm::scale(original,glm::vec3(58.0f));
+////  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+////  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
+////  command.modelMatrix = scale * translate * rotate;
+//  command.modelMatrix = original;
+//  m.addCommand(command);
+//  c.models.push_back(m);
+//
+//  Model m3;
+//  Command command3;
+//  command3.vao = c.vertexbuffer2.getVAO();
+//  command3.draw = GL_POINTS;
+//  //command.textureName = "my3Dtexture";
+//  command3.textureName = "my3Dtexture";
+//  command3.shaderName = "marchingShaderLine";
+//  command3.startIndex = 0;
+//  command3.count = vb2_count; //CUBE_TOTAL_COUNT;
+////  command3.modelMatrix = scale * translate * rotate;
+//  command3.modelMatrix = original;
+//  m3.addCommand(command3);
+//  c.models.push_back(m3);
+
+  Model m5;
+  Command command5;
+  command5.name = "marching_tier2_wire";
+  command5.vao = c.vertexbuffer3.getVAO();
+  command5.draw = GL_POINTS;
   //command.textureName = "my3Dtexture";
-  command3.textureName = "my3Dtexture";
-  command3.shaderName = "marchingShaderLine";
-  command3.startIndex = 0;
-  command3.count = CUBE_TOTAL_COUNT;
+  command5.textureName = "my3Dtexture";
+  command5.shaderName = "marchingShaderLine";
+  command5.startIndex = 0;
+  command5.count = vb3_count; //CUBE_TOTAL_COUNT;
 //  command3.modelMatrix = scale * translate * rotate;
-  command3.modelMatrix = original;
-  m3.addCommand(command3);
-  c.models.push_back(m3);
+//  auto scale5 = glm::scale(original,glm::vec3(1.0f));
+//  auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
+//  command5.modelMatrix = translate5;
+  command5.modelMatrix = original;
+  m5.addCommand(command5);
+  c.models.push_back(m5);
+
+  Model m4;
+  Command command4;
+  command4.name = "marching_tier2";
+  command4.vao = c.vertexbuffer3.getVAO();
+  command4.draw = GL_POINTS;
+  //command.textureName = "my3Dtexture";
+  command4.textureName = "my3Dtexture";
+  command4.shaderName = "marchingShader";
+  command4.startIndex = 0;
+  command4.count = vb3_count; // 16859136;
+//  command3.modelMatrix = scale * translate * rotate;
+  command4.modelMatrix = original;
+  m4.addCommand(command4);
+  c.models.push_back(m4);
   #endif
 
   Model m2;

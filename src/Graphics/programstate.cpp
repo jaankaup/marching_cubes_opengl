@@ -112,3 +112,13 @@ bool ProgramState::getDebugCube() const
 {
   return pDebugCube;
 }
+
+void ProgramState::setCubeDimension(const glm::ivec3& cubeDimension)
+{
+  pCubeDimension = cubeDimension;
+}
+
+glm::ivec3 ProgramState::getCubeDimension() const
+{
+  return pCubeDimension;
+}

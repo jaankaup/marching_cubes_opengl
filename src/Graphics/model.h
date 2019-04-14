@@ -9,6 +9,7 @@
 
 struct Command
 {
+  std::string name;
   GLuint vao;
   GLenum draw;
   std::string textureName;

@@ -27,9 +27,14 @@ struct Cube
 
 float calculateDensity(vec3 v)
 {
+  vec3 again = vec3(mod(v.x,8.0) - 4.0,mod(v.y,15.0f),mod(v.z,2.0f));
   float noise = texture(diffuse3DTexture,v).w;
-  float circle = noise * pow(v.x*v.x + v.y*v.y, 0.5) - 1.0;
-  return v.y + noise + circle;
+  float hils = 3.0*sin(v.x);
+  float hils2 = 2.0*sin(v.z);
+  float circle = clamp(noise * pow(again.x*again.x + again.y*again.y, 3.5),-2.0,20.0) - 2.0;
+
+  return v.y + noise + circle + hils + hils2 + 20.0*v.y + 3.0 * noise ; // + circle; // - circle2;
+//    return v.y + noise; // + hils + hils2;
 }
 
 Cube createCube(vec4 position)
