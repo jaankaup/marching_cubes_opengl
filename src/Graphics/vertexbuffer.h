@@ -6,19 +6,22 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "vertexAttributes.h"
 
+
 class Vertexbuffer
 {
+  friend class VertexBufferManager;
+
 	public:
 		Vertexbuffer();
 		~Vertexbuffer();
 
-    // Copying causes problems because destructor deletes the buffers.
-    Vertexbuffer& operator=(const Vertexbuffer&) = delete;
-    Vertexbuffer(const Vertexbuffer&) = delete;
-
-    // Use move instead.
-    Vertexbuffer(Vertexbuffer&&) = default;
-    Vertexbuffer& operator=(Vertexbuffer&&) = default;
+//    // Copying causes problems because destructor deletes the buffers.
+//    Vertexbuffer& operator=(const Vertexbuffer&) = delete;
+//    Vertexbuffer(const Vertexbuffer&) = delete;
+//
+//    // Use move instead.
+//    Vertexbuffer(Vertexbuffer&&) = default;
+//    Vertexbuffer& operator=(Vertexbuffer&&) = default;
 
     void init();
     void bind() const;
@@ -28,6 +31,8 @@ class Vertexbuffer
     int createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ);
     GLuint getHandle() const;
     GLuint getVAO() const;
+    // TODO: change.
+    int* getCount() const;
 
 	private:
     GLuint pId = 0;
@@ -36,6 +41,10 @@ class Vertexbuffer
     GLenum pUsage;
     std::vector<float> pData;
 
+    // TODO: change this. 
+    int *pDataCount = new int[1];
+
+    void dispose() const;
 };
 
 

@@ -7,9 +7,6 @@ Vertexbuffer::Vertexbuffer()
 
 Vertexbuffer::~Vertexbuffer()
 {
-  if (pId != 0) glDeleteBuffers(1,&pId);
-  glDeleteVertexArrays(1, &pVAO);
-  glDeleteBuffers(1, &pId);
 }
 
 void Vertexbuffer::bind() const
@@ -81,21 +78,6 @@ void Vertexbuffer::createExampleCube()
                                   glm::vec3(1.0f , 0.0f , 0.0f),
                                   glm::vec3(0.0f , 1.0f , 0.0f),
                                   glm::vec3(0.0f, -1.0f, 0.0f)};
-//  std::vector<glm::vec3> vData = {glm::vec3(0.0f, 0.0f, 0.0f),
-//                                  glm::vec3(0.0f, 0.0f, 1.0f),
-//                                  glm::vec3(0.0f, 1.0f, 0.0f),
-//                                  glm::vec3(0.0f, 1.0f, 1.0f),
-//                                  glm::vec3(1.0f, 0.0f, 0.0f),
-//                                  glm::vec3(1.0f, 0.0f, 1.0f),
-//                                  glm::vec3(1.0f, 1.0f, 0.0f),
-//                                  glm::vec3(1.0f, 1.0f, 1.0f)};
-
-//  std::vector<glm::vec3> nData = {glm::vec3(0.0, 0.0, 0.0),
-//                                  glm::vec3(0.0, 0.0,-1.0),
-//                                  glm::vec3(0.0, 1.0, 0.0),
-//                                  glm::vec3(0.0,-1.0, 0.0),
-//                                  glm::vec3(1.0, 0.0, 0.0),
-//                                  glm::vec3(-1.0, 0.0, 0.0)};
   // Face 1
 //  f 5/1/1 1/2/1 4/3/1 
   std::vector<glm::vec3> vs;
@@ -256,6 +238,9 @@ void Vertexbuffer::createExampleCube()
   }
   std::vector<std::string> types = {"3f","2f","3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
+
+  pDataCount[1] = pData.size();
+  pData.clear();
 }
 
 GLuint Vertexbuffer::getVAO() const
@@ -284,7 +269,11 @@ int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY
 
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
-  return pData.size();
+  int dataSize = pData.size();
+  pDataCount[1] = dataSize;
+  pData.clear();
+  pData.clear();
+  return dataSize;
 }
 
 int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ)
@@ -319,5 +308,23 @@ int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimen
   Log::getDebug().log("TIER2 : DATASIZE: %", std::to_string(pData.size()));
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
-  return pData.size();
+  int dataSize = pData.size();
+  pDataCount[1] = dataSize;
+  pData.clear();
+  return dataSize;
 }
+
+void Vertexbuffer::dispose() const
+{
+  Log::getDebug().log("Deleting vertexvuffer: %", std::to_string(pId));
+  delete[] pDataCount;
+  if (pId != 0) glDeleteBuffers(1,&pId);
+  glDeleteVertexArrays(1, &pVAO);
+  glDeleteBuffers(1, &pId);
+}
+
+int* Vertexbuffer::getCount() const
+{
+    return pDataCount;
+}
+

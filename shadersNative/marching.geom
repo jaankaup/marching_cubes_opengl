@@ -91,6 +91,7 @@ e0 |    /                   |e2  /
  */
 
 // https://github.com/QianMo/GPU-Gems-Book-Source-Code/blob/master/GPU-Gems-3-CD-Content/content/01/demo/models/tables.nma
+// https://prideout.net/blog/distance_fields
 
 float calculateDensity(vec3 v)
 {

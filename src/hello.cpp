@@ -28,6 +28,7 @@
 #include "Graphics/model.h"
 #include "Graphics/programstate.h"
 #include "Graphics/timer.h"
+#include "Graphics/vertexBufferManager.h"
 #include "Utils/log.h"
 #include "Utils/misc.h"
 #include "Utils/myrandom.h"
@@ -39,9 +40,9 @@
 struct context
 {
     Renderer renderer;
-    Vertexbuffer vertexbuffer;
-    Vertexbuffer vertexbuffer2;
-    Vertexbuffer vertexbuffer3;
+//    Vertexbuffer vertexbuffer;
+//    Vertexbuffer vertexbuffer2;
+//    Vertexbuffer vertexbuffer3;
     Camera camera;
     std::vector<Model> models;
 };
@@ -54,8 +55,59 @@ void loop_handler2(void *arg)
     Window::getInstance().swapBuffers();
 }
 
+/* Creates the green thing. @param wireframe tells that a wireframe version
+ * should be made. */
+Model createEarth(bool wireframe)
+{
+  glm::mat4 original = glm::mat4(1.0f);
+
+  const int BLOCK_SIZE = 12;
+  const int CUBE_COUNT_X = BLOCK_SIZE * 6;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 6 ;
+  const int CUBE_COUNT_Z = BLOCK_SIZE * 6;
+  const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
+
+  const std::string TEXTURE_NAME = "greenThingTexture"; 
+  const std::string VB_NAME = "greenThingTexture"; 
+
+  int vb_count = 0;
+
+  if (!wireframe)
+  {
+    // Create the 3D texture data.
+    Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
+    auto tex3D_data = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
+    tex3D.create3D(tex3D_data);
+
+    // A LOCAL COPY. TODO: fix it.
+    auto vb = VertexBufferManager::getInstance().createVertexBuffer(VB_NAME);
+    vb_count = vb.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+  }
+  else vb_count = VertexBufferManager::getInstance().getVertexBufferByName(VB_NAME).getCount()[1]; 
+
+  Model m;
+  m.setCameraPosition(glm::vec3(0.0f,0.0f,17.0f));
+  Command c;
+  c.block_size = BLOCK_SIZE;
+  c.cube_count_x = CUBE_COUNT_X;
+  c.cube_count_y = CUBE_COUNT_Y;
+  c.cube_count_z = CUBE_COUNT_Z;
+  c.start_point = glm::vec3(-35.0f, -37.0f, -67.0f);
+  c.vao = VertexBufferManager::getInstance().getVertexBufferByName(VB_NAME).getVAO(); 
+  c.draw = GL_POINTS;
+  c.textureName = TEXTURE_NAME;
+  if (wireframe) c.shaderName = "marchingShaderLine";
+  else c.shaderName = "marchingShader";
+  c.startIndex = 0;
+  c.count = vb_count;
+  c.modelMatrix = original;
+  m.addCommand(c);
+  return m;
+}
+
 int main()
 {
+
 
   const int BLOCK_SIZE = 12;
 
@@ -90,8 +142,8 @@ int main()
   // The shader for shading textured cube.
   Shader shaderCube = ShaderManager::getInstance().createShader("cubeShader");
 
-  // 3D texture.
-  Texture texture = TextureManager::getInstance().create3D("my3Dtexture");
+//  // 3D texture.
+//  Texture texture = TextureManager::getInstance().create3D("my3Dtexture");
 
   // The tri_table data .
   Texture tritable = TextureManager::getInstance().create1D("tri_table_texture");
@@ -124,25 +176,28 @@ int main()
   c.renderer.init();
 
   // Creation of the cube.
-  c.vertexbuffer.init();
-  c.vertexbuffer.createExampleCube();
+//  auto vb = VertexBufferManager::getInstance().createVertexBuffer("cube");
+//  vb.init();
+//  vb.createExampleCube();
 
   // The triangle count of the cube.
 //  c.triangleCount = 6*2*3;
 
-  c.vertexbuffer2.init();
-  int vb2_count = c.vertexbuffer2.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-
-  c.vertexbuffer3.init();
-  int vb3_count = c.vertexbuffer3.createExamplePointsTier2(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-//  int vb3_count = c.vertexbuffer3.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-
-  // Create the 3D texture data.
-  auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-  //auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-//    auto hyh = create2x2();
-  texture.create3D(hyh);
-  textureCube.create("assets/rock.jpg");
+//  auto vb2 = VertexBufferManager::getInstance().createVertexBuffer("marchingData");
+//  vb2.init();
+//  int vb2_count = vb2.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+//
+//  auto vb3 = VertexBufferManager::getInstance().createVertexBuffer("marchingDataTier2");
+//  vb3.init();
+//  int vb3_count = vb3.createExamplePointsTier2(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+////  int vb3_count = c.vertexbuffer3.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
+//
+//  // Create the 3D texture data.
+//  auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
+//  //auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
+////    auto hyh = create2x2();
+//  texture.create3D(hyh);
+//  textureCube.create("assets/rock.jpg");
 
 ////  Model m;
 //////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
@@ -156,95 +211,99 @@ int main()
 ////  m.addCommand(command);
 ////  c.models.push_back(m);
 
-
   #ifndef EMSCRIPTEN
 
-  glm::mat4 original = glm::mat4(1.0f);
-
-  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
-  Model m;
-  Command command;
-  command.vao = c.vertexbuffer2.getVAO();
-  command.draw = GL_POINTS;
-  //command.textureName = "my3Dtexture";
-  command.textureName = "my3Dtexture";
-  command.shaderName = "marchingShader";
-  command.startIndex = 0;
-  command.count = vb2_count; // CUBE_TOTAL_COUNT;
-//  auto scale = glm::scale(original,glm::vec3(58.0f));
-//  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
-//  command.modelMatrix = scale * translate * rotate;
-  command.modelMatrix = original;
-  m.addCommand(command);
+  Model m = createEarth(false);
+  Model m_wireframe = createEarth(true);
   c.models.push_back(m);
-
-  Model m3;
-  Command command3;
-  command3.vao = c.vertexbuffer2.getVAO();
-  command3.draw = GL_POINTS;
-  //command.textureName = "my3Dtexture";
-  command3.textureName = "my3Dtexture";
-  command3.shaderName = "marchingShaderLine";
-  command3.startIndex = 0;
-  command3.count = vb2_count; //CUBE_TOTAL_COUNT;
-//  command3.modelMatrix = scale * translate * rotate;
-  command3.modelMatrix = original;
-  m3.addCommand(command3);
-  c.models.push_back(m3);
-
-  Model m5;
-  Command command5;
-  command5.name = "marching_tier2_wire";
-  command5.vao = c.vertexbuffer3.getVAO();
-  command5.draw = GL_POINTS;
-  //command.textureName = "my3Dtexture";
-  command5.textureName = "my3Dtexture";
-  command5.shaderName = "marchingShaderLine";
-  command5.startIndex = 0;
-  command5.count = vb3_count; //CUBE_TOTAL_COUNT;
-//  command3.modelMatrix = scale * translate * rotate;
-//  auto scale5 = glm::scale(original,glm::vec3(1.0f));
-//  auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
-//  command5.modelMatrix = translate5;
-  command5.modelMatrix = original;
-  m5.addCommand(command5);
-  c.models.push_back(m5);
-
-  Model m4;
-  Command command4;
-  command4.name = "marching_tier2";
-  command4.vao = c.vertexbuffer3.getVAO();
-  command4.draw = GL_POINTS;
-  //command.textureName = "my3Dtexture";
-  command4.textureName = "my3Dtexture";
-  command4.shaderName = "marchingShader";
-  command4.startIndex = 0;
-  command4.count = vb3_count; // 16859136;
-//  command3.modelMatrix = scale * translate * rotate;
-  command4.modelMatrix = original;
-  m4.addCommand(command4);
-  c.models.push_back(m4);
+  c.models.push_back(m_wireframe);
+//  glm::mat4 original = glm::mat4(1.0f);
+//
+//  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
+//  Model m;
+//  Command command;
+//  command.vao = vb2.getVAO();
+//  command.draw = GL_POINTS;
+//  //command.textureName = "my3Dtexture";
+//  command.textureName = "my3Dtexture";
+//  command.shaderName = "marchingShader";
+//  command.startIndex = 0;
+//  command.count = vb2_count; // CUBE_TOTAL_COUNT;
+////  auto scale = glm::scale(original,glm::vec3(58.0f));
+////  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+////  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
+////  command.modelMatrix = scale * translate * rotate;
+//  command.modelMatrix = original;
+//  m.addCommand(command);
+//  c.models.push_back(m);
+//
+//  Model m3;
+//  Command command3;
+//  command3.vao = vb2.getVAO();
+//  command3.draw = GL_POINTS;
+//  //command.textureName = "my3Dtexture";
+//  command3.textureName = "my3Dtexture";
+//  command3.shaderName = "marchingShaderLine";
+//  command3.startIndex = 0;
+//  command3.count = vb2_count; //CUBE_TOTAL_COUNT;
+////  command3.modelMatrix = scale * translate * rotate;
+//  command3.modelMatrix = original;
+//  m3.addCommand(command3);
+//  c.models.push_back(m3);
+//
+//  Model m5;
+//  Command command5;
+//  command5.name = "marching_tier2_wire";
+//  command5.vao = vb3.getVAO();
+//  command5.draw = GL_POINTS;
+//  //command.textureName = "my3Dtexture";
+//  command5.textureName = "my3Dtexture";
+//  command5.shaderName = "marchingShaderLine";
+//  command5.startIndex = 0;
+//  command5.count = vb3_count; //CUBE_TOTAL_COUNT;
+////  command3.modelMatrix = scale * translate * rotate;
+////  auto scale5 = glm::scale(original,glm::vec3(1.0f));
+////  auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
+////  auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
+////  command5.modelMatrix = translate5;
+//  command5.modelMatrix = original;
+//  m5.addCommand(command5);
+//  c.models.push_back(m5);
+//
+//  Model m4;
+//  Command command4;
+//  command4.name = "marching_tier2";
+//  command4.vao = vb3.getVAO();
+//  command4.draw = GL_POINTS;
+//  //command.textureName = "my3Dtexture";
+//  command4.textureName = "my3Dtexture";
+//  command4.shaderName = "marchingShader";
+//  command4.startIndex = 0;
+//  command4.count = vb3_count; // 16859136;
+////  command3.modelMatrix = scale * translate * rotate;
+//  command4.modelMatrix = original;
+//  m4.addCommand(command4);
+//  c.models.push_back(m4);
   #endif
-
-  Model m2;
-//  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-  Command command2;
-  command2.vao = c.vertexbuffer.getVAO();
-  command2.draw = GL_TRIANGLES;
-  command2.textureName = "cubeTexture";
-  command2.shaderName = "cubeShader";
-  command2.startIndex = 0;
-  command2.count = 12*3;
-  glm::mat4 original2 = glm::mat4(1.0f);
-  auto scale2 = glm::scale(original2,glm::vec3(1.0f));
-  auto rotate2 = glm::rotate(original2,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
-  auto translate2 = glm::translate(original2,glm::vec3(8.0f,8.0f,8.0f));
-  command2.modelMatrix = scale2 * translate2 * rotate2;
-  m2.addCommand(command2);
-  c.models.push_back(m2);
-
+//
+//  Model m2;
+////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+//  Command command2;
+//  command2.vao = vb.getVAO();
+//  command2.draw = GL_TRIANGLES;
+//  command2.textureName = "cubeTexture";
+//  command2.shaderName = "cubeShader";
+//  command2.startIndex = 0;
+//  command2.count = 12*3;
+//  glm::mat4 original2 = glm::mat4(1.0f);
+//  auto scale2 = glm::scale(original2,glm::vec3(1.0f));
+//  auto rotate2 = glm::rotate(original2,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
+//  auto translate2 = glm::translate(original2,glm::vec3(8.0f,8.0f,8.0f));
+//  command2.modelMatrix = scale2 * translate2 * rotate2;
+//  m2.addCommand(command2);
+//  c.models.push_back(m2);
+//
+//  Model m234 = createEarth();
   Timer::getInstance().reset();
 
 //  Log::getDebug().log("GL_GEOMETRY_SHADER = %", std::to_string(GL_GEOMETRY_SHADER));

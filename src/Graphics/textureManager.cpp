@@ -15,6 +15,13 @@ TextureManager::~TextureManager()
 
 Texture TextureManager::create2D(const std::string& name)
 {
+   for (const auto& texData : pTextures)
+   {
+     if (std::get<0>(texData) == name)
+     {
+        throw new std::runtime_error("TextureManager::create2D. Texture name " + name + " already exists."); 
+     }
+   }
   Texture t;
   t.init(TextureType::d2);
   auto textureData = std::make_tuple(name,t);
