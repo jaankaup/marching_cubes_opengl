@@ -310,7 +310,7 @@ int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimen
 //    pData.push_back((float)i);
 //    pData.push_back((float)j);
 //    pData.push_back((float)k);
-    }
+  }
     pData.push_back((float)i);
     pData.push_back((float)j);
     pData.push_back((float)k);

@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <cmath>
+#include <chrono>
 #include <GL/glew.h>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -19,6 +20,7 @@
 #include "textureManager.h"
 #include "shaderManager.h"
 #include "programstate.h"
+#include "timer.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
 

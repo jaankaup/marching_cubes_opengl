@@ -15,6 +15,9 @@ uniform vec3 startPoint;
 uniform mat4 MVP;
 uniform float cubeMask;
 uniform float debugMask;
+uniform vec3 cameraPosition;
+uniform vec3 lookAt;
+uniform float time;
 
 struct Cube
 {
@@ -91,14 +94,22 @@ e0 |    /                   |e2  /
 
 float calculateDensity(vec3 v)
 {
-  vec3 again = vec3(mod(v.x,8.0) - 4.0,mod(v.y,15.0f),mod(v.z,2.0f));
+//  vec3 again = vec3(mod(v.x,8.0) - 4.0,mod(v.y,15.0f),mod(v.z,2.0f));
+  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z+3.0,2.0) - pow(2.2,2.0);  
   float noise = texture(diffuse3DTexture,v).w;
-  float hils = 13.0*sin(v.x);
-  float hils2 = 8.0*sin(v.z);
-  float circle = clamp(noise * pow(again.x*again.x + again.y*again.y, 2.0),-12.0,20.0) - 18.0;
+  float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
+  float noise3 = texture(diffuse3DTexture,v+vec3(sin(v.x),tan(v.y),cos(v.z))).w;
+  float hils = noise2*33.0*sin(v.z);
+  float hils2 = noise*13.0*cos(v.z);
 
-  return v.y + noise + circle + hils + hils2 + 20.0*v.y + 3.0 * noise ; // + circle; // - circle2;
-//    return v.y + noise; // + hils + hils2;
+ return ball + hils + hils2 - noise2*35.0 - noise*(30*sin(v.z*v.x));
+// else return 0.0;
+ // float noise = texture(diffuse3DTexture,v).w;
+ // float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
+//  float circle = clamp(noise * pow(again.x*again.x + again.y*again.y, 2.0),-12.0,20.0) - 2.0;
+
+//  return v.y + noise + circle + hils - hils2 + 20.0*v.y + 3.0 * noise ; // + circle; // - circle2;
+ //   return v.y + noise - hils + hils2;
 }
 
 vec3 calculateNormal(vec3 v)
@@ -407,9 +418,13 @@ void marchCube(Cube c)
 
 void main(){
 
+//        if (lookAt)  
         vec4 sp = vec4(startPoint,0.0) + gl_in[0].gl_Position;
-        if (sp.y > 23.0) return;
-        if (sp.y < -23.0) return;
+//        float distanceToCamera = distance(cameraPosition,sp.xyz);
+//        float vpb;
+//        if (distanceToCamera < 5.0) vpb = voxels_per_block;
+//        else if (distanceToCamera < 10.0) vpb = voxels_per_block/2.0;
+//        else if (distanceToCamera < 15.0) vpb = voxels_per_block/4.0;
         Cube c = createCube(sp);
         //Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position);
         marchCube(c);

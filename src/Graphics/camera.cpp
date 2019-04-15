@@ -146,8 +146,12 @@ void Camera::handleEvents()
 //  glm::vec3 lookat = glm::vec3(pViewMatrix[0][2],pViewMatrix[1][2],pViewMatrix[2][2]);
       /* Shift hidastaa liikkumisnopeutta */
     float speedMultiplier = pCamspeed;
-    if(keystate[SDL_SCANCODE_LSHIFT])
+    bool shift = false;
+    if(keystate[SDL_SCANCODE_LSHIFT] || keystate[SDL_SCANCODE_RSHIFT] )
+    {
         speedMultiplier *= 0.01f;
+        shift = true;
+    }
 
     /* WASD-nappaimet */
     if(keystate[SDL_SCANCODE_UP] || keystate[SDL_SCANCODE_W])
@@ -211,6 +215,53 @@ void Camera::handleEvents()
         bool debugMask = ProgramState::getInstance().getDebugCube();
         ProgramState::getInstance().setDebugCube(!debugMask);
         Log::getInfo().log("Debuggin cube = (%)", !debugMask ? "True" : "False" );
+    }
+
+    if(keystate[SDL_SCANCODE_I] && shift)
+    {
+        auto sp = ProgramState::getInstance().getStartPoint();
+        sp = sp + glm::vec3(0.1f,0.0f,0.0f);
+        ProgramState::getInstance().setStartPoint(sp);
+        logGLM("startPoint",sp);
+    }
+
+    if(keystate[SDL_SCANCODE_I] && !shift)
+    {
+        auto sp = ProgramState::getInstance().getStartPoint();
+        sp = sp + glm::vec3(-0.1f,0.0f,0.0f);
+        ProgramState::getInstance().setStartPoint(sp);
+        logGLM("startPoint",sp);
+    }
+
+    if(keystate[SDL_SCANCODE_J] && shift)
+    {
+        auto sp = ProgramState::getInstance().getStartPoint();
+        sp = sp + glm::vec3(0.0f,0.1f,0.0f);
+        ProgramState::getInstance().setStartPoint(sp);
+        logGLM("startPoint",sp);
+    }
+
+    if(keystate[SDL_SCANCODE_J] && !shift)
+    {
+        auto sp = ProgramState::getInstance().getStartPoint();
+        sp = sp + glm::vec3(0.0f,-0.1f,0.0f);
+        ProgramState::getInstance().setStartPoint(sp);
+        logGLM("startPoint",sp);
+    }
+    if(keystate[SDL_SCANCODE_K] && shift)
+    {
+        auto sp = ProgramState::getInstance().getStartPoint();
+        sp = sp + glm::vec3(0.0f,0.0f,0.1f);
+        ProgramState::getInstance().setStartPoint(sp);
+        logGLM("startPoint",sp);
+    }
+
+    if(keystate[SDL_SCANCODE_K] && !shift)
+    {
+        auto sp = ProgramState::getInstance().getStartPoint();
+        sp = sp + glm::vec3(0.0f,0.0f,-0.1f);
+        ProgramState::getInstance().setStartPoint(sp);
+        logGLM("startPoint",sp);
     }
 
     update();

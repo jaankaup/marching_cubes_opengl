@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "programstate.h"
 #include "../Utils/log.h"
+#include "../Utils/misc.h"
 
 /** A simple shader class with basic shader operations. */
 class Camera
@@ -42,7 +43,7 @@ class Camera
     glm::vec2 pMousePosition;
     float pMouseX_sensitivity = 0.002f;
     float pMouseY_sensitivity = 0.002f;
-    float pCamspeed= 0.02f;
+    float pCamspeed= 0.2f;
     uint32_t pPrevTick;
     uint32_t pLastX = 0;
     uint32_t pLastY = 0;

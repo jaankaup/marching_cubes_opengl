@@ -38,6 +38,7 @@ set(graphics_src
       ${graphics_dir}/shaderManager.cpp
       ${graphics_dir}/programstate.cpp
       ${graphics_dir}/textureData.cpp
+      ${graphics_dir}/timer.cpp
       )
 
 set(util_src 

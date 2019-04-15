@@ -27,6 +27,7 @@
 #include "Graphics/shaderManager.h"
 #include "Graphics/model.h"
 #include "Graphics/programstate.h"
+#include "Graphics/timer.h"
 #include "Utils/log.h"
 #include "Utils/misc.h"
 #include "Utils/myrandom.h"
@@ -56,14 +57,14 @@ void loop_handler2(void *arg)
 int main()
 {
 
-  const int BLOCK_SIZE = 16;
+  const int BLOCK_SIZE = 12;
 
   // 3D texture height.
   const int SAMPLE_POINTS_Y = BLOCK_SIZE ;
 
-  const int CUBE_COUNT_X = BLOCK_SIZE * 2;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 1;
-  const int CUBE_COUNT_Z = BLOCK_SIZE * 2;
+  const int CUBE_COUNT_X = BLOCK_SIZE * 6;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 6 ;
+  const int CUBE_COUNT_Z = BLOCK_SIZE * 6;
   const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
 
   // The program state must be created first.
@@ -77,8 +78,9 @@ int main()
 
   // Set the starting point to 0.25 height of the cube height.
   auto y_start = static_cast<float>(SAMPLE_POINTS_Y);  
-  ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, -CUBE_COUNT_Y/2.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
-  
+  //ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, -CUBE_COUNT_Y/2.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
+  ProgramState::getInstance().setStartPoint(glm::vec3(-35.0f, -37.0f, -67.0f));
+ 
 //  logGLM("sp",ProgramState::getInstance().getStartPoint());
 
 //  ProgramState::getInstance().setVoxelsPerBlock(8.0f); 
@@ -136,7 +138,7 @@ int main()
 //  int vb3_count = c.vertexbuffer3.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
 
   // Create the 3D texture data.
-  auto hyh = createRandom3Ddata(BLOCK_SIZE*2,BLOCK_SIZE*2,BLOCK_SIZE*2);
+  auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
   //auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
 //    auto hyh = create2x2();
   texture.create3D(hyh);
@@ -242,6 +244,8 @@ int main()
   command2.modelMatrix = scale2 * translate2 * rotate2;
   m2.addCommand(command2);
   c.models.push_back(m2);
+
+  Timer::getInstance().reset();
 
 //  Log::getDebug().log("GL_GEOMETRY_SHADER = %", std::to_string(GL_GEOMETRY_SHADER));
   
