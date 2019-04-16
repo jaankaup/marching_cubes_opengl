@@ -197,8 +197,3 @@ inline double centerY(int y)
     //return static_cast<uint8_t>(std::clamp(exp(0.02 * y*y),0.0, 255.0)) ;   
     return exp(0.005 * y*y) ;   
 }
-
-/*
- *  Set y = 128
-    data[index+3] = static_cast<uint8_t>(std::clamp(exp(0.02 * y*y),0.0, 255.0)) ;   
-    */

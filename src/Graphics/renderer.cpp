@@ -24,7 +24,7 @@ void Renderer::init()
 //    glEnable(GL_TEXTURE_3D);
 }
 
-void Renderer::renderModels(const std::vector<Model>& models, const Camera& camera)
+void Renderer::renderModels(const Camera& camera)
 {
   glClearColor(0.0f,0.0f,0.0f,1.0f);
   //glClearColor(0.2f,0.0f,0.0f,1.0f);
@@ -36,12 +36,14 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
 //  logGLM("eyePositionModels",eyePosition);
 //  logGLM("viewMatrixModels",viewMatrix);
 
+  auto models = ModelManager::getInstance().getModels();
   glm::mat4 projection = glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.001f, 100.0f);
   std::vector<Command> commands;
-  for (const auto& m : models)
+  for (const auto m : models)
   {
+    if (m->getDisabled()) continue;
 //    glm::mat4 modelMatrix = m.getModelMatrix();
-    for (const auto& c : m.getCommands())
+    for (const auto& c : m->getCommands())
     {
       commands.push_back(c);
     }
@@ -95,10 +97,10 @@ void Renderer::renderModels(const std::vector<Model>& models, const Camera& came
 //    auto scale5 = glm::scale(original,glm::vec3(1.0f));
 //    auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
 //    auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
-    glm::mat4 mx = glm::rotate(com.modelMatrix,glm::radians(Timer::getInstance().ticks()/9000000.0f), glm::vec3(1.0f,0.0f,0.0f));
+//    glm::mat4 mx = glm::rotate(com.modelMatrix,glm::radians(Timer::getInstance().ticks()/9000000.0f), glm::vec3(1.0f,0.0f,0.0f));
 
 //    Log::getDebug().log("timeNow = %",std::to_string(Timer::getInstance().ticks()/5000000.0f));
-//    glm::mat4 mx = com.modelMatrix ;
+    glm::mat4 mx = com.modelMatrix ;
     Texture texture = TextureManager::getInstance().getTextureByName(com.textureName);//{TextureType::d2,0};
     texture.use(0);
     glBindVertexArray(com.vao);

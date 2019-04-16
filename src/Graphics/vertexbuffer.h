@@ -32,7 +32,7 @@ class Vertexbuffer
     GLuint getHandle() const;
     GLuint getVAO() const;
     // TODO: change.
-    int* getCount() const;
+    int getCount() const;
 
 	private:
     GLuint pId = 0;
@@ -42,7 +42,7 @@ class Vertexbuffer
     std::vector<float> pData;
 
     // TODO: change this. 
-    int *pDataCount = new int[1];
+    int pDataCount = 0;
 
     void dispose() const;
 };

@@ -29,6 +29,7 @@
 #include "Graphics/programstate.h"
 #include "Graphics/timer.h"
 #include "Graphics/vertexBufferManager.h"
+#include "Graphics/modelManager.h"
 #include "Utils/log.h"
 #include "Utils/misc.h"
 #include "Utils/myrandom.h"
@@ -40,70 +41,17 @@
 struct context
 {
     Renderer renderer;
-//    Vertexbuffer vertexbuffer;
-//    Vertexbuffer vertexbuffer2;
-//    Vertexbuffer vertexbuffer3;
     Camera camera;
-    std::vector<Model> models;
 };
 
 void loop_handler2(void *arg)
 {
     context* c = static_cast<context*>(arg);
     c->camera.handleEvents();
-    c->renderer.renderModels(c->models,c->camera);
+    c->renderer.renderModels(c->camera);
     Window::getInstance().swapBuffers();
 }
 
-/* Creates the green thing. @param wireframe tells that a wireframe version
- * should be made. */
-Model createEarth(bool wireframe)
-{
-  glm::mat4 original = glm::mat4(1.0f);
-
-  const int BLOCK_SIZE = 12;
-  const int CUBE_COUNT_X = BLOCK_SIZE * 6;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 6 ;
-  const int CUBE_COUNT_Z = BLOCK_SIZE * 6;
-  const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
-
-  const std::string TEXTURE_NAME = "greenThingTexture"; 
-  const std::string VB_NAME = "greenThingTexture"; 
-
-  int vb_count = 0;
-
-  if (!wireframe)
-  {
-    // Create the 3D texture data.
-    Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
-    auto tex3D_data = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-    tex3D.create3D(tex3D_data);
-
-    // A LOCAL COPY. TODO: fix it.
-    auto vb = VertexBufferManager::getInstance().createVertexBuffer(VB_NAME);
-    vb_count = vb.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-  }
-  else vb_count = VertexBufferManager::getInstance().getVertexBufferByName(VB_NAME).getCount()[1]; 
-
-  Model m;
-  m.setCameraPosition(glm::vec3(0.0f,0.0f,17.0f));
-  Command c;
-  c.block_size = BLOCK_SIZE;
-  c.cube_count_x = CUBE_COUNT_X;
-  c.cube_count_y = CUBE_COUNT_Y;
-  c.cube_count_z = CUBE_COUNT_Z;
-  c.start_point = glm::vec3(-35.0f, -37.0f, -67.0f);
-  c.vao = VertexBufferManager::getInstance().getVertexBufferByName(VB_NAME).getVAO(); 
-  c.draw = GL_POINTS;
-  c.textureName = TEXTURE_NAME;
-  if (wireframe) c.shaderName = "marchingShaderLine";
-  else c.shaderName = "marchingShader";
-  c.startIndex = 0;
-  c.count = vb_count;
-  c.modelMatrix = original;
-  m.addCommand(c);
-  return m;
-}
 
 int main()
 {
@@ -175,48 +123,11 @@ int main()
   // The initialization of creation of renderer.
   c.renderer.init();
 
-  // Creation of the cube.
-//  auto vb = VertexBufferManager::getInstance().createVertexBuffer("cube");
-//  vb.init();
-//  vb.createExampleCube();
-
-  // The triangle count of the cube.
-//  c.triangleCount = 6*2*3;
-
-//  auto vb2 = VertexBufferManager::getInstance().createVertexBuffer("marchingData");
-//  vb2.init();
-//  int vb2_count = vb2.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-//
-//  auto vb3 = VertexBufferManager::getInstance().createVertexBuffer("marchingDataTier2");
-//  vb3.init();
-//  int vb3_count = vb3.createExamplePointsTier2(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-////  int vb3_count = c.vertexbuffer3.createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);
-//
-//  // Create the 3D texture data.
-//  auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-//  //auto hyh = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-////    auto hyh = create2x2();
-//  texture.create3D(hyh);
-//  textureCube.create("assets/rock.jpg");
-
-////  Model m;
-//////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-////  Command command;
-////  command.vao = c.vertexbuffer.getVAO();
-////  command.textureName = "my3Dtexture";
-////  command.shaderName = "my3Dshader";
-////  command.startIndex = 0;
-////  command.count = 12*3;
-////  command.modelMatrix = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f));
-////  m.addCommand(command);
-////  c.models.push_back(m);
-
   #ifndef EMSCRIPTEN
 
-  Model m = createEarth(false);
-  Model m_wireframe = createEarth(true);
-  c.models.push_back(m);
-  c.models.push_back(m_wireframe);
+  // Create models.
+  ModelManager::getInstance().create_green_thing(false);
+  ModelManager::getInstance().create_green_thing(true);
 //  glm::mat4 original = glm::mat4(1.0f);
 //
 //  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");

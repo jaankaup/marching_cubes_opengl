@@ -7,6 +7,7 @@ Vertexbuffer::Vertexbuffer()
 
 Vertexbuffer::~Vertexbuffer()
 {
+//  dispose();
 }
 
 void Vertexbuffer::bind() const
@@ -225,7 +226,7 @@ void Vertexbuffer::createExampleCube()
   ts.push_back(tData[13]);
   vn.push_back(nData[7]);
 //
-  for (int i=0 ; i<vs.size() ; i++)
+  for (unsigned int i=0 ; i<vs.size() ; i++)
   {
     pData.push_back(vs[i][0]); 
     pData.push_back(vs[i][1]); 
@@ -239,7 +240,7 @@ void Vertexbuffer::createExampleCube()
   std::vector<std::string> types = {"3f","2f","3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
 
-  pDataCount[1] = pData.size();
+  pDataCount = pData.size();
   pData.clear();
 }
 
@@ -270,9 +271,8 @@ int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
   int dataSize = pData.size();
-  pDataCount[1] = dataSize;
-  pData.clear();
-  pData.clear();
+  pDataCount = dataSize;
+  //pData.clear();
   return dataSize;
 }
 
@@ -309,21 +309,20 @@ int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimen
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
   int dataSize = pData.size();
-  pDataCount[1] = dataSize;
-  pData.clear();
+  pDataCount = dataSize;
+  //pData.clear();
   return dataSize;
 }
 
 void Vertexbuffer::dispose() const
 {
   Log::getDebug().log("Deleting vertexvuffer: %", std::to_string(pId));
-  delete[] pDataCount;
   if (pId != 0) glDeleteBuffers(1,&pId);
   glDeleteVertexArrays(1, &pVAO);
   glDeleteBuffers(1, &pId);
 }
 
-int* Vertexbuffer::getCount() const
+int Vertexbuffer::getCount() const
 {
     return pDataCount;
 }

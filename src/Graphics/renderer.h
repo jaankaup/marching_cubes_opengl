@@ -21,6 +21,7 @@
 #include "shaderManager.h"
 #include "programstate.h"
 #include "timer.h"
+#include "modelManager.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
 
@@ -36,7 +37,7 @@ class Renderer
 		~Renderer();
 
     void init();
-    void renderModels(const std::vector<Model>& models, const Camera& camera);
+    void renderModels(const Camera& camera);
 
 	private:
 
