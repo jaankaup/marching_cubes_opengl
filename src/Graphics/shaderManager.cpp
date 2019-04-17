@@ -13,13 +13,13 @@ ShaderManager::~ShaderManager()
    }
 }
 
-Shader ShaderManager::createShader(const std::string& name)
+Shader* ShaderManager::createShader(const std::string& name)
 {
   Shader s;
   s.init();
   auto shaderData = std::make_tuple(name,s);
   pShaders.push_back(shaderData);
-  return s;
+  return getShaderByName(name);
 }
 
 ShaderManager& ShaderManager::getInstance()
@@ -28,15 +28,14 @@ ShaderManager& ShaderManager::getInstance()
     return instance;
 }
 
-Shader ShaderManager::getShaderByName(const std::string& name) const
+Shader* ShaderManager::getShaderByName(const std::string& name)
 {
     for (const auto& obj : pShaders)
     {
         if (std::get<0>(obj) == name)
         {
-            return std::get<1>(obj);
+            return const_cast<Shader*>(&std::get<1>(obj));
         }
     }
     throw std::runtime_error("ShaderManager::getShaderByName(" + name + "). No such shader.");
 }
-

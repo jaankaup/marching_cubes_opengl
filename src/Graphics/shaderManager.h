@@ -18,10 +18,10 @@ class ShaderManager
   public:
     static ShaderManager& getInstance();
   
-    Shader createShader(const std::string& name);
+    Shader* createShader(const std::string& name);
   
     /// Get shader by its name. throws runtime_expecton if texture is not found.  
-    Shader getShaderByName(const std::string& name) const;
+    Shader* getShaderByName(const std::string& name);
   
   private:
     ShaderManager();

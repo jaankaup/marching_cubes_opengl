@@ -43,7 +43,7 @@ bool Model::getDisabled() const
 //  return pModelMatrix;
 //}
 
-std::vector<Command> Model::getCommands() const
+std::vector<Command>* Model::getCommands() const
 {
-  return pCommands;
+  return const_cast<std::vector<Command>*>(&pCommands);
 }

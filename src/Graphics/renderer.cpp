@@ -43,7 +43,7 @@ void Renderer::renderModels(const Camera& camera)
   {
     if (m->getDisabled()) continue;
 //    glm::mat4 modelMatrix = m.getModelMatrix();
-    for (const auto& c : m->getCommands())
+    for (const auto& c : *m->getCommands())
     {
       commands.push_back(c);
     }
@@ -64,12 +64,12 @@ void Renderer::renderModels(const Camera& camera)
   for (const auto& com : commands)
   {
     heko = !heko;
-    Shader shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
-    shader.bind();
+    Shader* shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
+    shader->bind();
     auto startPoint = ProgramState::getInstance().getStartPoint();
-    shader.setUniform("lookAt", lookAt);
+    shader->setUniform("lookAt", lookAt);
     auto timeNow = std::chrono::system_clock::now().time_since_epoch().count();
-    shader.setUniform("time", static_cast<float>(timeNow/1000000000));
+    shader->setUniform("time", static_cast<float>(timeNow/1000000000));
 //    logGLM("startPoint",startPoint);
     glm::vec3 sumPoint;// = glm::vec3(std::floor(startPoint.x/2.0f + voxels_per_block/4.0f * eyePosition.x),
                        //     std::floor(startPoint.y/2.0f + voxels_per_block/4.0f * eyePosition.y),
@@ -81,7 +81,7 @@ void Renderer::renderModels(const Camera& camera)
       sumPoint = glm::vec3(std::floor(startPoint.x/2.0f + voxels_per_block/4.0f * eyePosition.x),
                            std::floor(startPoint.y/2.0f + voxels_per_block/4.0f * eyePosition.y),
                            std::floor(startPoint.z/2.0f + voxels_per_block/4.0f * eyePosition.z));
-      shader.setUniform("voxels_per_block", voxels_per_block/4.0f);
+      shader->setUniform("voxels_per_block", voxels_per_block/4.0f);
     }
     else
     {
@@ -90,7 +90,7 @@ void Renderer::renderModels(const Camera& camera)
       sumPoint = glm::vec3(std::floor(startPoint.x + voxels_per_block * eyePosition.x),
                            std::floor(startPoint.y + voxels_per_block * eyePosition.y),
                            std::floor(startPoint.z + voxels_per_block * eyePosition.z));
-      shader.setUniform("voxels_per_block", voxels_per_block);
+      shader->setUniform("voxels_per_block", voxels_per_block);
 //      }
     }
 
@@ -104,20 +104,20 @@ void Renderer::renderModels(const Camera& camera)
     Texture texture = TextureManager::getInstance().getTextureByName(com.textureName);//{TextureType::d2,0};
     texture.use(0);
     glBindVertexArray(com.vao);
-    shader.setUniform("MVP", projection * viewMatrix * mx);
-    shader.setUniform("normalMatrix", glm::inverseTranspose(glm::mat3(mx)));
-    shader.setUniform("M", mx);
-    shader.setUniform("lights[0].color", glm::vec3(1.0f,1.0f,1.0f));
-    shader.setUniform("lights[0].ambientCoeffience", 0.25f);
-    shader.setUniform("lights[0].materialSpecularColor", glm::vec3(1.0f,1.0f,1.0f));
-    shader.setUniform("lights[0].materialShininess", 70.0f);
-    shader.setUniform("lights[0].attentuationFactor", 0.00009f);
-    shader.setUniform("cameraPosition", eyePosition);
-    shader.setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
+    shader->setUniform("MVP", projection * viewMatrix * mx);
+    shader->setUniform("normalMatrix", glm::inverseTranspose(glm::mat3(mx)));
+    shader->setUniform("M", mx);
+    shader->setUniform("lights[0].color", glm::vec3(1.0f,1.0f,1.0f));
+    shader->setUniform("lights[0].ambientCoeffience", 0.25f);
+    shader->setUniform("lights[0].materialSpecularColor", glm::vec3(1.0f,1.0f,1.0f));
+    shader->setUniform("lights[0].materialShininess", 70.0f);
+    shader->setUniform("lights[0].attentuationFactor", 0.00009f);
+    shader->setUniform("cameraPosition", eyePosition);
+    shader->setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
 //    shader.setUniform("voxels_per_block", voxels_per_block);
-    shader.setUniform("startPoint", startPoint); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
-    shader.setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
-    shader.setUniform("debugMask", ProgramState::getInstance().getDebugCube() ? 1.0f : 0.0f);
+    shader->setUniform("startPoint", startPoint); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
+    shader->setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
+    shader->setUniform("debugMask", ProgramState::getInstance().getDebugCube() ? 1.0f : 0.0f);
 
     Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
 
@@ -127,14 +127,14 @@ void Renderer::renderModels(const Camera& camera)
     switch (texture.getTextureType())
     {
       case TextureType::d2:
-        shader.setUniform("diffuseTexture",0);
+        shader->setUniform("diffuseTexture",0);
         break;
       case TextureType::d3:
-        shader.setUniform("diffuse3DTexture",0);
+        shader->setUniform("diffuse3DTexture",0);
         break;
     }
     tritable.use(1);
-    shader.setUniform("tri_table", 1);/* eyePosition);*/
+    shader->setUniform("tri_table", 1);/* eyePosition);*/
 
     switch (com.draw)
     {

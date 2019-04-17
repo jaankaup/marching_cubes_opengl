@@ -22,7 +22,6 @@ struct Cube
   vec4 v5;
   vec4 v6;
   vec4 v7;
-
 };
 
 float calculateDensity(vec3 v)

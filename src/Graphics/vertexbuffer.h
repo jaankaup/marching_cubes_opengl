@@ -31,6 +31,7 @@ class Vertexbuffer
     int createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ);
     GLuint getHandle() const;
     GLuint getVAO() const;
+    void init_transform_feedback(const GLuint id, GLuint count);
     // TODO: change.
     int getCount() const;
 

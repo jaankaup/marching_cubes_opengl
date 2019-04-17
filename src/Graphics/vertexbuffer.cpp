@@ -25,6 +25,21 @@ void Vertexbuffer::init()
     pUsage = GL_STATIC_DRAW;
 }
 
+void Vertexbuffer::init_transform_feedback(const GLuint id, GLuint count)
+{
+    glGenVertexArrays(1, &pVAO);
+    glGenBuffers(1,&pId);
+    bind();
+    glBindBuffer(GL_ARRAY_BUFFER, id);
+    pId = id;
+    pDataCount = count;
+    VertexAttributes vas;
+    std::vector<std::string> types = {"3f"};
+    vas.create_interleaved_attributes(types, false);
+    vas.registerAttributes();
+    glBindVertexArray(0);
+}
+
 GLuint Vertexbuffer::getHandle() const
 {
   return pId;

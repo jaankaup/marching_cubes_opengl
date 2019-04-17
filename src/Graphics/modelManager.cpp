@@ -52,9 +52,17 @@ Model* ModelManager::create_green_thing(bool wireframe)
   const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
 
   const std::string TEXTURE_NAME = "greenThingTexture"; 
-  const std::string VB_NAME = "greenThingTexture"; 
+  const std::string VB_NAME = "greenThingVB"; 
 
   int vb_count = 0;
+
+  Log::getDebug().log("creating the green optimization shader");
+  // The shader for optimizing the green thing data.
+  Shader* green_optimization_shader1 = ShaderManager::getInstance().createShader("green_thing_optimized");
+//  green_optimization_shader1.
+  std::vector<std::string> green_stage1 = {"shaders/marching.vert", "shaders/marching_green_thing_stage1.geom"};
+  green_optimization_shader1->setFeedback(true,"outputCase");
+  green_optimization_shader1->build(green_stage1);
 
   if (!wireframe)
   {

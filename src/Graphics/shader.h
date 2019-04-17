@@ -30,11 +30,14 @@ class Shader
         //void SetUniform(const std::string& name, int count, const glm::vec4* values);
         //void SetUniform(const std::string& name, int count, const glm::mat4* values);
 //        GLuint getID() const;
+    void setFeedback(const bool feedback, const std::string& feedbackVarying);
 
 
 	private:
 
 		GLuint pId = 0;
+		bool pFeedback = false;
+    std::string pFeedbackVarying;
 
 		Shader();
 

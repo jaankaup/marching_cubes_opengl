@@ -5,7 +5,12 @@
 #include <tuple>
 #include <stdexcept>
 #include "vertexbuffer.h"
+#include "texture.h"
+#include "textureManager.h"
+#include "shader.h"
+#include "shaderManager.h"
 #include "../Utils/log.h"
+#include "../Utils/misc.h"
 
 class Vertexbuffer;
 
@@ -19,7 +24,13 @@ class VertexBufferManager
     Vertexbuffer* createVertexBuffer(const std::string& name);
     Vertexbuffer* getVertexBufferByName(const std::string& name);
 
-    Vertexbuffer* optimize_vertex_buffer(const std::string& vb_name, const std::string& optimizedName, const glm::vec3& basePosition);
+    Vertexbuffer* optimize_vertex_buffer(const std::string& optimized_name,
+                                         const std::string& shaderName,
+                                         const glm::vec3& basePosition,
+                                         const std::string& texture3D,
+                                         float voxels_per_block,
+//                                         const glm::vec3& mvp, // Do we actually need this?
+                                         const Vertexbuffer* vb);
   
   private:
     VertexBufferManager();

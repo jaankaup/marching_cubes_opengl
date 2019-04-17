@@ -31,6 +31,12 @@ void Shader::init()
   }
 }
 
+void Shader::setFeedback(const bool feedback, const std::string& feedbackVarying)
+{
+  pFeedback = feedback;
+  pFeedbackVarying = feedbackVarying;
+}
+
 void Shader::build(const std::vector<std::string>& sources)
 {
     using ShaderObjData = struct{
@@ -71,14 +77,24 @@ void Shader::build(const std::vector<std::string>& sources)
     {
         compileShader(object.shaderObj, object.sourceCode);
         if (!checkShader(object.shaderObj))
+            {
             Log::getError().log("Shader::build: couldn't build shader object from source:\n%",object.sourceCode);
             std::runtime_error("Shader::build: An error occurred while compiling a shader object.");
+            }
     }
 
     /* Attach shader objects to the program. */
     for (const auto& object : sod)
     {
         glAttachShader(pId, object.shaderObj);
+//        Log::getDebug().log("Shader type is geometry: %",object.shaderType == GL_GEOMETRY_SHADER);
+    }
+    if (pFeedback)
+    {
+      const GLchar* feedbackVaryings[] = {"outputCase"}; //pFeedbackVarying.c_str()}; 
+      Log::getDebug().log("feedback varying: %",feedbackVaryings[0]);
+      Log::getDebug().log("pId: %",std::to_string(pId));
+      glTransformFeedbackVaryings(pId, 1, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
     }
 
     GLenum pname = GL_LINK_STATUS;
@@ -102,7 +118,7 @@ void Shader::build(const std::vector<std::string>& sources)
         glGetProgramiv(pId, GL_INFO_LOG_LENGTH, &errorLength);
         GLchar *errorMessage = new GLchar[errorLength];
         glGetProgramInfoLog(pId, errorLength, NULL, errorMessage);
-        Log::getError().log("Shader object compilation failed: %", errorMessage);
+        Log::getError().log("Shader program creation failed: %", errorMessage);
         delete[] errorMessage;
     }
 
@@ -110,7 +126,7 @@ void Shader::build(const std::vector<std::string>& sources)
     //{
     //    glDeleteShader(object.shaderObj);
     //}
-    Log::getDebug().log("Shader created succesfully.");
+    Log::getDebug().log("Shader program created succesfully.");
 }
 
 void Shader::bind() const

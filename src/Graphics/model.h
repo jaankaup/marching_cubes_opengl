@@ -37,7 +37,7 @@ class Model
     void setDisabled(const bool disabled);
 
     // Getters.
-    std::vector<Command> getCommands() const;
+    std::vector<Command>* getCommands() const;
     glm::vec3 getCameraPosition() const;
     bool getDisabled() const;
 
