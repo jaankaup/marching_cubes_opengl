@@ -241,19 +241,26 @@ int main()
 
   // Create models.
   Model* green_thing = ModelManager::getInstance().create_green_thing(false);
+//  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
   std::vector<Command>& gm = *(green_thing->getCommands());
-  Command c_green;
-  if (gm.size() > 0) c_green = gm[0]; 
+//  Command c_green;
+  if (gm.size() == 0) Log::getError().log("hello::main. gm.size() = %", std::to_string(gm.size()));
   Vertexbuffer* green_vb = VertexBufferManager::getInstance().getVertexBufferByName("greenThingVB");
   Vertexbuffer* optimizedGreen =
     VertexBufferManager::getInstance().optimize_vertex_buffer("green_thing_optimized_vb",
                                                               "green_thing_optimized",
-                                                              c_green.start_point,
-                                                              c_green.textureName,
-                                                              c_green.block_size,
+                                                              gm[0].start_point,
+                                                              gm[0].textureName,
+                                                              gm[0].block_size,
                                                               green_vb);
   gm[0].vao = optimizedGreen->getVAO();
+  gm[0].count = optimizedGreen->getCount();
+ // gm[1].vao = optimizedGreen->getVAO();
   Log::getDebug().log("gm[0] = %", std::to_string(gm[0].vao));
+  auto cou = optimizedGreen->getCount(); 
+  Log::getDebug().log("optimized count = %", std::to_string(cou));
+  VertexBufferManager::getInstance().deleteVertexBuffer("greenThingVB");
+  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
   // TODO :: getCommand should return a pointer.
 //  ModelManager::getInstance().create_green_thing(true);
 //  glm::mat4 original = glm::mat4(1.0f);
@@ -345,46 +352,6 @@ int main()
 //  Model m234 = createEarth();
   Timer::getInstance().reset();
 
-//  Log::getDebug().log("GL_GEOMETRY_SHADER = %", std::to_string(GL_GEOMETRY_SHADER));
-  
-////////  auto tData = exampleData2();
-////////
-//////////std::vector<glm::vec3> triangulate(const ArrayType& data, float isolevel)
-////////  auto [vertices,normals] = triangulate(tData, 0.5f);
-////////  std::vector<glm::vec3> marchingData;
-////////  for (int q=0; q<vertices.size() ; q++)
-////////  {
-////////    marchingData.push_back(vertices[q]);
-////////    Log::getDebug().log("vertice = (%,%,%)", std::to_string(vertices[q].x),std::to_string(vertices[q].y),std::to_string(vertices[q].z));
-////////    marchingData.push_back(normals[q]);
-////////    Log::getDebug().log("normal = (%,%,%)", std::to_string(normals[q].x),std::to_string(normals[q].y),std::to_string(normals[q].z));
-//////////    auto n = glm::vec3(0.0f,0.0f,0.0f);
-//////////    marchingData.push_back(n);
-////////
-///////////    Log::getDebug().log("(%,%,%)", std::to_string(x.x), std::to_string(x.y),std::to_string(x.z));
-////////  }
-//  Log::getDebug().log("size of tData = %", std::to_string(tData.size()));
-//  Log::getDebug().log("size of vertices = %", std::to_string(vertices.size()));
-//  Log::getDebug().log("size of normals/3 = %", std::to_string(normals.size()/3));
-//  for (const auto& e : res)
-//  {
-////    std::cout << x << std::endl;
-//    Log::getDebug().log("(%,%,%)", std::to_string(e.x), std::to_string(e.y),std::to_string(e.z));
-//  }
-  
-//  Log::getDebug().log("size of tData = %", std::to_string(tData.size()));
-//  for (int k=0 ; k<3 ; k++)
-//  {
-//  for (int j=0 ; j<3 ; j++)
-//  {
-//  for (int i=0 ; i<3 ; i++)
-//  {
-//    Log::getDebug().log("vData.getValue(%,%,%) = %", std::to_string(i), std::to_string(j),std::to_string(k),std::to_string(tData.getValue(i,j,k)));
-//    Log::getDebug().log("index = %", std::to_string(i+4*j+16*k));
-//  }}}
-////  c.vertexbuffer.addData(&marchingData[0], marchingData.size() * sizeof(glm::vec3));
-////
-////  c.triangleCount = vertices.size()/3;
 
 
     /**

@@ -206,7 +206,7 @@ void Camera::handleEvents()
     if(keystate[SDL_SCANCODE_KP_DIVIDE])
     {
         float cubeMask = ProgramState::getInstance().getCubeMask();
-        if (cubeMask == 0.0f) return;
+        if (cubeMask == -1.0f) return;
         ProgramState::getInstance().setCubeMask(cubeMask - 0.5f);
         Log::getInfo().log("CubeMask = (%)",std::to_string(ProgramState::getInstance().getCubeMaskCeil()));
     }

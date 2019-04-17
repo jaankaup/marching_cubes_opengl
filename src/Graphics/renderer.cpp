@@ -97,10 +97,10 @@ void Renderer::renderModels(const Camera& camera)
 //    auto scale5 = glm::scale(original,glm::vec3(1.0f));
 //    auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
 //    auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
-//    glm::mat4 mx = glm::rotate(com.modelMatrix,glm::radians(Timer::getInstance().ticks()/9000000.0f), glm::vec3(1.0f,0.0f,0.0f));
+    glm::mat4 mx = glm::rotate(com.modelMatrix,glm::radians(Timer::getInstance().ticks()/9000000.0f), glm::vec3(1.0f,0.0f,0.0f));
 
 //    Log::getDebug().log("timeNow = %",std::to_string(Timer::getInstance().ticks()/5000000.0f));
-    glm::mat4 mx = com.modelMatrix ;
+//    glm::mat4 mx = com.modelMatrix ;
     Texture texture = TextureManager::getInstance().getTextureByName(com.textureName);//{TextureType::d2,0};
     texture.use(0);
     glBindVertexArray(com.vao);

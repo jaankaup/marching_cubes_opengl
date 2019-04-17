@@ -27,12 +27,14 @@ struct Cube
 float calculateDensity(vec3 v)
 {
 //  vec3 again = vec3(mod(v.x,8.0) - 4.0,mod(v.y,15.0f),mod(v.z,2.0f));
- float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z+186.0,2.0) - pow(5.0,2.0);  
- float noise = texture(diffuse3DTexture,v).w;
- float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
-  float hils = noise2*13.0*sin(v.x);
-  float hils2 = noise*3.0*cos(v.z);
- return ball + hils + hils2;
+  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z+3.0,2.0) - pow(2.2,2.0);  
+  float noise = texture(diffuse3DTexture,v).w;
+  float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
+  float noise3 = texture(diffuse3DTexture,v+vec3(sin(v.x),tan(v.y),cos(v.z))).w;
+  float hils = noise2*33.0*sin(v.z);
+  float hils2 = noise*13.0*cos(v.z);
+
+ return ball + hils + hils2 - noise2*35.0 - noise*(30*sin(v.z*v.x));
 // else return 0.0;
  // float noise = texture(diffuse3DTexture,v).w;
  // float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
@@ -98,37 +100,36 @@ float calculateCase(Cube c)
 
 void printCube(Cube c, float mask, bool printMask)
 {
-    if (!(mask == cubeMask)) return;
     float pSize = 1.0;
 //    float maskColor = float(mask) / float(255);
-    float maskColor = 1.0;
+    vec3 maskColor = vec3(1.0);
 
     // FRONT sideFront = v0 v1 v2 v3
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v2.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v2.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     EndPrimitive();
 
@@ -136,28 +137,28 @@ void printCube(Cube c, float mask, bool printMask)
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v5.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v5.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v6.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v6.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v2.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v2.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     EndPrimitive();
 
@@ -165,28 +166,28 @@ void printCube(Cube c, float mask, bool printMask)
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v2.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v2.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v6.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v6.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v7.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v7.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     EndPrimitive();
 
@@ -194,28 +195,28 @@ void printCube(Cube c, float mask, bool printMask)
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v1.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v1.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v5.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v5.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     EndPrimitive();
 
@@ -224,28 +225,28 @@ void printCube(Cube c, float mask, bool printMask)
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v5.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v5.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v6.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v6.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v7.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v7.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     EndPrimitive();
 
@@ -254,28 +255,28 @@ void printCube(Cube c, float mask, bool printMask)
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
 
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v4.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v4.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v7.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v7.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v3.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v3.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     gl_PointSize = pSize;
 	  gl_Position =  MVP * vec4(c.v0.xyz,1.0);
     if (!printMask) { fColorIn = vec3(c.v0.w); }
-    else { fColorIn = vec3(maskColor);}
+    else { fColorIn = maskColor;}
           EmitVertex();
     EndPrimitive();
 }
@@ -284,5 +285,6 @@ void main(){
 
         Cube c = createCube(vec4(startPoint,0.0) + gl_in[0].gl_Position);
         float theCase = calculateCase(c); 
-        printCube(c,theCase,true);
+        if (cubeMask == -1.0) printCube(c,theCase,true);
+        else if (theCase == cubeMask) printCube(c,theCase,true);
 }

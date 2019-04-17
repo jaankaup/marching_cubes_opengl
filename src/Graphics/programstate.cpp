@@ -91,7 +91,7 @@ float ProgramState::getCubeMask() const
 
 void ProgramState::setCubeMask(const float cubeMask)
 {
-  if (cubeMask < 256.0f && cubeMask > 0.0f) pCubeMask = cubeMask; 
+  if (cubeMask < 256.0f && cubeMask > -1.0f) pCubeMask = cubeMask; 
   else return;
   
 //  Log::getError().log("ProgramState::setCubeMask(%)",std::to_string(cubeMask));

@@ -56,6 +56,18 @@ Model* ModelManager::create_green_thing(bool wireframe)
 
   int vb_count = 0;
 
+  if (wireframe)
+  {
+    Model* original = getModelByName("greenThingModel");
+    std::vector<Command>& gm = *(original->getCommands());
+    Command c = gm[0]; 
+    c.shaderName = "marchingShaderLine";
+    original->addCommand(c);
+    return original;
+  }
+
+  if (!wireframe)
+  {
   Log::getDebug().log("creating the green optimization shader");
   // The shader for optimizing the green thing data.
   Shader* green_optimization_shader1 = ShaderManager::getInstance().createShader("green_thing_optimized");
@@ -63,6 +75,7 @@ Model* ModelManager::create_green_thing(bool wireframe)
   std::vector<std::string> green_stage1 = {"shaders/marching.vert", "shaders/marching_green_thing_stage1.geom"};
   green_optimization_shader1->setFeedback(true,"outputCase");
   green_optimization_shader1->build(green_stage1);
+  }
 
   if (!wireframe)
   {
@@ -88,12 +101,15 @@ Model* ModelManager::create_green_thing(bool wireframe)
   c.vao = VertexBufferManager::getInstance().getVertexBufferByName(VB_NAME)->getVAO(); 
   c.draw = GL_POINTS;
   c.textureName = TEXTURE_NAME;
-  if (wireframe) c.shaderName = "marchingShaderLine";
-  else c.shaderName = "marchingShader";
+ // if (wireframe) c.shaderName = "marchingShaderLine";
+  c.shaderName = "marchingShader";
   c.startIndex = 0;
   c.count = vb_count;
   c.modelMatrix = original;
   m.addCommand(c);
+//  std::string modelName;
+//  if (!wireframe) modelName = "greenThingModel";
+//  else  modelName = "greenThingModel_line";
   auto modelData = std::make_tuple("greenThingModel",m);
   pModels.push_back(modelData);
   return getModelByName("greenThingModel");

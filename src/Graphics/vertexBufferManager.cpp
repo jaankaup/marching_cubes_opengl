@@ -135,9 +135,25 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   result->init();
   std::vector<std::string> types = {"3f"};
   result->addData(feedback, sizeof(float)*primitiveCount*3, types);
+  result->pDataCount = primitiveCount;
 
   delete[] feedback;
 //  result-> init_transform_feedback(tbo, primitiveCount/3);
 
   return result;
+}
+
+bool VertexBufferManager::deleteVertexBuffer(const std::string& name)
+{
+   for (unsigned int i=0 ; i < pVertexBuffers.size() ; i++)
+   {
+     if (std::get<0>(pVertexBuffers[i]) == name)
+     {
+       auto haaaaa = pVertexBuffers.begin() + 1;
+       std::get<1>(pVertexBuffers[i]).dispose();
+       pVertexBuffers.erase(haaaaa);
+       return true;
+     }
+   }
+   return false;
 }

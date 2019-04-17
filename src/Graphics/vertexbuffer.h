@@ -10,6 +10,7 @@
 class Vertexbuffer
 {
   friend class VertexBufferManager;
+//  friend class std::vector<std::tuple<const std::string, Vertexbuffer>>;
 
 	public:
 		Vertexbuffer();
@@ -34,8 +35,10 @@ class Vertexbuffer
     void init_transform_feedback(const GLuint id, GLuint count);
     // TODO: change.
     int getCount() const;
+    void dispose() const;
 
 	private:
+
     GLuint pId = 0;
     GLuint pVAO = 0;
     GLenum pTarget;
@@ -45,7 +48,6 @@ class Vertexbuffer
     // TODO: change this. 
     int pDataCount = 0;
 
-    void dispose() const;
 };
 
 
