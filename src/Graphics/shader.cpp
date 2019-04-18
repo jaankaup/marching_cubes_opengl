@@ -91,10 +91,10 @@ void Shader::build(const std::vector<std::string>& sources)
     }
     if (pFeedback)
     {
-      const GLchar* feedbackVaryings[] = {"outputCase"}; //pFeedbackVarying.c_str()}; 
+      const GLchar* feedbackVaryings[] = {"fPosIn","fNormalIn"}; //pFeedbackVarying.c_str()}; 
       Log::getDebug().log("feedback varying: %",feedbackVaryings[0]);
       Log::getDebug().log("pId: %",std::to_string(pId));
-      glTransformFeedbackVaryings(pId, 1, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
+      glTransformFeedbackVaryings(pId, 2, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
     }
 
     GLenum pname = GL_LINK_STATUS;

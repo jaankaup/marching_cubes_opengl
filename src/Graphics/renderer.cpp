@@ -97,10 +97,14 @@ void Renderer::renderModels(const Camera& camera)
 //    auto scale5 = glm::scale(original,glm::vec3(1.0f));
 //    auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
 //    auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
-    glm::mat4 mx = glm::rotate(com.modelMatrix,glm::radians(Timer::getInstance().ticks()/9000000.0f), glm::vec3(1.0f,0.0f,0.0f));
+//    glm::mat4 mx = glm::rotate(com.modelMatrix,glm::radians(Timer::getInstance().ticks()/9000000.0f), glm::vec3(1.0f,0.0f,0.0f));
 
 //    Log::getDebug().log("timeNow = %",std::to_string(Timer::getInstance().ticks()/5000000.0f));
-//    glm::mat4 mx = com.modelMatrix ;
+//    if (com.shaderName == "marchingShader_green") Log::getDebug().log(std::to_string(com.count));
+//    Log::getDebug().log("%",com.shaderName);
+//    logGLM("startPoint",com.start_point);
+//    Log::getDebug().log("%",com.shaderName);
+    glm::mat4 mx = com.modelMatrix ;
     Texture texture = TextureManager::getInstance().getTextureByName(com.textureName);//{TextureType::d2,0};
     texture.use(0);
     glBindVertexArray(com.vao);
@@ -115,9 +119,10 @@ void Renderer::renderModels(const Camera& camera)
     shader->setUniform("cameraPosition", eyePosition);
     shader->setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
 //    shader.setUniform("voxels_per_block", voxels_per_block);
-    shader->setUniform("startPoint", startPoint); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
+    shader->setUniform("startPoint", com.start_point); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
     shader->setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
     shader->setUniform("debugMask", ProgramState::getInstance().getDebugCube() ? 1.0f : 0.0f);
+    shader->setUniform("wireframe", ProgramState::getInstance().getWireframe() ? 1.0f : 0.0f);
 
     Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
 

@@ -190,6 +190,48 @@ TextureData create2x2()
   return std::move(td);
 }
 
+TextureData createPerlin3D(const  int width, const int height, const int depth)
+{
+  int size = width*height*depth*4;
+  TextureData td(size,width,height,depth);
+  auto data = td.getData();
+
+  // Reinterpret the one dimensional array as multi-dimensional array.
+  uint8_t (&multiArray)[width][height][depth][4] = *reinterpret_cast<uint8_t (*)[width][height][depth][4]>(data);
+
+  MyRandom<double> mr;
+  mr.setDistribution(0,25000.0);
+
+  siv::PerlinNoise pn(mr());
+//  siv::PerlinNoise pn_r(mr());
+//  siv::PerlinNoise pn_g(mr());
+//  siv::PerlinNoise pn_b(mr());
+
+  const double fx = width; // / frequency;
+  const double fy = height; // / frequency;
+  const double fz = depth; // / frequency;
+
+//
+//  MyRandom<int> mr2;
+//  mr2.setDistribution(-12,12);
+//
+//  MyRandom<int> mr3;
+//  mr3.setDistribution(-12,12);
+  
+  for (int z = 0; z < depth ; z++) {
+  for (int y = 0; y < height ; y++){
+  for (int x = 0; x < width ; x++) {
+//
+//    Log::getDebug().log("pn.noise = (%)", pn.noise0_1(x/fx,y/fy,z/fz)*255);
+    multiArray[z][y][x][0] = 123; 
+    multiArray[z][y][x][1] = 100; 
+    multiArray[z][y][x][2] = pn.noise0_1(x/fx,y/fy,z/fz)*255;  //pn.noise0_1(x/fx,y/fy,z/fz)*255; 
+    multiArray[z][y][x][3] = pn.noise0_1(x/fx,y/fy,z/fz)*255; 
+//    multiArray[z][y][x][3] = pn.noise0_1(x/fx,y/fy,z/fz)*255; 
+  }}};
+
+  return std::move(td);
+}
 
 // y ~= 128
 inline double centerY(int y)

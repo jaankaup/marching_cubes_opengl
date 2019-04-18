@@ -195,6 +195,7 @@ void Camera::handleEvents()
     {
         bool wireframe = ProgramState::getInstance().getWireframe();
         ProgramState::getInstance().setWireframe(!wireframe);
+        Log::getInfo().log("Wireframe = (%)",!wireframe ? "Enabled" : "Disabled");
     }
     if(keystate[SDL_SCANCODE_KP_MULTIPLY])
     {

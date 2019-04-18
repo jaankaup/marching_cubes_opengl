@@ -78,7 +78,7 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   GLuint tbo;
   glGenBuffers(1, &tbo);
   glBindBuffer(GL_ARRAY_BUFFER, tbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*count*3, nullptr, GL_STATIC_READ);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*count*15*6, nullptr, GL_STATIC_READ);
 
   // Perform feedback transform. Get all cube cases for the green thing.
   glEnable(GL_RASTERIZER_DISCARD);
@@ -110,9 +110,10 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 
   Log::getDebug().log("primitiveCounter == %.", std::to_string(primitiveCount));
 
+  int triangleDataCount = primitiveCount;
   // Fetch the non empty cube coordinates.
-  GLfloat* feedback = new GLfloat[primitiveCount*3];
-  glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float)*primitiveCount*3, feedback);
+  GLfloat* feedback = new GLfloat[triangleDataCount*6*3];
+  glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float)*triangleDataCount*6*3, feedback);
 
   // Release the transfrom feedback buffer.
   glDeleteBuffers(1, &tbo);
@@ -120,22 +121,22 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 //  Log::getDebug().log("sizeof(feedback) == %.", std::to_string(sizeof(feedback)));
 //  int maskCount = 0;
 //  Log::getDebug().log("feedback[0] == %.", std::to_string(feedback[0]));
-//  for (int i=0; i<primitiveCount ; i++)
-//  {
-//    Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
-////    if (feedback[i] == 0.0) break;
-////    {
-////      maskCount++;
-//////      logGLM("basePosition",basePosition);
-////      //Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
-////    }
-//  }
+  for (int i=0; i<200 ; i++)
+  {
+    Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
+//    if (feedback[i] == 0.0) break;
+//    {
+//      maskCount++;
+////      logGLM("basePosition",basePosition);
+//      //Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
+//    }
+  }
 //  Log::getDebug().log("maskCount = %", std::to_string(maskCount));
   Vertexbuffer* result = createVertexBuffer(optimized_name);
   result->init();
-  std::vector<std::string> types = {"3f"};
-  result->addData(feedback, sizeof(float)*primitiveCount*3, types);
-  result->pDataCount = primitiveCount;
+  std::vector<std::string> types = {"3f","3f"};
+  result->addData(feedback, sizeof(float)*primitiveCount*3*6, types);
+  result->pDataCount = triangleDataCount;
 
   delete[] feedback;
 //  result-> init_transform_feedback(tbo, primitiveCount/3);

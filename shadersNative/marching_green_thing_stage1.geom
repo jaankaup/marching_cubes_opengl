@@ -20,6 +20,8 @@ uniform sampler1D tri_table;
 uniform float voxels_per_block;
 //uniform mat4 MVP;
 
+uniform float isovalue = 1.0;
+
 struct Cube
 {
   vec4 v0;
@@ -34,22 +36,15 @@ struct Cube
 
 float calculateDensity(vec3 v)
 {
-//  vec3 again = vec3(mod(v.x,8.0) - 4.0,mod(v.y,15.0f),mod(v.z,2.0f));
-  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z+3.0,2.0) - pow(2.2,2.0);  
+//  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z,2.0); // - pow(2.2,2.0);  
   float noise = texture(diffuse3DTexture,v).w;
-  float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
-  float noise3 = texture(diffuse3DTexture,v+vec3(sin(v.x),tan(v.y),cos(v.z))).w;
-  float hils = noise2*33.0*sin(v.z);
-  float hils2 = noise*13.0*cos(v.z);
+//  float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
+//  float noise3 = texture(diffuse3DTexture,v+vec3(sin(v.x),tan(v.y),cos(v.z))).w;
+//  float hils = noise2*33.0*sin(v.z);
+//  float hils2 = noise*13.0*cos(v.z);
 
- return ball + hils + hils2 - noise2*35.0 - noise*(30*sin(v.z*v.x));
-// else return 0.0;
- // float noise = texture(diffuse3DTexture,v).w;
- // float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
-//  float circle = clamp(noise * pow(again.x*again.x + again.y*again.y, 2.0),-12.0,20.0) - 2.0;
-
-//  return v.y + noise + circle + hils - hils2 + 20.0*v.y + 3.0 * noise ; // + circle; // - circle2;
- //   return v.y + noise - hils + hils2;
+// return ball + hils + hils2 - noise2*35.0 - noise*(30*sin(v.z*v.x));
+ return v.y - noise;
 }
 
 Cube createCube(vec3 position)
@@ -94,14 +89,14 @@ float calculateCase(Cube c)
 {
   float result = 0.0;
   
-  if (c.v7.w < 0.5) { result += 128.0;} 
-  if (c.v6.w < 0.5) { result += 64.0;}
-  if (c.v5.w < 0.5) { result += 32.0;} 
-  if (c.v4.w < 0.5) { result += 16.0;} 
-  if (c.v3.w < 0.5) { result += 8.0; }
-  if (c.v2.w < 0.5) { result += 4.0; }
-  if (c.v1.w < 0.5) { result += 2.0; }
-  if (c.v0.w < 0.5) { result += 1.0; }
+  if (c.v7.w < isovalue) { result += 128.0;} 
+  if (c.v6.w < isovalue) { result += 64.0;}
+  if (c.v5.w < isovalue) { result += 32.0;} 
+  if (c.v4.w < isovalue) { result += 16.0;} 
+  if (c.v3.w < isovalue) { result += 8.0; }
+  if (c.v2.w < isovalue) { result += 4.0; }
+  if (c.v1.w < isovalue) { result += 2.0; }
+  if (c.v0.w < isovalue) { result += 1.0; }
   
   return result;
 } 

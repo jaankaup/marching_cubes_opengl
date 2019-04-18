@@ -51,45 +51,9 @@ void loop_handler2(void *arg)
     c->renderer.renderModels(c->camera);
     Window::getInstance().swapBuffers();
 }
-// Vertex shader
-const GLchar* vertexShaderSrc = R"glsl(
-    #version 150 core
-
-    in float inValue;
-    out float geoValue;
-
-    void main()
-    {
-        geoValue = sqrt(inValue);
-    }
-)glsl";
-
-// Geometry shader
-const GLchar* geoShaderSrc = R"glsl(
-    #version 150 core
-
-    layout(points) in;
-    layout(triangle_strip, max_vertices = 3) out;
-
-    in float[] geoValue;
-    out float outValue;
-
-    void main()
-    {
-        for (int i = 0; i < 3; i++) {
-            outValue = geoValue[0] + i;
-            EmitVertex();
-        }
-
-        EndPrimitive();
-    }
-)glsl";
-
-
 
 int main()
 {
-
 
   const int BLOCK_SIZE = 12;
 
@@ -113,7 +77,7 @@ int main()
   // Set the starting point to 0.25 height of the cube height.
   auto y_start = static_cast<float>(SAMPLE_POINTS_Y);  
   //ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, -CUBE_COUNT_Y/2.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
-  ProgramState::getInstance().setStartPoint(glm::vec3(-35.0f, -37.0f, -67.0f));
+//  ProgramState::getInstance().setStartPoint(glm::vec3(-35.0f, -37.0f, -67.0f));
  
 //  logGLM("sp",ProgramState::getInstance().getStartPoint());
 
@@ -121,86 +85,6 @@ int main()
   // Create the window.
   Window window = Window::getInstance();
 
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-////
-//    // Compile shaders
-//    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-//    glShaderSource(vertexShader, 1, &vertexShaderSrc, nullptr);
-//    glCompileShader(vertexShader);
-//
-//    GLuint geoShader = glCreateShader(GL_GEOMETRY_SHADER);
-//    glShaderSource(geoShader, 1, &geoShaderSrc, nullptr);
-//    glCompileShader(geoShader);
-//
-//    // Create program and specify transform feedback variables
-//    GLuint program = glCreateProgram();
-//    glAttachShader(program, vertexShader);
-//    glAttachShader(program, geoShader);
-//
-//    const GLchar* feedbackVaryings[] = { "outValue" };
-//    glTransformFeedbackVaryings(program, 1, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
-//
-//    glLinkProgram(program);
-//    glUseProgram(program);
-//
-//    // Create VAO
-//    GLuint vao;
-//    glGenVertexArrays(1, &vao);
-//    glBindVertexArray(vao);
-//
-//    // Create input VBO and vertex format
-//    GLfloat data[] = { 1.0f, 2.0f, 3.0f, 4.0f, 5.0f };
-//
-//    GLuint vbo;
-//    glGenBuffers(1, &vbo);
-//    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
-//
-//    GLint inputAttrib = glGetAttribLocation(program, "inValue");
-//    glEnableVertexAttribArray(inputAttrib);
-//    glVertexAttribPointer(inputAttrib, 1, GL_FLOAT, GL_FALSE, 0, 0);
-//
-//    // Create transform feedback buffer
-//    GLuint tbo;
-//    glGenBuffers(1, &tbo);
-//    glBindBuffer(GL_ARRAY_BUFFER, tbo);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(data) * 3, nullptr, GL_STATIC_READ);
-//
-//    // Perform feedback transform
-//    glEnable(GL_RASTERIZER_DISCARD);
-//
-//    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tbo);
-//
-//    glBeginTransformFeedback(GL_TRIANGLES);
-//        glDrawArrays(GL_POINTS, 0, 5);
-//    glEndTransformFeedback();
-//
-//    glDisable(GL_RASTERIZER_DISCARD);
-//
-//    glFlush();
-//
-//    // Fetch and print results
-//    GLfloat feedback[15];
-//    glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(feedback), feedback);
-//
-//    for (int i = 0; i < 15; i++) {
-//        printf("%f\n", feedback[i]);
-//    }
-//
-//    glDeleteProgram(program);
-//    glDeleteShader(geoShader);
-//    glDeleteShader(vertexShader);
-//
-//    glDeleteBuffers(1, &tbo);
-//    glDeleteBuffers(1, &vbo);
-//
-//    glDeleteVertexArrays(1, &vao);
-//
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////
 //  // The shader for shading textured cube.
   Shader* shaderCube = ShaderManager::getInstance().createShader("cubeShader");
 
@@ -215,7 +99,7 @@ int main()
   Texture textureCube = TextureManager::getInstance().create2D("cubeTexture");
 
   // The shader sources for the default 2D texture shader.
-  std::vector<std::string> shaderSourcesCube = {"shaders/default.vert", "shaders/default.frag"};
+  std::vector<std::string> shaderSourcesCube = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
 
   // The default shader compilation.
   shaderCube->build(shaderSourcesCube);
@@ -225,16 +109,27 @@ int main()
 
   // We create marching cubes shader only with native opengl.
   #ifndef EMSCRIPTEN
-    Shader* marchingShader = ShaderManager::getInstance().createShader("marchingShader");
-    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching.geom", "shaders/marching.frag"};
+
+  /*
+   * This is a really hacky way to do this. If I have some time I'll develop
+   * somethin better.
+   *
+   * THE GREEN THING: Shaders: marching_green, marchingShaderWire_green
+   *                  Textures: greenThingTexture
+   *                  Primary vertex buffer: greenThingVB
+   *                  Secondary vertex buffer: green_thing_optimized
+   */
+
+    Shader* marchingShader = ShaderManager::getInstance().createShader("marchingShader_green");
+    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
     marchingShader->build(marchingShader_src);
 
-    Shader* marchingShaderLine = ShaderManager::getInstance().createShader("marchingShaderLine");
-    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame.geom", "shaders/marchingLine2.frag"};
+    Shader* marchingShaderLine = ShaderManager::getInstance().createShader("marchingShaderWire_green");
+    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
     marchingShaderLine->build(marchingShaderLine_src);
   #endif
 
-  // The initialization of creation of renderer.
+  // Initialize the renderer.
   c.renderer.init();
 
   #ifndef EMSCRIPTEN
@@ -245,6 +140,7 @@ int main()
   std::vector<Command>& gm = *(green_thing->getCommands());
 //  Command c_green;
   if (gm.size() == 0) Log::getError().log("hello::main. gm.size() = %", std::to_string(gm.size()));
+
   Vertexbuffer* green_vb = VertexBufferManager::getInstance().getVertexBufferByName("greenThingVB");
   Vertexbuffer* optimizedGreen =
     VertexBufferManager::getInstance().optimize_vertex_buffer("green_thing_optimized_vb",
@@ -255,14 +151,24 @@ int main()
                                                               green_vb);
   gm[0].vao = optimizedGreen->getVAO();
   gm[0].count = optimizedGreen->getCount();
- // gm[1].vao = optimizedGreen->getVAO();
-  Log::getDebug().log("gm[0] = %", std::to_string(gm[0].vao));
-  auto cou = optimizedGreen->getCount(); 
-  Log::getDebug().log("optimized count = %", std::to_string(cou));
-  VertexBufferManager::getInstance().deleteVertexBuffer("greenThingVB");
-  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
-  // TODO :: getCommand should return a pointer.
-//  ModelManager::getInstance().create_green_thing(true);
+  gm[0].shaderName = "cubeShader";
+  gm[0].shaderName = "cubeShader";
+  gm[0].draw = GL_TRIANGLES;
+//// // gm[1].vao = optimizedGreen->getVAO();
+////  auto cou = optimizedGreen->getCount(); 
+////  Log::getDebug().log("optimized count = %", std::to_string(cou));
+      VertexBufferManager::getInstance().deleteVertexBuffer("greenThingVB");
+////  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
+////  Log::getDebug().log("gm[0] = %", std::to_string(gm[0].vao));
+////  Log::getDebug().log("gm[0] = %", std::to_string(gm[0].count));
+////  Log::getDebug().log("gm[0] = %", gm[0].shaderName);
+
+
+
+
+
+
+
 //  glm::mat4 original = glm::mat4(1.0f);
 //
 //  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
