@@ -55,10 +55,14 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   logGLM("basePosition",basePosition);
   Log::getDebug().log("texture3D == %.", texture3D);
   Log::getDebug().log("voxels_per_block == %.", std::to_string(voxels_per_block));
-  std::string triangulation_sh = ProgramState::getInstance().getMetadata().triangulationShader;
-  std::string meshShader = ProgramState::getInstance().getMetadata().meshShader;
-  std::string cubemarch_sh = ProgramState::getInstance().getMetadata().cubeMarchShader;
-  std::string cubemarch_wire = ProgramState::getInstance().getMetadata().cubeMarchWireframe;
+//  std::string triangulation_sh = ProgramState::getInstance().getMetadata().triangulationShader;
+//  std::string meshShader = ProgramState::getInstance().getMetadata().meshShader;
+//  std::string cubemarch_sh = ProgramState::getInstance().getMetadata().cubeMarchShader;
+//  std::string cubemarch_wire = ProgramState::getInstance().getMetadata().cubeMarchWireframe;
+  std::string triangulation_sh = ProgramState::getInstance().getMetadata()->triangulationShader;
+  std::string meshShader = ProgramState::getInstance().getMetadata()->meshShader;
+  std::string cubemarch_sh = ProgramState::getInstance().getMetadata()->cubeMarchShader;
+  std::string cubemarch_wire = ProgramState::getInstance().getMetadata()->cubeMarchWireframe;
 //    std::string meshShader;
 //    std::string triangulationShader;
 //    std::string cubeMarchShader;
@@ -68,9 +72,14 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   Log::getDebug().log("cubemarch_sh == %.", cubemarch_sh);
   Log::getDebug().log("cubemarch_wire == %.", cubemarch_wire);
 
+  auto metadata = ProgramState::getInstance().getMetadata();
+  //Log::getDebug().log("tritable_name == %.", metadata.texture3Dname);
+  Log::getDebug().log("tritable_name == %.", metadata->texture3Dname);
+
   Shader* shader = ShaderManager::getInstance().getShaderByName(triangulation_sh);
   shader->bind();
-  Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");
+  //Texture tritable = TextureManager::getInstance().getTextureByName(metadata.tri_table_name);
+  Texture tritable = TextureManager::getInstance().getTextureByName(metadata->tri_table_name);
   tritable.use(1);
   shader->setUniform("tri_table", 1);/* eyePosition);*/
   

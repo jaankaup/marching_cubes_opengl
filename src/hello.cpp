@@ -46,6 +46,10 @@ struct context
 
 void createShaders()
 {
+    
+
+    // TODO: delete all existing shaders here.
+    
     const std::string MARCHING_CUBES_SHADER = "marchingShader_green"; 
     const std::string MARCHING_CUBES_WIREFRAME = "marchingShaderWire_green"; 
     const std::string MARCHING_CUBES_TRIANGULATION = "triangulationShader"; 
@@ -56,14 +60,16 @@ void createShaders()
     std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
     marchingShader->build(marchingShader_src);
 
-    ProgramState::getInstance().getMetadata().cubeMarchShader = MARCHING_CUBES_SHADER;
+    //ProgramState::getInstance().getMetadata().cubeMarchShader = MARCHING_CUBES_SHADER;
+    ProgramState::getInstance().getMetadata()->cubeMarchShader = MARCHING_CUBES_SHADER;
 
     // The marching cubes wireframe shader.
     Shader* marchingShaderLine = ShaderManager::getInstance().createShader(MARCHING_CUBES_WIREFRAME);
     std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
     marchingShaderLine->build(marchingShaderLine_src);
 
-    ProgramState::getInstance().getMetadata().cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
+    //ProgramState::getInstance().getMetadata().cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
+    ProgramState::getInstance().getMetadata()->cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
 
     // The triangulation shader.
     Shader* triangulationShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_TRIANGULATION);
@@ -71,7 +77,8 @@ void createShaders()
     triangulationShader->setFeedback(true,"outputCase");
     triangulationShader->build(triangulate_src);
 
-    ProgramState::getInstance().getMetadata().triangulationShader = MARCHING_CUBES_TRIANGULATION;
+    //ProgramState::getInstance().getMetadata().triangulationShader = MARCHING_CUBES_TRIANGULATION;
+    ProgramState::getInstance().getMetadata()->triangulationShader = MARCHING_CUBES_TRIANGULATION;
 
     // The shader for drawing the triangulated scene. The name is a bit
     // misleading.
@@ -79,7 +86,62 @@ void createShaders()
     std::vector<std::string> shaderSourcesCube = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
     shaderCube->build(shaderSourcesCube);
 
-    ProgramState::getInstance().getMetadata().meshShader = SCENE_SHADER;
+    //ProgramState::getInstance().getMetadata().meshShader = SCENE_SHADER;
+    ProgramState::getInstance().getMetadata()->meshShader = SCENE_SHADER;
+}
+
+void initializeCubeAttributes()
+{
+  const int BLOCK_SIZE = 8;
+  const int CUBE_COUNT_X = BLOCK_SIZE * 8 ;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 8  ;
+  const int CUBE_COUNT_Z = BLOCK_SIZE * 8 ;
+  const float ISO_VALUE = 0.0f;
+
+  auto metadata = ProgramState::getInstance().getMetadata(); //.cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
+  //metadata.block_size = BLOCK_SIZE; 
+  //metadata.cube_count_x = CUBE_COUNT_X;
+  //metadata.cube_count_y = CUBE_COUNT_Y;
+  //metadata.cube_count_z = CUBE_COUNT_Z;
+  //metadata.isovalue = ISO_VALUE;
+  metadata->block_size = BLOCK_SIZE; 
+  metadata->cube_count_x = CUBE_COUNT_X;
+  metadata->cube_count_y = CUBE_COUNT_Y;
+  metadata->cube_count_z = CUBE_COUNT_Z;
+  metadata->isovalue = ISO_VALUE;
+}
+
+void createBaseVertexBuffer()
+{
+  const std::string BASE_VERTEX_BUFFER_NAME = "greenThingVB"; 
+
+  auto metadata = ProgramState::getInstance().getMetadata();
+
+  auto vb = VertexBufferManager::getInstance().createVertexBuffer(BASE_VERTEX_BUFFER_NAME);
+  //vb->createExamplePoints(metadata.cube_count_x, metadata.cube_count_y, metadata.cube_count_z);
+  vb->createExamplePoints(metadata->cube_count_x, metadata->cube_count_y, metadata->cube_count_z);
+}
+
+void createtextures()
+{
+  const std::string TEXTURE_NAME = "greenThingTexture"; 
+  const std::string TRITABLE_NAME = "tri_table_texture"; 
+
+  auto metadata = ProgramState::getInstance().getMetadata();
+
+  // Create the 3D texture.
+  Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
+  //auto tex3D_data = createPerlin3D(metadata.cube_count_x*2,metadata.cube_count_x*2,metadata.cube_count_z*2);
+  auto tex3D_data = createPerlin3D(metadata->cube_count_x*2,metadata->cube_count_x*2,metadata->cube_count_z*2);
+  tex3D.create3D(tex3D_data);
+//  metadata.texture3Dname = TEXTURE_NAME;
+  metadata->texture3Dname = TEXTURE_NAME;
+
+  // Create the tri_table.
+  Texture tritable = TextureManager::getInstance().create1D("tri_table_texture");
+  tritable.create_tritable_texture();
+//  metadata.tri_table_name = "paukku";// TRITABLE_NAME;
+  metadata->tri_table_name = TRITABLE_NAME;// TRITABLE_NAME;
 }
 
 void loop_handler2(void *arg)
@@ -93,39 +155,21 @@ void loop_handler2(void *arg)
 int main()
 {
 
-  const int BLOCK_SIZE = 12;
-
-  // 3D texture height.
-  const int SAMPLE_POINTS_Y = BLOCK_SIZE;
-
-  const int CUBE_COUNT_X = BLOCK_SIZE * 6;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 6; 
-  const int CUBE_COUNT_Z = BLOCK_SIZE * 6;
-  const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
-
   // The program state must be created first.
   ProgramState::getInstance();
   
-  // Initialize the voxelsPerBlock count.
-  ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
+  // Initialize the base information for the marching cubes.
+  initializeCubeAttributes();
 
-  // Set the starting point to 0.25 height of the cube height.
-  auto y_start = static_cast<float>(SAMPLE_POINTS_Y);  
-  //ProgramState::getInstance().setStartPoint(glm::vec3(-CUBE_COUNT_X/2.0f, -CUBE_COUNT_Y/2.0f /*  CUBE_COUNT_Y/4.0f    y_start */ ,-CUBE_COUNT_Z/2.0f));
-//  ProgramState::getInstance().setStartPoint(glm::vec3(-35.0f, -37.0f, -67.0f));
- 
-//  logGLM("sp",ProgramState::getInstance().getStartPoint());
-
-//  ProgramState::getInstance().setVoxelsPerBlock(8.0f); 
-  // Create the window.
+  // Create the window. This also creates the opengl context.
   Window window = Window::getInstance();
 
-//  // 3D texture.
-//  Texture texture = TextureManager::getInstance().create3D("my3Dtexture");
+  // Create all textures.
+  createtextures();
 
   // The tri_table data .
-  Texture tritable = TextureManager::getInstance().create1D("tri_table_texture");
-  tritable.create_tritable_texture();
+//  Texture tritable = TextureManager::getInstance().create1D("tri_table_texture");
+//  tritable.create_tritable_texture();
 
   // Creates a default texture for rendering the cube.
   Texture textureCube = TextureManager::getInstance().create2D("cubeTexture");
@@ -196,7 +240,8 @@ int main()
   auto ps = ProgramState::getInstance();
   gm[0].vao = optimizedGreen->getVAO();
   gm[0].count = optimizedGreen->getCount();
-  gm[0].shaderName = ps.getMetadata().meshShader;
+  gm[0].shaderName = ps.getMetadata()->meshShader;
+  //gm[0].shaderName = ps.getMetadata().meshShader;
   gm[0].draw = GL_TRIANGLES;
 //// // gm[1].vao = optimizedGreen->getVAO();
 ////  auto cou = optimizedGreen->getCount(); 

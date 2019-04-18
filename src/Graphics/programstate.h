@@ -55,6 +55,8 @@
     std::string cubeMarchShader;
     std::string cubeMarchWireframe;
     std::string base_vertex_buffer_name;
+    std::string texture3Dname;
+    std::string tri_table_name;
     float isovalue = 0.0;
 
   };
@@ -77,7 +79,7 @@ class ProgramState
     float getCubeMaskCeil() const;
     bool getDebugCube() const;
     glm::ivec3 getCubeDimension() const;
-    Cube_meta_data& getMetadata();
+    Cube_meta_data* getMetadata();
 
 
     void setScreenWidth(const int width);
