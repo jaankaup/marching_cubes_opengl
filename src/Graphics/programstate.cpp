@@ -122,3 +122,8 @@ glm::ivec3 ProgramState::getCubeDimension() const
 {
   return pCubeDimension;
 }
+
+Cube_meta_data& ProgramState::getMetadata()
+{
+  return pMetaData;
+}

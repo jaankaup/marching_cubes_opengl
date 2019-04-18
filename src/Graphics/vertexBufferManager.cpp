@@ -55,7 +55,20 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   logGLM("basePosition",basePosition);
   Log::getDebug().log("texture3D == %.", texture3D);
   Log::getDebug().log("voxels_per_block == %.", std::to_string(voxels_per_block));
-  Shader* shader = ShaderManager::getInstance().getShaderByName(shaderName);
+  std::string triangulation_sh = ProgramState::getInstance().getMetadata().triangulationShader;
+  std::string meshShader = ProgramState::getInstance().getMetadata().meshShader;
+  std::string cubemarch_sh = ProgramState::getInstance().getMetadata().cubeMarchShader;
+  std::string cubemarch_wire = ProgramState::getInstance().getMetadata().cubeMarchWireframe;
+//    std::string meshShader;
+//    std::string triangulationShader;
+//    std::string cubeMarchShader;
+//    std::string cubeMarchWireframe;
+  Log::getDebug().log("triangulation_sh == %.", triangulation_sh);
+  Log::getDebug().log("meshshader == %.", meshShader);
+  Log::getDebug().log("cubemarch_sh == %.", cubemarch_sh);
+  Log::getDebug().log("cubemarch_wire == %.", cubemarch_wire);
+
+  Shader* shader = ShaderManager::getInstance().getShaderByName(triangulation_sh);
   shader->bind();
   Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");
   tritable.use(1);

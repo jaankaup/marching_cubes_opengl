@@ -44,6 +44,44 @@ struct context
     Camera camera;
 };
 
+void createShaders()
+{
+    const std::string MARCHING_CUBES_SHADER = "marchingShader_green"; 
+    const std::string MARCHING_CUBES_WIREFRAME = "marchingShaderWire_green"; 
+    const std::string MARCHING_CUBES_TRIANGULATION = "triangulationShader"; 
+    const std::string SCENE_SHADER = "cubeshader"; 
+
+    // The marching cubes shader.
+    Shader* marchingShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_SHADER);
+    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
+    marchingShader->build(marchingShader_src);
+
+    ProgramState::getInstance().getMetadata().cubeMarchShader = MARCHING_CUBES_SHADER;
+
+    // The marching cubes wireframe shader.
+    Shader* marchingShaderLine = ShaderManager::getInstance().createShader(MARCHING_CUBES_WIREFRAME);
+    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
+    marchingShaderLine->build(marchingShaderLine_src);
+
+    ProgramState::getInstance().getMetadata().cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
+
+    // The triangulation shader.
+    Shader* triangulationShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_TRIANGULATION);
+    std::vector<std::string> triangulate_src = {"shaders/marching.vert", "shaders/triangulate.geom"};
+    triangulationShader->setFeedback(true,"outputCase");
+    triangulationShader->build(triangulate_src);
+
+    ProgramState::getInstance().getMetadata().triangulationShader = MARCHING_CUBES_TRIANGULATION;
+
+    // The shader for drawing the triangulated scene. The name is a bit
+    // misleading.
+    Shader* shaderCube = ShaderManager::getInstance().createShader(SCENE_SHADER);
+    std::vector<std::string> shaderSourcesCube = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
+    shaderCube->build(shaderSourcesCube);
+
+    ProgramState::getInstance().getMetadata().meshShader = SCENE_SHADER;
+}
+
 void loop_handler2(void *arg)
 {
     context* c = static_cast<context*>(arg);
@@ -58,19 +96,16 @@ int main()
   const int BLOCK_SIZE = 12;
 
   // 3D texture height.
-  const int SAMPLE_POINTS_Y = BLOCK_SIZE ;
+  const int SAMPLE_POINTS_Y = BLOCK_SIZE;
 
   const int CUBE_COUNT_X = BLOCK_SIZE * 6;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 6 ;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 6; 
   const int CUBE_COUNT_Z = BLOCK_SIZE * 6;
   const int CUBE_TOTAL_COUNT = CUBE_COUNT_X * CUBE_COUNT_Y * CUBE_COUNT_Z;
 
   // The program state must be created first.
   ProgramState::getInstance();
   
-  // Set base cube dimension.
-//  ProgramState::getInstance().setCubeDimension(glm::ivec3(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2));
-
   // Initialize the voxelsPerBlock count.
   ProgramState::getInstance().setVoxelsPerBlock(float(BLOCK_SIZE)); 
 
@@ -85,9 +120,6 @@ int main()
   // Create the window.
   Window window = Window::getInstance();
 
-//  // The shader for shading textured cube.
-  Shader* shaderCube = ShaderManager::getInstance().createShader("cubeShader");
-
 //  // 3D texture.
 //  Texture texture = TextureManager::getInstance().create3D("my3Dtexture");
 
@@ -98,35 +130,47 @@ int main()
   // Creates a default texture for rendering the cube.
   Texture textureCube = TextureManager::getInstance().create2D("cubeTexture");
 
-  // The shader sources for the default 2D texture shader.
-  std::vector<std::string> shaderSourcesCube = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
-
-  // The default shader compilation.
-  shaderCube->build(shaderSourcesCube);
-
   // Context creation.
   context c;
 
   // We create marching cubes shader only with native opengl.
   #ifndef EMSCRIPTEN
 
-  /*
-   * This is a really hacky way to do this. If I have some time I'll develop
-   * somethin better.
-   *
-   * THE GREEN THING: Shaders: marching_green, marchingShaderWire_green
-   *                  Textures: greenThingTexture
-   *                  Primary vertex buffer: greenThingVB
-   *                  Secondary vertex buffer: green_thing_optimized
-   */
+  createShaders();
 
-    Shader* marchingShader = ShaderManager::getInstance().createShader("marchingShader_green");
-    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
-    marchingShader->build(marchingShader_src);
-
-    Shader* marchingShaderLine = ShaderManager::getInstance().createShader("marchingShaderWire_green");
-    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
-    marchingShaderLine->build(marchingShaderLine_src);
+///////    const std::string MARCHING_CUBES_SHADER = "marchingShader_green"; 
+///////    const std::string MARCHING_CUBES_WIREFRAME = "marchingShaderWire_green"; 
+///////    const std::string MARCHING_CUBES_TRIANGULATION = "triangulationShader"; 
+///////
+///////    Shader* marchingShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_SHADER);
+///////    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
+///////    marchingShader->build(marchingShader_src);
+///////
+/////////    int block_size = 0;
+/////////    int cube_count_x = 0;
+/////////    int cube_count_y = 0;
+/////////    int cube_count_z = 0;
+/////////    std::string meshShader;
+/////////    std::string triangulationShader;
+/////////    std::string cubeMarchShader;
+/////////    std::string cubeMarchWireframe;
+/////////    std::string base_vertex_buffer_name;
+/////////    float isovalue = 0.0;
+///////
+///////    ProgramState::getInstance().getMetadata()->cubeMarchShader = MARCHING_CUBES_SHADER;
+///////
+///////    Shader* marchingShaderLine = ShaderManager::getInstance().createShader(MARCHING_CUBES_WIREFRAME);
+///////    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
+///////    marchingShaderLine->build(marchingShaderLine_src);
+///////
+///////    ProgramState::getInstance().getMetadata()->cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
+///////
+///////    Shader* triangulationShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_TRIANGULATION);
+///////    std::vector<std::string> triangulate_src = {"shaders/marching.vert", "shaders/triangulate.geom"};
+///////    marchingShaderLine->build(triangulate_src);
+///////
+///////    ProgramState::getInstance().getMetadata()->cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
+///////
   #endif
 
   // Initialize the renderer.
@@ -149,10 +193,10 @@ int main()
                                                               gm[0].textureName,
                                                               gm[0].block_size,
                                                               green_vb);
+  auto ps = ProgramState::getInstance();
   gm[0].vao = optimizedGreen->getVAO();
   gm[0].count = optimizedGreen->getCount();
-  gm[0].shaderName = "cubeShader";
-  gm[0].shaderName = "cubeShader";
+  gm[0].shaderName = ps.getMetadata().meshShader;
   gm[0].draw = GL_TRIANGLES;
 //// // gm[1].vao = optimizedGreen->getVAO();
 ////  auto cou = optimizedGreen->getCount(); 

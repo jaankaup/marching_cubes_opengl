@@ -9,6 +9,7 @@
 #include "textureManager.h"
 #include "shader.h"
 #include "shaderManager.h"
+#include "programstate.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
 
