@@ -267,8 +267,11 @@ GLuint Vertexbuffer::getVAO() const
 int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY, const int dimensionZ)
 {
   int size = dimensionX * dimensionY * dimensionZ;
-  pData.reserve(size);
-  Log::getDebug().log("DATASIZE: %", std::to_string(size));
+//  pData.reserve(size);
+//  Log::getDebug().log("DATASIZE: %", std::to_string(size));
+//  Log::getDebug().log("DATASIZE_X: %", std::to_string(dimensionX));
+//  Log::getDebug().log("DATASIZE_Y: %", std::to_string(dimensionY));
+//  Log::getDebug().log("DATASIZE_Z: %", std::to_string(dimensionZ));
   for (int i=0 ; i<dimensionX ; ++i) {
   for (int j=0 ; j<dimensionY ; ++j) {
   for (int k=0 ; k<dimensionZ ; ++k) {
@@ -285,10 +288,12 @@ int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY
 
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
+//  Log::getDebug().log("pData.size(): %", std::to_string(pData.size()));
+//  Log::getDebug().log("DATASIZE_ÖÖÖ: %", std::to_string(pData.size()*sizeof(GL_FLOAT)));
   int dataSize = pData.size();
-  pDataCount = dataSize;
+  pDataCount = size;
   //pData.clear();
-  return dataSize;
+  return size;
 }
 
 int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ)

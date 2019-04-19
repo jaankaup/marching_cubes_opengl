@@ -63,13 +63,17 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 
  // glm::vec3 basePositions[27]; 
   std::vector<glm::vec3> basePositions;
-  for (int k = -3 ; k<1 ; k++) {
-  for (int j = -2 ; j<1 ; j++) {
-  for (int i = -8 ; i<1 ; i++) {
-    basePositions.push_back(glm::vec3(float(i*X),float(j*Y),float(k*Z)));
+  for (int k = -6 ; k<4 ; k++) {
+  for (int j = -6 ; j<4 ; j++) {
+  for (int i = -6 ; i<4 ; i++) {
+    basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
 //    Log::getDebug().log("(i,j,k) = %,%,%", std::to_string(i),std::to_string(j),std::to_string(k));
 //    logGLM("basePosition",glm::vec3(i*X,j*Y,k*Z));
   }}};
+//  for (const auto& q : basePositions)
+//  {
+//    logGLM("basePosition",q);
+//  }
   Log::getDebug().log("SIZE OF BASEDATA = %", std::to_string(basePositions.size()));
 
 //  glm::vec3 basePositions[27] = {glm::vec3(0.0f,0.0f,0.0f),glm::vec3(X,0.0f,0.0f),glm::vec3(-X,0.0f,0.0f), 
@@ -88,7 +92,7 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   GLuint instanceVBO;
   glGenBuffers(1, &instanceVBO);
   glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*(basePositions.size()), &basePositions[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*3*(basePositions.size()), &basePositions[0], GL_STATIC_DRAW);
 //  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*27, &basePositions, GL_STATIC_DRAW);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -111,17 +115,17 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   // Continue instanced.
   glEnableVertexAttribArray(1);
   glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-  glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3)  , 0);
+  glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, sizeof(float)*3 , 0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
   glVertexAttribDivisor(1,1);
 
   // Create the transform feedback buffer
 
 //  vb->bind();
-  auto count = 262144; // vb->getCount();
+  auto count = vb->getCount();
   //auto count = vb->getCount();
   Log::getDebug().log("COUNT == %.", std::to_string(count));
-  auto transformFeedbackCount = 100000000;
+  auto transformFeedbackCount = 200000000;
   GLuint tbo;
   glGenBuffers(1, &tbo);
   glBindBuffer(GL_ARRAY_BUFFER, tbo);
