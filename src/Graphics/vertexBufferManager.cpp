@@ -44,63 +44,88 @@ Vertexbuffer* VertexBufferManager::getVertexBufferByName(const std::string& name
 Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& optimized_name,
                                                           const std::string& shaderName,
                                                           const glm::vec3& basePosition,
-                                                          const std::string& texture3D,
-                                                          float voxels_per_block,
-//                                                          const glm::vec3& mvp,
                                                           const Vertexbuffer* vb)
 {
   Log::getDebug().log("CREATING OPTIMIZED GREEN.");
-  Log::getDebug().log("optimized_name == %.", optimized_name);
-  Log::getDebug().log("shaderName == %.", shaderName);
-  logGLM("basePosition",basePosition);
-  Log::getDebug().log("texture3D == %.", texture3D);
-  Log::getDebug().log("voxels_per_block == %.", std::to_string(voxels_per_block));
-//  std::string triangulation_sh = ProgramState::getInstance().getMetadata().triangulationShader;
-//  std::string meshShader = ProgramState::getInstance().getMetadata().meshShader;
-//  std::string cubemarch_sh = ProgramState::getInstance().getMetadata().cubeMarchShader;
-//  std::string cubemarch_wire = ProgramState::getInstance().getMetadata().cubeMarchWireframe;
-  std::string triangulation_sh = ProgramState::getInstance().getMetadata()->triangulationShader;
-  std::string meshShader = ProgramState::getInstance().getMetadata()->meshShader;
-  std::string cubemarch_sh = ProgramState::getInstance().getMetadata()->cubeMarchShader;
-  std::string cubemarch_wire = ProgramState::getInstance().getMetadata()->cubeMarchWireframe;
-//    std::string meshShader;
-//    std::string triangulationShader;
-//    std::string cubeMarchShader;
-//    std::string cubeMarchWireframe;
-  Log::getDebug().log("triangulation_sh == %.", triangulation_sh);
-  Log::getDebug().log("meshshader == %.", meshShader);
-  Log::getDebug().log("cubemarch_sh == %.", cubemarch_sh);
-  Log::getDebug().log("cubemarch_wire == %.", cubemarch_wire);
 
+  // Instanced thing.
+  
   auto metadata = ProgramState::getInstance().getMetadata();
-  //Log::getDebug().log("tritable_name == %.", metadata.texture3Dname);
-  Log::getDebug().log("tritable_name == %.", metadata->texture3Dname);
 
-  Shader* shader = ShaderManager::getInstance().getShaderByName(triangulation_sh);
+//    int cube_count_x = 0;
+//    int cube_count_y = 0;
+//    int cube_count_z = 0;
+  float X = (float)metadata->cube_count_x;
+  float Y = (float)metadata->cube_count_y;
+  float Z = (float)metadata->cube_count_z;
+
+  Log::getDebug().log("CUBE_COUNTS = %,%,%", std::to_string(X),std::to_string(Y),std::to_string(Z));
+
+ // glm::vec3 basePositions[27]; 
+  std::vector<glm::vec3> basePositions;
+  for (int k = -3 ; k<1 ; k++) {
+  for (int j = -2 ; j<1 ; j++) {
+  for (int i = -8 ; i<1 ; i++) {
+    basePositions.push_back(glm::vec3(float(i*X),float(j*Y),float(k*Z)));
+//    Log::getDebug().log("(i,j,k) = %,%,%", std::to_string(i),std::to_string(j),std::to_string(k));
+//    logGLM("basePosition",glm::vec3(i*X,j*Y,k*Z));
+  }}};
+  Log::getDebug().log("SIZE OF BASEDATA = %", std::to_string(basePositions.size()));
+
+//  glm::vec3 basePositions[27] = {glm::vec3(0.0f,0.0f,0.0f),glm::vec3(X,0.0f,0.0f),glm::vec3(-X,0.0f,0.0f), 
+//                                glm::vec3(0.0f,Y,0.0f)   ,glm::vec3(0.0f,-Y,0.0f),
+//                                glm::vec3(0.0f,0.0f,Z),glm::vec3(0.0f,0.0f,-Z),
+//                                glm::vec3(X,Y,0.0f),glm::vec3(X,-Y,0.0f),
+//                                glm::vec3(X,0.0f,Z),glm::vec3(X,0.0f,-Z),
+//                                glm::vec3(X,Y,Z),glm::vec3(X,Y,-Z),
+//                                glm::vec3(X,-Y,Z),glm::vec3(X,-Y,-Z),
+//                                glm::vec3(-X,Y,0.0f),glm::vec3(-X,-Y,0.0f),
+//                                glm::vec3(-X,0.0f,Z),glm::vec3(-X,0.0f,-Z),
+//                                glm::vec3(-X,Y,Z),glm::vec3(-X,Y,-Z),
+//                                glm::vec3(-X,-Y,Z),glm::vec3(-X,-Y,-Z),
+//                                glm::vec3(0.0f,Y,Z),glm::vec3(0.0f,Y,-Z)
+//                                };
+  GLuint instanceVBO;
+  glGenBuffers(1, &instanceVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*(basePositions.size()), &basePositions[0], GL_STATIC_DRAW);
+//  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3)*27, &basePositions, GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+  Shader* shader = ShaderManager::getInstance().getShaderByName(metadata->triangulationShader);
   shader->bind();
-  //Texture tritable = TextureManager::getInstance().getTextureByName(metadata.tri_table_name);
   Texture tritable = TextureManager::getInstance().getTextureByName(metadata->tri_table_name);
   tritable.use(1);
-  shader->setUniform("tri_table", 1);/* eyePosition);*/
+  shader->setUniform("tri_table", 1);
   
-  Texture texture = TextureManager::getInstance().getTextureByName(texture3D);
+  Texture texture = TextureManager::getInstance().getTextureByName(metadata->texture3Dname);
   texture.use(0);
 
   shader->setUniform("diffuse3DTexture",0);
-//  shader->setUniform("MVP", mvp);
-  shader->setUniform("voxels_per_block", voxels_per_block);
+  shader->setUniform("voxels_per_block", (float)metadata->block_size);
   shader->setUniform("startPoint", basePosition);
   
   vb->bind();
 
-  // Create transform feedback buffer
+  // Continue instanced.
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+  glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3)  , 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glVertexAttribDivisor(1,1);
 
-  auto count = vb->getCount();
-//  Log::getDebug().log("count == %.", std::to_string(count));
+  // Create the transform feedback buffer
+
+//  vb->bind();
+  auto count = 262144; // vb->getCount();
+  //auto count = vb->getCount();
+  Log::getDebug().log("COUNT == %.", std::to_string(count));
+  auto transformFeedbackCount = 100000000;
   GLuint tbo;
   glGenBuffers(1, &tbo);
   glBindBuffer(GL_ARRAY_BUFFER, tbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*count*15*6, nullptr, GL_STATIC_READ);
+  glBufferData(GL_ARRAY_BUFFER, transformFeedbackCount /* sizeof(glm::vec3)*count*15*6 */, nullptr, GL_STATIC_READ);
 
   // Perform feedback transform. Get all cube cases for the green thing.
   glEnable(GL_RASTERIZER_DISCARD);
@@ -115,7 +140,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 
   // Do the recording for cube cooridates that creates triangles.
   glBeginTransformFeedback(GL_TRIANGLES);
-  glDrawArrays(GL_POINTS, 0, count);
+//  glDrawArrays(GL_POINTS, 0, count);
+//  glDrawArraysInstanced(GL_POINTS, 0, count, 27);
+  glDrawArraysInstanced(GL_POINTS, 0, count, basePositions.size());
   glEndTransformFeedback();
 
 
@@ -130,35 +157,41 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   GLuint primitiveCount;
   glGetQueryObjectuiv(query, GL_QUERY_RESULT, &primitiveCount);
 
-  Log::getDebug().log("primitiveCounter == %.", std::to_string(primitiveCount));
+  Log::getDebug().log("PRIMITIVE_READ == %.", std::to_string(primitiveCount));
 
   int triangleDataCount = primitiveCount;
-  // Fetch the non empty cube coordinates.
-  GLfloat* feedback = new GLfloat[triangleDataCount*6*3];
-  glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float)*triangleDataCount*6*3, feedback);
+
+  unsigned int actual_data_size = primitiveCount*6*sizeof(float);
+  GLfloat* feedback = new GLfloat[primitiveCount*6];
+  glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, actual_data_size, feedback);
 
   // Release the transfrom feedback buffer.
   glDeleteBuffers(1, &tbo);
 
+  // Release the instanced buffers.
+  glDeleteBuffers(1, &instanceVBO);
+
 //  Log::getDebug().log("sizeof(feedback) == %.", std::to_string(sizeof(feedback)));
 //  int maskCount = 0;
 //  Log::getDebug().log("feedback[0] == %.", std::to_string(feedback[0]));
-  for (int i=0; i<200 ; i++)
-  {
-    Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
-//    if (feedback[i] == 0.0) break;
-//    {
-//      maskCount++;
-////      logGLM("basePosition",basePosition);
-//      //Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
-//    }
-  }
+//////  for (int i=0; i<200 ; i++)
+//////  {
+//////    Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
+////////    if (feedback[i] == 0.0) break;
+////////    {
+////////      maskCount++;
+//////////      logGLM("basePosition",basePosition);
+////////      //Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
+////////    }
+//////  }
 //  Log::getDebug().log("maskCount = %", std::to_string(maskCount));
   Vertexbuffer* result = createVertexBuffer(optimized_name);
   result->init();
   std::vector<std::string> types = {"3f","3f"};
-  result->addData(feedback, sizeof(float)*primitiveCount*3*6, types);
-  result->pDataCount = triangleDataCount;
+  result->addData(feedback, actual_data_size, types);
+  result->pDataCount = primitiveCount;
+  Log::getDebug().log("PRIMITIVECOUNT == %.", std::to_string(result->pDataCount));
+  Log::getDebug().log("SIZE_OF_FEEDBACK == %.", std::to_string(sizeof(float)*primitiveCount*6));
 
   delete[] feedback;
 //  result-> init_transform_feedback(tbo, primitiveCount/3);

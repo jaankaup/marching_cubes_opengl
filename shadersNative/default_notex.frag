@@ -1,5 +1,5 @@
-#version 300 es
-precision highp float;
+#version 430
+//precision highp float;
 //precision mediump float;
 
 // #define MAX_LIGHTS = 8;

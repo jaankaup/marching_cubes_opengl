@@ -11,15 +11,15 @@ out vec3 fNormalIn;
 uniform sampler3D diffuse3DTexture;
 uniform sampler1D tri_table;
 uniform float voxels_per_block;
-uniform vec3 startPoint;
-uniform mat4 MVP;
+//uniform vec3 startPoint;
+//uniform mat4 MVP;
 uniform float cubeMask;
 uniform float debugMask;
 //uniform vec3 cameraPosition;
 //uniform vec3 lookAt;
 //uniform float time;
 
-uniform float isovalue = 1.0;
+uniform float isovalue = 0.0;
 
 struct Cube
 {
@@ -99,13 +99,16 @@ float calculateDensity(vec3 v)
 {
 //  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z,2.0) ; // - pow(2.2,2.0);  
   float noise = texture(diffuse3DTexture,v).w;
+//  float noise2 = 3.0*texture(diffuse3DTexture,v*0.1).w;
+//  float noise3 = 9.0*texture(diffuse3DTexture,v*0.05+0.4).w;
 //  float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
 //  float noise3 = texture(diffuse3DTexture,v+vec3(sin(v.x),tan(v.y),cos(v.z))).w;
 //  float hils = noise2*33.0*sin(v.z);
 //  float hils2 = noise*13.0*cos(v.z);
 
 // return ball + hils + hils2 - noise2*35.0 - noise*(30*sin(v.z*v.x));
- return v.y - noise;
+// float again = mod(v.x,8.0); // + mod(v.y,2.0f) + mod(v.z,2.0f);
+   return v.y + 3* noise; // + noise2 + noise3;
 }
 
 vec3 calculateNormal(vec3 v)
@@ -212,7 +215,8 @@ void createVertex(float edgeValue, Cube c)
     float iterator = 1.0 / 255.0;
     if (edgeValue == 0.0) // < 0.000001 )
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v0, c.v1),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v0, c.v1),1.0);
+      gl_Position =  vec4(interpolateV(c.v0, c.v1),1.0);
 //      fColorIn = vec3(1.0,0.0,0.0);
         fPosIn = interpolateV(c.v0, c.v1);
 //        fNormalIn = c.n0;
@@ -221,7 +225,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v1, c.v2),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v1, c.v2),1.0);
+      gl_Position =  vec4(interpolateV(c.v1, c.v2),1.0);
       //fColorIn = vec3(0.0,1.0,0.0);
       fPosIn = interpolateV(c.v1, c.v2);
 //      fNormalIn = c.n1;
@@ -231,7 +236,8 @@ void createVertex(float edgeValue, Cube c)
     else if (abs(edgeValue - iterator * 2.0) < 0.000001)
     //else if (edgeValue == iterator*2.0)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v2, c.v3),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v2, c.v3),1.0);
+      gl_Position =  vec4(interpolateV(c.v2, c.v3),1.0);
       fPosIn = interpolateV(c.v2, c.v3);
       //fColorIn = vec3(0.0,0.0,1.0);
       //fNormalIn = c.n2;
@@ -240,7 +246,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 3.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v3, c.v0),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v3, c.v0),1.0);
+      gl_Position =  vec4(interpolateV(c.v3, c.v0),1.0);
       fPosIn = interpolateV(c.v3, c.v0);
       //fColorIn = vec3(0.0,0.3,0.3);
       fNormalIn = interpolateN(c.n3, c.n0, c.v3.w, c.v0.w);
@@ -249,7 +256,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 4.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v4, c.v5),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v4, c.v5),1.0);
+      gl_Position =  vec4(interpolateV(c.v4, c.v5),1.0);
       fPosIn = interpolateV(c.v4, c.v5);
       //fColorIn = vec3(0.3,0.3,0.0);
       //fNormalIn = c.n4;
@@ -258,7 +266,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 5.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v5, c.v6),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v5, c.v6),1.0);
+      gl_Position =  vec4(interpolateV(c.v5, c.v6),1.0);
       fPosIn = interpolateV(c.v5, c.v6);
       //fColorIn = vec3(0.0,0.7,0.2);
       //fNormalIn = c.n5;
@@ -267,7 +276,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 6.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v6, c.v7),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v6, c.v7),1.0);
+      gl_Position =  vec4(interpolateV(c.v6, c.v7),1.0);
       fPosIn = interpolateV(c.v6, c.v7);
       //fNormalIn = c.n6;
       fNormalIn = interpolateN(c.n6, c.n7, c.v6.w, c.v7.w);
@@ -276,7 +286,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 7.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v7, c.v4),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v7, c.v4),1.0);
+      gl_Position =  vec4(interpolateV(c.v7, c.v4),1.0);
       fPosIn = interpolateV(c.v7, c.v4);
       //fNormalIn = c.n7;
       fNormalIn = interpolateN(c.n7, c.n4, c.v7.w, c.v4.w);
@@ -284,7 +295,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 8.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v0, c.v4),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v0, c.v4),1.0);
+      gl_Position =  vec4(interpolateV(c.v0, c.v4),1.0);
       //fNormalIn = c.n0;
       fNormalIn = interpolateN(c.n0, c.n4, c.v0.w, c.v4.w);
       fPosIn = interpolateV(c.v0, c.v4);
@@ -293,7 +305,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 9.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v1, c.v5),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v1, c.v5),1.0);
+      gl_Position =  vec4(interpolateV(c.v1, c.v5),1.0);
       fPosIn = interpolateV(c.v1, c.v5);
       //fNormalIn = c.n1;
       fNormalIn = interpolateN(c.n1, c.n5, c.v1.w, c.v5.w);
@@ -302,7 +315,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 10.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v2, c.v6),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v2, c.v6),1.0);
+      gl_Position =  vec4(interpolateV(c.v2, c.v6),1.0);
       fPosIn = interpolateV(c.v2, c.v6);
       //fNormalIn = c.n2;
       fNormalIn = interpolateN(c.n2, c.n6, c.v2.w, c.v6.w);
@@ -311,7 +325,8 @@ void createVertex(float edgeValue, Cube c)
     }           
     else if (abs(edgeValue - iterator * 11.0) < 0.000001)
     {
-      gl_Position =  MVP * vec4(interpolateV(c.v3, c.v7),1.0);
+      //gl_Position =  MVP * vec4(interpolateV(c.v3, c.v7),1.0);
+      gl_Position =  vec4(interpolateV(c.v3, c.v7),1.0);
       fPosIn = interpolateV(c.v3, c.v7);
       //fNormalIn = c.n3;
       fNormalIn = interpolateN(c.n3, c.n7, c.v3.w, c.v7.w);
@@ -415,7 +430,8 @@ void marchCube(Cube c)
 void main(){
 
 //        if (lookAt)  
-        vec4 sp = vec4(startPoint,0.0) + gl_in[0].gl_Position;
+//        vec4 sp = vec4(startPoint,0.0) + gl_in[0].gl_Position;
+        vec4 sp = gl_in[0].gl_Position;
 //        float distanceToCamera = distance(cameraPosition,sp.xyz);
 //        float vpb;
 //        if (distanceToCamera < 5.0) vpb = voxels_per_block;

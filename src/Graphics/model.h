@@ -12,16 +12,16 @@ struct Command
   std::string name;
   GLuint vao;
   GLenum draw;
-  std::string textureName;
+//  std::string textureName;
   std::string shaderName;
   uint32_t startIndex = 0;
   uint32_t count = 0;
   glm::mat4 modelMatrix;
-  int block_size;
-  int cube_count_x;
-  int cube_count_y;
-  int cube_count_z;
-  glm::vec3 start_point;
+//  int block_size;
+//  int cube_count_x;
+//  int cube_count_y;
+//  int cube_count_z;
+//  glm::vec3 start_point;
 };
 
 class Model

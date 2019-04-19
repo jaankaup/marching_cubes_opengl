@@ -27,8 +27,6 @@ class VertexBufferManager
     Vertexbuffer* optimize_vertex_buffer(const std::string& optimized_name,
                                          const std::string& shaderName,
                                          const glm::vec3& basePosition,
-                                         const std::string& texture3D,
-                                         float voxels_per_block,
                                          const Vertexbuffer* vb);
     bool deleteVertexBuffer(const std::string& name);
   

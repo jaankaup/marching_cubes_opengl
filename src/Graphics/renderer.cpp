@@ -104,8 +104,10 @@ void Renderer::renderModels(const Camera& camera)
 //    Log::getDebug().log("%",com.shaderName);
 //    logGLM("startPoint",com.start_point);
 //    Log::getDebug().log("%",com.shaderName);
+    auto metadata = ProgramState::getInstance().getMetadata();
+    auto tName = metadata->texture3Dname;
     glm::mat4 mx = com.modelMatrix ;
-    Texture texture = TextureManager::getInstance().getTextureByName(com.textureName);//{TextureType::d2,0};
+    Texture texture = TextureManager::getInstance().getTextureByName(tName);//{TextureType::d2,0};
     texture.use(0);
     glBindVertexArray(com.vao);
     shader->setUniform("MVP", projection * viewMatrix * mx);
@@ -119,7 +121,7 @@ void Renderer::renderModels(const Camera& camera)
     shader->setUniform("cameraPosition", eyePosition);
     shader->setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
 //    shader.setUniform("voxels_per_block", voxels_per_block);
-    shader->setUniform("startPoint", com.start_point); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
+    shader->setUniform("startPoint", ProgramState::getInstance().getStartPoint()); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
     shader->setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
     shader->setUniform("debugMask", ProgramState::getInstance().getDebugCube() ? 1.0f : 0.0f);
     shader->setUniform("wireframe", ProgramState::getInstance().getWireframe() ? 1.0f : 0.0f);
@@ -145,6 +147,7 @@ void Renderer::renderModels(const Camera& camera)
     {
       case GL_TRIANGLES:
         glDrawArrays(GL_TRIANGLES, com.startIndex, com.count);
+//        Log::getInfo().log("%",std::to_string(com.count));
         break;
       case GL_POINTS:
         glDrawArrays(GL_POINTS, com.startIndex, com.count);
