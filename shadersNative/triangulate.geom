@@ -97,9 +97,9 @@ e0 |    /                   |e2  /
 
 float calculateDensity(vec3 v)
 {
-  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z,2.0) ; // - pow(2.2,2.0);  
+//  float ball = pow(v.x,2.0) + pow(v.y,2.0) + pow(v.z,2.0) - pow(4.0, 2.0);  
   float noise = texture(diffuse3DTexture,v).w;
-  float noise2 = 3.0*texture(diffuse3DTexture,v*0.2 + vec3(0.0,0.1,0.43)).w;
+  float noise2 = 3.0*texture(diffuse3DTexture,v*0.2 + vec3(0.0,0.1,0.43)).b;
 //  float noise3 = 9.0*texture(diffuse3DTexture,v*0.05+0.4).w;
 //  float noise2 = texture(diffuse3DTexture,v+vec3(0.2,0.1,0.3)).w;
 //  float noise3 = texture(diffuse3DTexture,v+vec3(sin(v.x),tan(v.y),cos(v.z))).w;
@@ -107,9 +107,10 @@ float calculateDensity(vec3 v)
 //  float hils2 = noise*13.0*cos(v.z);
 
 // return ball + hils + hils2 - noise2*35.0 - noise*(30*sin(v.z*v.x));
-// float again = mod(v.x,8.0); // + mod(v.y,2.0f) + mod(v.z,2.0f);
+// float again = mod(v.x,2.0); // + mod(v.y,2.0f) + mod(v.z,2.0f);
 //   return v.y + 64.0 * noise; // + noise2 + noise3;
-  return v.y + 5.0 * noise + 3.0 * noise2;
+  return v.y + 2 * noise + 3 * noise2; // v.y + 2.0 * noise + 2.0 * noise2;
+//  return ball;
 }
 
 vec3 calculateNormal(vec3 v)

@@ -80,10 +80,10 @@ Model* ModelManager::create_green_thing(bool wireframe)
   if (!wireframe)
   {
     // Create the 3D texture data.
-    Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
-//    auto tex3D_data = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-    auto tex3D_data = createPerlin3D(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
-    tex3D.create3D(tex3D_data);
+//    Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
+////    auto tex3D_data = createRandom3Ddata(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
+//    auto tex3D_data = createPerlin3D(CUBE_COUNT_X*2,CUBE_COUNT_Y*2,CUBE_COUNT_Z*2);
+//    tex3D.create3D(tex3D_data);
 
     auto vb = VertexBufferManager::getInstance().createVertexBuffer(VB_NAME);
     vb_count = vb->createExamplePoints(CUBE_COUNT_X, CUBE_COUNT_Y, CUBE_COUNT_Z);

@@ -68,9 +68,8 @@ void main(){
 
         // Pinnan vä.
 	//vec3 surfaceColor = texture3D(diffuseTexture,vec3(tFrag_in,1.0f)).rgb;
-	vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
-//	vec3 surfaceColor = texture(diffuse3DTexture,vFrag_in.xyz).rgb;
-	//vec3 surfaceColor = vec3(0.5,0.5,0.5);
+//	vec3 surfaceColor = texture(diffuseTexture,tFrag_in).rgb;
+	vec3 surfaceColor = vec3(0.5,0.5,0.5);
 
 	// Ambient vä.
         vec3 ambient = lights[0].ambientCoeffience * lights[0].color * surfaceColor;

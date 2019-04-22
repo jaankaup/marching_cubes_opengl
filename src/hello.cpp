@@ -89,9 +89,9 @@ void createShaders()
 void initializeCubeAttributes()
 {
   const int BLOCK_SIZE = 32;
-  const int CUBE_COUNT_X = BLOCK_SIZE * 2 ;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 2  ;
-  const int CUBE_COUNT_Z = BLOCK_SIZE * 2 ;
+  const int CUBE_COUNT_X = BLOCK_SIZE * 4;
+  const int CUBE_COUNT_Y = BLOCK_SIZE * 4;
+  const int CUBE_COUNT_Z = BLOCK_SIZE * 4;
   const float ISO_VALUE = 0.0f;
 
   auto metadata = ProgramState::getInstance().getMetadata();
@@ -122,7 +122,7 @@ void createtextures()
 
   // Create the 3D texture.
   Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
-  auto tex3D_data = createPerlin3D(metadata->cube_count_x*2,metadata->cube_count_x*2,metadata->cube_count_z*2);
+  auto tex3D_data = createPerlin3D(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
   tex3D.create3D(tex3D_data);
   metadata->texture3Dname = TEXTURE_NAME;
 
@@ -184,7 +184,7 @@ int main()
   auto mData = ProgramState::getInstance().getMetadata();
   Vertexbuffer* green_vb = VertexBufferManager::getInstance().getVertexBufferByName("greenThingVB");
   Vertexbuffer* optimizedGreen =
-    VertexBufferManager::getInstance().optimize_vertex_buffer("green_thing_optimized_vb",
+    VertexBufferManager::getInstance().optimize_vertex_buffer2("green_thing_optimized_vb",
                                                               "green_thing_optimized",
                                                               ProgramState::getInstance().getStartPoint(),
                                                               green_vb);

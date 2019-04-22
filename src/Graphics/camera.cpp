@@ -4,7 +4,7 @@
 
 Camera::Camera()
 {
-  pEyePosition = glm::vec3(0.0f,3.0f,0.0f);
+  pEyePosition = glm::vec3(0.0f,0.0f,0.0f);
 //  pEyePosition = glm::vec3(0.0f,1.5f,1.5f);
 //    pEyePosition = glm::vec3(00.0f,50.0f,0.0f);
 //    glm::vec3 pUp = glm::vec3(0.0f,1.0f, 0.0f);
