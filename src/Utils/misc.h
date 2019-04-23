@@ -24,15 +24,12 @@ extern void logGLM(const std::string& name, const glm::vec4& object);
 extern void logGLM(const std::string& name, const glm::mat3& object);
 extern void logGLM(const std::string& name, const glm::mat4& object);
 
-extern TextureData createRandom3Ddata(const int width, const int height, const int depth);
-extern TextureData createChess3Ddata(const  int width, const int height, const int depth);
+//extern TextureData createRandom3Ddata(const int width, const int height, const int depth);
+//extern TextureData createChess3Ddata(const  int width, const int height, const int depth);
 
 extern TextureData createPerlin3D(const int width, const int height, const int depth);
 
-extern TextureData create2x2();
-
-extern double centerY(int y);
-
+// This should go to vertexbuffer.cpp
 extern void createBaseVertexBuffer();
 
 #endif //MISC_H

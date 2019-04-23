@@ -1,4 +1,4 @@
-// This is a density function that creates a wierd ball.
+// This is a density function that creates a wierd landscape.
 // The @v is the input vertice.
 // The diffuse3DTexture is for sampling. Now the 3d texture coordinates
 // See for application code src/Util/textureData.cpp::createPerlin3D

@@ -280,20 +280,17 @@ void Camera::handleEvents()
         ModelManager::getInstance().createSceneObject();
     }
 
-    if(keystate[SDL_SCANCODE_0])
-    {
-      changeScene(0);
-//        std::string shaderName = ProgramState::getInstance().getMetadata()->triangulationShader;
-//        shaderName[shaderName.size()-1] = '0';
-//        ProgramState::getInstance().getMetadata()->triangulationShader = shaderName;
-//        Log::getInfo().log("Changing densityShader to triangulationShader0 ...");
-//        ModelManager::getInstance().createSceneObject();
-    }
+    if (keystate[SDL_SCANCODE_0]) { changeScene(0);}
+    if (keystate[SDL_SCANCODE_1]) { changeScene(1);}
+    if (keystate[SDL_SCANCODE_2]) { changeScene(2);}
+    if (keystate[SDL_SCANCODE_3]) { changeScene(3);}
+    if (keystate[SDL_SCANCODE_4]) { changeScene(4);}
+    if (keystate[SDL_SCANCODE_5]) { changeScene(5);}
+    if (keystate[SDL_SCANCODE_6]) { changeScene(6);}
+    if (keystate[SDL_SCANCODE_7]) { changeScene(7);}
+    if (keystate[SDL_SCANCODE_8]) { changeScene(8);}
+    if (keystate[SDL_SCANCODE_9]) { changeScene(9);}
 
-    if(keystate[SDL_SCANCODE_1])
-    {
-      changeScene(1);
-    }
     update();
 //  auto result = update();
 //  
