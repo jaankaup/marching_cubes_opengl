@@ -234,9 +234,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
   }}};
 
   std::vector<glm::vec3> basePositions;
-  for (int i = -4 ; i<4 ; i++) {
-  for (int j = -4 ; j<4 ; j++) {
-  for (int k = -4 ; k<4 ; k++) {
+  for (int i = -12 ; i<12 ; i++) {
+  for (int j = -9 ; j<9 ; j++) {
+  for (int k = -12 ; k<12 ; k++) {
     basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
   }}};
 
@@ -290,7 +290,7 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
 //  auto count = vb->getCount();
   //auto count = vb->getCount();
 //  Log::getDebug().log("COUNT == %.", std::to_string(count));
-  auto transformFeedbackCount = 50000000;
+  auto transformFeedbackCount = 200000000;
   GLuint tbo;
   glGenBuffers(1, &tbo);
 //  glGenTransformFeedbacks(1, &tbo);GL_ARRAY_BUFFER
