@@ -39,7 +39,7 @@ class Window
     SDL_Window* pWindow = NULL; 
     SDL_GLContext pContext = NULL; 
 
-    bool pBlah = false;
+    //bool pBlah = false;
 
     // Creates a window and initializes SDL2.
     Window();

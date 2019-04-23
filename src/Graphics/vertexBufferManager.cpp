@@ -63,9 +63,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 
  // glm::vec3 basePositions[27]; 
   std::vector<glm::vec3> basePositions;
-  for (int k = -5 ; k<5 ; k++) {
-  for (int j = -5 ; j<5 ; j++) {
-  for (int i = -5 ; i<5 ; i++) {
+  for (int k = -1 ; k<1 ; k++) {
+  for (int j = -1 ; j<1 ; j++) {
+  for (int i = -1 ; i<1 ; i++) {
     basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
 //    Log::getDebug().log("(i,j,k) = %,%,%", std::to_string(i),std::to_string(j),std::to_string(k));
 //    logGLM("basePosition",glm::vec3(i*X,j*Y,k*Z));
@@ -108,6 +108,7 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 
   shader->setUniform("diffuse3DTexture",0);
   shader->setUniform("voxels_per_block", (float)metadata->block_size);
+  Log::getDebug().log("HEY!! VOXELS_PER_BLOCK = %", std::to_string((float)metadata->block_size));
   shader->setUniform("startPoint", basePosition);
   
   vb->bind();
@@ -179,16 +180,16 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 //  Log::getDebug().log("sizeof(feedback) == %.", std::to_string(sizeof(feedback)));
 //  int maskCount = 0;
 //  Log::getDebug().log("feedback[0] == %.", std::to_string(feedback[0]));
-//////  for (int i=0; i<200 ; i++)
-//////  {
-//////    Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
+  for (int i=0; i<200 ; i++)
+  {
+    Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
 ////////    if (feedback[i] == 0.0) break;
 ////////    {
 ////////      maskCount++;
 //////////      logGLM("basePosition",basePosition);
 ////////      //Log::getDebug().log("feedback[%] == %.", std::to_string(i), std::to_string(feedback[i]));
 ////////    }
-//////  }
+  }
 //  Log::getDebug().log("maskCount = %", std::to_string(maskCount));
   Vertexbuffer* result = createVertexBuffer(optimized_name);
   result->init();
@@ -233,9 +234,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
   }}};
 
   std::vector<glm::vec3> basePositions;
-  for (int i = -2 ; i<3 ; i++) {
-  for (int j = -2 ; j<3 ; j++) {
-  for (int k = -2 ; k<3 ; k++) {
+  for (int i = -4 ; i<4 ; i++) {
+  for (int j = -4 ; j<4 ; j++) {
+  for (int k = -4 ; k<4 ; k++) {
     basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
   }}};
 
@@ -273,6 +274,7 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
 
   shader->setUniform("diffuse3DTexture",0);
   shader->setUniform("voxels_per_block", (float)metadata->block_size);
+  Log::getDebug().log("HEY!! VOXELS_PER_BLOCK = %", std::to_string((float)metadata->block_size));
   shader->setUniform("startPoint", basePosition);
   
   // Continue instanced.
@@ -288,25 +290,32 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
 //  auto count = vb->getCount();
   //auto count = vb->getCount();
 //  Log::getDebug().log("COUNT == %.", std::to_string(count));
-  auto transformFeedbackCount = 200000000;
+  auto transformFeedbackCount = 50000000;
   GLuint tbo;
   glGenBuffers(1, &tbo);
+//  glGenTransformFeedbacks(1, &tbo);GL_ARRAY_BUFFER
+  //glBindBuffer(GL_TRANSFORM_FEEDBACK, tbo);
   glBindBuffer(GL_ARRAY_BUFFER, tbo);
-  glBufferData(GL_ARRAY_BUFFER, transformFeedbackCount /* sizeof(glm::vec3)*count*15*6 */, nullptr, GL_STATIC_READ);
+//  glBindTransformFeedback(GL_TRANSFORM_FEEDBACK);
+  glBufferData(GL_ARRAY_BUFFER, transformFeedbackCount /* sizeof(glm::vec3)*count*15*6 */, nullptr, /*GL_STATIC_READ*/ GL_DYNAMIC_COPY);
+  //glBufferData(GL_TRANSFORM_FEEDBACK, transformFeedbackCount /* sizeof(glm::vec3)*count*15*6 */, nullptr, GL_STATIC_READ /*GL_DYNAMIC_COPY*/);
 
   // Perform feedback transform. Get all cube cases for the green thing.
   glEnable(GL_RASTERIZER_DISCARD);
 
+  //glBindBufferBase(GL_ARRAY_BUFFER, 0, tbo);
   glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tbo);
 
   // The counter for the geomtery shader. This must be done before
   // glBeginTransformFeedback.
   GLuint query;
   glGenQueries(1,&query);
-  glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN,query);
+  //glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN,query);
+  glBeginQuery(GL_PRIMITIVES_GENERATED, query);
 
   // Do the recording for cube cooridates that creates triangles.
   glBeginTransformFeedback(GL_TRIANGLES);
+  //glBeginTransformFeedback(GL_POINTS);
 //  glDrawArrays(GL_POINTS, 0, count);
 //  glDrawArraysInstanced(GL_POINTS, 0, count, 27);
   glDrawArraysInstanced(GL_POINTS, 0, size, basePositions.size());
@@ -319,7 +328,8 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
   glFlush();
 
   // Stop the counter.
-  glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+  //glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
+  glEndQuery(GL_PRIMITIVES_GENERATED);
 
   // The result of the counter.
   GLuint primitiveCount;
@@ -331,7 +341,8 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer2(const std::string& op
 
   unsigned int actual_data_size = primitiveCount*6*sizeof(float);
   GLfloat* feedback = new GLfloat[primitiveCount*6];
-  glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, actual_data_size, feedback);
+  //glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, actual_data_size, feedback);
+  glGetBufferSubData(GL_ARRAY_BUFFER, 0, actual_data_size, feedback);
 
   glDeleteVertexArrays(1, &quadVAO);
   // Release the transfrom feedback buffer.

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <string>
 
 /**
  * Yksinkertainen luokka loggausta varten.

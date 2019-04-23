@@ -38,8 +38,8 @@ uint8_t* TextureData::getData() const
 bool TextureData::setWidth(const int w)
 {
   int result;
-  Log::getDebug().log("TextureData::setWidth: result = %.", std::to_string(result));
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &result); 
+  Log::getDebug().log("TextureData::setWidth: result = %.", std::to_string(result));
   if (w > result)
   {
     Log::getError().log("TextureData::setWidth(%): GL_MAX_TEXTURE_SIZE == %.", std::to_string(w),std::to_string(result));
@@ -53,8 +53,8 @@ bool TextureData::setHeight(const int h)
 {
 
   int result;
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &result);
   Log::getDebug().log("TextureData::setHeight: result = %.", std::to_string(result));
-  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &result); 
   if (h > result)
   {
     Log::getError().log("TextureData::setHeight(%): GL_MAX_TEXTURE_SIZE == %.", std::to_string(h),std::to_string(result));
@@ -67,8 +67,8 @@ bool TextureData::setHeight(const int h)
 bool TextureData::setDepth(const int d)
 {
   int result;
-  Log::getDebug().log("TextureData::setDepth: result = %.", std::to_string(result));
   glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &result); 
+  Log::getDebug().log("TextureData::setDepth: result = %.", std::to_string(result));
   if (d > result)
   {
     Log::getError().log("TextureData::setDepth(%): GL_MAX_TEXTURE_SIZE == %.", std::to_string(d),std::to_string(result));

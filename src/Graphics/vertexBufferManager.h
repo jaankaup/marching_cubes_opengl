@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <tuple>
+#include <string>
 #include <stdexcept>
 #include "vertexbuffer.h"
 #include "texture.h"

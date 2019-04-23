@@ -55,6 +55,7 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
 {
   int size = width*height*depth*4;
   TextureData td(size,width,height,depth);
+  /*
   auto data = td.getData();
 
   // Reinterpret the one dimensional array as multi-dimensional array.
@@ -98,6 +99,7 @@ TextureData createRandom3Ddata(const int width, const int height, const int dept
 ////    data[index+3] = std::clamp(( 255.0f / (height*height)) * y + 10 * sin(1.0f * index / 3.5f),0.0,255.0);  ; // hah ? 255 : 0;   
 //    hah = !hah;
 //  }}};
+  */
   return std::move(td);
 }
 
@@ -105,6 +107,7 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
 {
   int size = width*height*depth*4;
   TextureData td(size,width,height,depth);
+  /*
   auto data = td.getData();
 //  auto texels = new unsigned char[size];
   bool hah = false;
@@ -119,11 +122,12 @@ TextureData createChess3Ddata(const int width, const int height, const int depth
     data[i*4] =  static_cast<uint8_t>(240);// 0.5f; //   (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
     data[i*4+1] = 0; // 1.0f; //(i*1.0f/size) < 1.0f ? (i*1.0f/size) : 1.0f;
     data[i*4+2] = 0; // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr(); 
+    data[i*4+3] = hah ? 0 : 255;// (int)((i/float(size))*255); // mr();
 //    data[i*4+2] = (uint8_t)(i*3); // (i*1.0f/size)*255 < 255 ? (i*1.0f/size)*255 : 255;
-//    data[i*4+3] = (uint8_t)(i*3); // mr(); // hah ? 5 : 250;// (int)((i/float(size))*255); // mr(); 
+//    data[i*4+3] = (uint8_t)(i*3); // mr(); // hah ? 5 : 250;// (int)((i/float(size))*255); // mr();
     hah = !hah;
   }
+  */
   return std::move(td);
   //return td;
 }
@@ -190,14 +194,16 @@ TextureData create2x2()
   return std::move(td);
 }
 
-TextureData createPerlin3D(const  int width, const int height, const int depth)
+TextureData createPerlin3D(const int width, const int height, const int depth)
 {
+  Log::getDebug().log("Persin noise w,h,d = (%,%,%)", std::to_string(width), std::to_string(height), std::to_string(depth));
   int size = width*height*depth*4;
   TextureData td(size,width,height,depth);
+  
   auto data = td.getData();
 
   // Reinterpret the one dimensional array as multi-dimensional array.
-  uint8_t (&multiArray)[width][height][depth][4] = *reinterpret_cast<uint8_t (*)[width][height][depth][4]>(data);
+  //uint8_t (&multiArray)[width][height][depth][4] = *reinterpret_cast<uint8_t (*)[width][height][depth][4]>(data);
 
   MyRandom<double> mr;
   mr.setDistribution(0,25000.0);
@@ -218,20 +224,29 @@ TextureData createPerlin3D(const  int width, const int height, const int depth)
 //  MyRandom<int> mr3;
 //  mr3.setDistribution(-12,12);
   
+//    Log::getDebug().log("pn.noise = (%)", pn.noise0_1(x/fx,y/fy,z/fz)*255);
+  unsigned int xOffset = 4;
+  unsigned int yOffset = 4 * width;
+  unsigned int zOffset = 4 * width * height;
+  unsigned int lkm = 0;
   for (int z = 0; z < depth ; z++) {
   for (int y = 0; y < height ; y++){
   for (int x = 0; x < width ; x++) {
-//
-//    Log::getDebug().log("pn.noise = (%)", pn.noise0_1(x/fx,y/fy,z/fz)*255);
-    multiArray[z][y][x][0] = 123; 
-    multiArray[z][y][x][1] = 100; 
-    multiArray[z][y][x][2] = pn.noise0_1(x/fx,y/fy,z/fz)*255;  //pn.noise0_1(x/fx,y/fy,z/fz)*255; 
-    multiArray[z][y][x][3] = pn.noise0_1(x/fx,y/fy,z/fz)*255; 
-//    multiArray[z][y][x][3] = pn.noise0_1(x/fx,y/fy,z/fz)*255; 
+    int density = mr();
+	unsigned int position = x*xOffset + y*yOffset + z*zOffset;
+    data[position] = 123;
+    data[position+1] = 100; //  + mr3(); // * density*0.5f;
+    data[position+2] = pn.noise0_1(x / fx, y / fy, z / fz) * 255; //density / 5; // std::clamp(abs(mr3() * density / 20 ),0,255) ;
+    data[position+3] = pn.noise0_1(x / fx, y / fy, z / fz) * 255;
+	lkm++;
+	if (lkm > 150) continue;
+	Log::getDebug().log("data[%,%,%] = (%,%,%,%)", std::to_string(x), std::to_string(y), std::to_string(z),
+		std::to_string(data[position]), std::to_string(data[position + 1]), std::to_string(data[position + 2]), std::to_string(data[position + 3]));
   }}};
 
   return std::move(td);
 }
+
 
 // y ~= 128
 inline double centerY(int y)

@@ -88,10 +88,10 @@ void createShaders()
 // Initialize the marching cubes attributes.
 void initializeCubeAttributes()
 {
-  const int BLOCK_SIZE = 32;
-  const int CUBE_COUNT_X = BLOCK_SIZE * 4;
-  const int CUBE_COUNT_Y = BLOCK_SIZE * 4;
-  const int CUBE_COUNT_Z = BLOCK_SIZE * 4;
+  const int BLOCK_SIZE = 8;
+  const int CUBE_COUNT_X = BLOCK_SIZE;
+  const int CUBE_COUNT_Y = BLOCK_SIZE;
+  const int CUBE_COUNT_Z = BLOCK_SIZE;
   const float ISO_VALUE = 0.0f;
 
   auto metadata = ProgramState::getInstance().getMetadata();
@@ -140,7 +140,8 @@ void loop_handler2(void *arg)
     Window::getInstance().swapBuffers();
 }
 
-int main()
+//int main()
+int main(int argc, char* argv[])
 {
 
   // The program state must be created first.
