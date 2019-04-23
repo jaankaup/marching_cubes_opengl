@@ -25,14 +25,7 @@ class VertexBufferManager
   
     Vertexbuffer* createVertexBuffer(const std::string& name);
     Vertexbuffer* getVertexBufferByName(const std::string& name);
-    Vertexbuffer* optimize_vertex_buffer(const std::string& optimized_name,
-                                         const std::string& shaderName,
-                                         const glm::vec3& basePosition,
-                                         const Vertexbuffer* vb);
-    Vertexbuffer* optimize_vertex_buffer2(const std::string& optimized_name,
-                                                               const std::string& shaderName,
-                                                               const glm::vec3& basePosition,
-                                                               const Vertexbuffer* vb);
+    Vertexbuffer* optimize_vertex_buffer(const std::string& optimized_name, const std::string& shaderName);
     bool deleteVertexBuffer(const std::string& name);
   
   private:

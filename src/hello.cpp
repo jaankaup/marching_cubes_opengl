@@ -102,17 +102,6 @@ void initializeCubeAttributes()
   metadata->isovalue = ISO_VALUE;
 }
 
-// Create the buffer for the base data points.
-void createBaseVertexBuffer()
-{
-  const std::string BASE_VERTEX_BUFFER_NAME = "greenThingVB"; 
-
-  auto metadata = ProgramState::getInstance().getMetadata();
-
-  auto vb = VertexBufferManager::getInstance().createVertexBuffer(BASE_VERTEX_BUFFER_NAME);
-  vb->createExamplePoints(metadata->cube_count_x, metadata->cube_count_y, metadata->cube_count_z);
-}
-
 void createtextures()
 {
   const std::string TEXTURE_NAME = "greenThingTexture"; 
@@ -177,39 +166,22 @@ int main(int argc, char* argv[])
   #ifndef EMSCRIPTEN
 
   // Create models.
-  Model* green_thing = ModelManager::getInstance().create_green_thing(false);
-//  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
-  std::vector<Command>& gm = *(green_thing->getCommands());
-//  Command c_green;
-  if (gm.size() == 0) Log::getError().log("hello::main. gm.size() = %", std::to_string(gm.size()));
-  auto mData = ProgramState::getInstance().getMetadata();
-  Vertexbuffer* green_vb = VertexBufferManager::getInstance().getVertexBufferByName("greenThingVB");
-  Vertexbuffer* optimizedGreen =
-    VertexBufferManager::getInstance().optimize_vertex_buffer2("green_thing_optimized_vb",
-                                                              "green_thing_optimized",
-                                                              ProgramState::getInstance().getStartPoint(),
-                                                              green_vb);
-  auto ps = ProgramState::getInstance();
-  gm[0].vao = optimizedGreen->getVAO();
-  gm[0].count = optimizedGreen->getCount();
-  gm[0].shaderName = ps.getMetadata()->meshShader;
-  //gm[0].shaderName = ps.getMetadata().meshShader;
-  gm[0].draw = GL_TRIANGLES;
-//// // gm[1].vao = optimizedGreen->getVAO();
-////  auto cou = optimizedGreen->getCount(); 
-////  Log::getDebug().log("optimized count = %", std::to_string(cou));
-      VertexBufferManager::getInstance().deleteVertexBuffer("greenThingVB");
+//  Model* green_thing = ModelManager::getInstance().create_green_thing(false);
 ////  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
-////  Log::getDebug().log("gm[0] = %", std::to_string(gm[0].vao));
-////  Log::getDebug().log("gm[0] = %", std::to_string(gm[0].count));
-////  Log::getDebug().log("gm[0] = %", gm[0].shaderName);
-
-
-
-
-
-
-
+//  std::vector<Command>& gm = *(green_thing->getCommands());
+////  Command c_green;
+//  if (gm.size() == 0) Log::getError().log("hello::main. gm.size() = %", std::to_string(gm.size()));
+//  auto mData = ProgramState::getInstance().getMetadata();
+//  //Vertexbuffer* green_vb = VertexBufferManager::getInstance().getVertexBufferByName("greenThingVB");
+//  Vertexbuffer* optimizedGreen =
+//    VertexBufferManager::getInstance().optimize_vertex_buffer("green_thing_optimized_vb",
+//                                                              "green_thing_optimized");
+//  auto ps = ProgramState::getInstance();
+//  gm[0].vao = optimizedGreen->getVAO();
+//  gm[0].count = optimizedGreen->getCount();
+//  gm[0].shaderName = ps.getMetadata()->meshShader;
+//  gm[0].draw = GL_TRIANGLES;
+    ModelManager::getInstance().createSceneObject();
 //  glm::mat4 original = glm::mat4(1.0f);
 //
 //  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");

@@ -65,3 +65,17 @@ Texture TextureManager::getTextureByName(const std::string& name) const
     throw std::runtime_error("TextureManager::getTextureByName(" + name + "). No such texture.");
 }
 
+bool TextureManager::deleteTexture(const std::string& name)
+{
+   for (unsigned int i=0 ; i < pTextures.size() ; i++)
+   {
+     if (std::get<0>(pTextures[i]) == name)
+     {
+       auto ind = pTextures.begin() + 1;
+       std::get<1>(pTextures[i]).dispose();
+       pTextures.erase(ind);
+       return true;
+     }
+   }
+   return false;
+}

@@ -11,6 +11,8 @@
 #include "log.h"
 #include "myrandom.h"
 #include "../Graphics/textureData.h"
+#include "../Graphics/programstate.h"
+#include "../Graphics/vertexBufferManager.h"
 
 extern void joopajoo();
 extern std::string addPadding(const std::string& str, const uint32_t count, const char paddingChar);
@@ -31,5 +33,6 @@ extern TextureData create2x2();
 
 extern double centerY(int y);
 
+extern void createBaseVertexBuffer();
 
 #endif //MISC_H

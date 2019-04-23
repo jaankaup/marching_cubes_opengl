@@ -264,6 +264,21 @@ void Camera::handleEvents()
         ProgramState::getInstance().setStartPoint(sp);
         logGLM("startPoint",sp);
     }
+    if(keystate[SDL_SCANCODE_T] && !shift)
+    {
+        // This should go somewhere else.
+        auto metadata = ProgramState::getInstance().getMetadata();
+        auto name = metadata->texture3Dname;
+        TextureManager::getInstance().deleteTexture(name); 
+        Texture tex3D = TextureManager::getInstance().create3D(name);
+        auto tex3D_data = createPerlin3D(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+        tex3D.create3D(tex3D_data);
+        metadata->texture3Dname = name;
+        Log::getInfo().log("Creating a new 3D texture...");
+
+
+
+    }
 
     update();
 //  auto result = update();

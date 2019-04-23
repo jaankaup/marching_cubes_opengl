@@ -7,6 +7,7 @@
 #include "model.h"
 #include "texture.h"
 #include "textureManager.h"
+#include "vertexbuffer.h"
 #include "vertexBufferManager.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
@@ -24,9 +25,7 @@ class ModelManager
 
     const std::vector<Model*> getModels() const;
 
-    /// Shaders marchingShader and marchingShaderLine must be created before
-    /// calling this funtion. 
-    Model* create_green_thing(bool wireframe);
+    Model* createSceneObject();
   
   private:
     ModelManager();

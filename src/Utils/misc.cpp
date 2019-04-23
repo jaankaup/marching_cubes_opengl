@@ -206,9 +206,10 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
   //uint8_t (&multiArray)[width][height][depth][4] = *reinterpret_cast<uint8_t (*)[width][height][depth][4]>(data);
 
   MyRandom<double> mr;
-  mr.setDistribution(0,25000.0);
+  mr.setDistribution(0,250000.0);
 
   siv::PerlinNoise pn(mr());
+  siv::PerlinNoise pn2(mr());
 //  siv::PerlinNoise pn_r(mr());
 //  siv::PerlinNoise pn_g(mr());
 //  siv::PerlinNoise pn_b(mr());
@@ -217,9 +218,9 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
   const double fy = height; // / frequency;
   const double fz = depth; // / frequency;
 
-//
+
 //  MyRandom<int> mr2;
-//  mr2.setDistribution(-12,12);
+//  mr2.setDistribution(0,255);
 //
 //  MyRandom<int> mr3;
 //  mr3.setDistribution(-12,12);
@@ -235,8 +236,8 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
     int density = mr();
 	unsigned int position = x*xOffset + y*yOffset + z*zOffset;
     data[position] = 123;
-    data[position+1] = 100; //  + mr3(); // * density*0.5f;
-    data[position+2] = pn.noise0_1(x / fx, y / fy, z / fz) * 255; //density / 5; // std::clamp(abs(mr3() * density / 20 ),0,255) ;
+    data[position+1] = 100; // mr2(); //  + mr3(); // * density*0.5f;
+    data[position+2] = pn2.noise0_1(x / fx, y / fy, z / fz) * 255; //density / 5; // std::clamp(abs(mr3() * density / 20 ),0,255) ;
     data[position+3] = pn.noise0_1(x / fx, y / fy, z / fz) * 255;
 	lkm++;
 	if (lkm > 150) continue;
@@ -253,4 +254,18 @@ inline double centerY(int y)
 {
     //return static_cast<uint8_t>(std::clamp(exp(0.02 * y*y),0.0, 255.0)) ;   
     return exp(0.005 * y*y) ;   
+}
+
+// Create the buffer for the base data points.
+void createBaseVertexBuffer()
+{
+  const std::string BASE_VERTEX_BUFFER_NAME = "sceneVBO"; 
+
+  auto metadata = ProgramState::getInstance().getMetadata();
+  metadata->base_vertex_buffer_name = BASE_VERTEX_BUFFER_NAME;
+  auto shaderName = metadata->triangulationShader; 
+  if (shaderName == "") Log::getError().log("Misc::createBaseVertexBuffer: triangulation shader was not created.");
+//  auto vb = VertexBufferManager::getInstance().(BASE_VERTEX_BUFFER_NAME);
+  auto vb = VertexBufferManager::getInstance().optimize_vertex_buffer(BASE_VERTEX_BUFFER_NAME, shaderName );
+  //vb->createExamplePoints(metadata->cube_count_x, metadata->cube_count_y, metadata->cube_count_z);
 }

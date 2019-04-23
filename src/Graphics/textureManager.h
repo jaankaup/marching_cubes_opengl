@@ -30,12 +30,14 @@ class TextureManager
     /// Get texture by its name. throws runtime_expecton if texture is not found.  
     Texture getTextureByName(const std::string& name) const;
 
+    bool deleteTexture(const std::string& name);
+
   private:
     TextureManager();
     ~TextureManager();
 
     /// Name:Texture pairs.
-    std::vector<std::tuple<const std::string, Texture>> pTextures;
+    std::vector<std::tuple<std::string, Texture>> pTextures;
 };
 
 #endif // TEXTUREMANAGER_H
