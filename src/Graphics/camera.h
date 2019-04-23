@@ -30,6 +30,9 @@ class Camera
     glm::vec3 getLookAt() const;
     glm::mat4 getViewMatrix() const;
     glm::vec3 getStafe() const;
+
+    // This should put somewhere else.
+    void changeScene(const char number) const;
 //    glm::vec3 getEyePosition() const;
 
 	private:

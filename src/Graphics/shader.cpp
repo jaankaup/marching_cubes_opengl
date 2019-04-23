@@ -1,6 +1,4 @@
 #include <fstream>
-#include <streambuf>
-#include <stdexcept>
 #include "shader.h"
 #include "../Utils/log.h"
 
@@ -37,7 +35,45 @@ void Shader::setFeedback(const bool feedback, const std::string& feedbackVarying
   pFeedbackVarying = feedbackVarying;
 }
 
-void Shader::build(const std::vector<std::string>& sources)
+void Shader::buildDensity(const std::vector<std::string>& sources)
+{
+  std::string density;
+  std::string geom;
+  std::string vert;
+
+  // This is a copy paste function. TODO: move it to the misc.cpp.
+  static const auto endsWith = [](const std::string& str, const std::string& postFix)
+  {
+    if (str.length() >= postFix.length()) {
+      return (0 == str.compare(str.length() - postFix.length(), postFix.length(), postFix));
+    } else {
+      return false;
+    } 
+  };
+
+  static const auto replace = [](std::string& str, const std::string& from, const std::string& to)
+  {
+     size_t start_pos = str.find(from);
+    if (start_pos == std::string::npos) return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+  };
+
+  for (const auto& src : sources)
+  {
+    if (endsWith(src,".geom")) geom = loadSource(src);
+    else if (endsWith(src,".df")) density = loadSource(src);
+    else if (endsWith(src,".vert")) vert = loadSource(src);
+  }
+
+  bool result = replace(geom, "{{density_function_comes_here_from_another_file}}", density); 
+  
+  std::vector<std::string> triangulate_src = {vert, geom};
+  build(triangulate_src, true);
+
+}
+
+void Shader::build(const std::vector<std::string>& sources, const bool triangulate)
 {
     using ShaderObjData = struct{
         GLenum shaderType;
@@ -52,25 +88,45 @@ void Shader::build(const std::vector<std::string>& sources)
     SOD sod;
 
     /* We iterate trought all source codes and extract shader object types and sourcecodes. */
-    for (const auto& location : sources)
+    // This is stupid, but I'm running out of time! TODO: Fix this.
+    if (!triangulate)
     {
-        Log::getDebug().log("Creating shader from file: %", location);
+      for (const auto& location : sources)
+      {
+          Log::getDebug().log("Creating shader from file: %", location);
 
-        /* Solve the type of shader object from file extension. */
-        GLenum shaderType = getShaderType(location);
-        if (shaderType == 0)
-        {
-            Log::getError().log("Shader::build: Could'n solve the shader object type from file '%'.",location);
-            Log::getError().log("Shader::build: file extension must be one the following: [%].",".vert .gtcs .gtes .geom .frag");
-            // TODO: exception
-        }
+          /* Solve the type of shader object from file extension. */
+          GLenum shaderType = getShaderType(location);
+          if (shaderType == 0)
+          {
+              Log::getError().log("Shader::build: Could'n solve the shader object type from file '%'.",location);
+              Log::getError().log("Shader::build: file extension must be one the following: [%].",".vert .gtcs .gtes .geom .frag");
+              // TODO: exception
+          }
 
-        ShaderObjData shaderObjectData;
-        shaderObjectData.shaderType = shaderType;
-        shaderObjectData.shaderObj = glCreateShader(shaderType);
-        shaderObjectData.sourceCode = loadSource(location);
-        /* Put the source type and source code to sod. */
-        sod.push_back(shaderObjectData);
+          ShaderObjData shaderObjectData;
+          shaderObjectData.shaderType = shaderType;
+          shaderObjectData.shaderObj = glCreateShader(shaderType);
+          shaderObjectData.sourceCode = loadSource(location);
+          /* Put the source type and source code to sod. */
+          sod.push_back(shaderObjectData);
+      }
+    }
+    else 
+    {
+          ShaderObjData shaderObjectData;
+          shaderObjectData.shaderType = GL_VERTEX_SHADER;
+          shaderObjectData.shaderObj = glCreateShader(GL_VERTEX_SHADER);
+          shaderObjectData.sourceCode = sources[0]; // Really hacky stuff!
+          /* Put the source type and source code to sod. */
+          sod.push_back(shaderObjectData);
+       
+          ShaderObjData shaderObjectData2;
+          shaderObjectData2.shaderType = GL_GEOMETRY_SHADER;
+          shaderObjectData2.shaderObj = glCreateShader(GL_GEOMETRY_SHADER);
+          shaderObjectData2.sourceCode = sources[1]; // Really hacky stuff!!!!!
+          /* Put the source type and source code to sod. */
+          sod.push_back(shaderObjectData2);
     }
 
     for (const auto& object : sod)

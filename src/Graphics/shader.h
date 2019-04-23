@@ -18,7 +18,8 @@ class Shader
 	public:
 
 		~Shader();
-		void build(const std::vector<std::string>& sources);
+		void build(const std::vector<std::string>& sources,const bool triangulate);
+    void buildDensity(const std::vector<std::string>& sources);
 		void bind() const;
 
     void setUniform(const std::string& name, int value) const;

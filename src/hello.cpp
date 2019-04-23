@@ -49,38 +49,43 @@ void createShaders()
     
     // TODO: delete all existing shaders here.
     
-    const std::string MARCHING_CUBES_SHADER = "marchingShader_green"; 
-    const std::string MARCHING_CUBES_WIREFRAME = "marchingShaderWire_green"; 
+// WE OMIT THE DEBUG SHADERS FOR NOW. 
+  
+//    const std::string MARCHING_CUBES_SHADER = "marchingShader_green"; 
+//    const std::string MARCHING_CUBES_WIREFRAME = "marchingShaderWire_green"; 
     const std::string MARCHING_CUBES_TRIANGULATION = "triangulationShader"; 
     const std::string SCENE_SHADER = "cubeshader"; 
 
-    // The marching cubes shader.
-    Shader* marchingShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_SHADER);
-    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
-    marchingShader->build(marchingShader_src);
+//    // The marching cubes shader.
+//    Shader* marchingShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_SHADER);
+//    std::vector<std::string> marchingShader_src = {"shaders/marching.vert", "shaders/marching_green_thing.geom", "shaders/marching.frag"};
+//    marchingShader->build(marchingShader_src);
+//
+//    ProgramState::getInstance().getMetadata()->cubeMarchShader = MARCHING_CUBES_SHADER;
+//
+//    // The marching cubes wireframe shader.
+//    Shader* marchingShaderLine = ShaderManager::getInstance().createShader(MARCHING_CUBES_WIREFRAME);
+//    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
+//    marchingShaderLine->build(marchingShaderLine_src);
+//
+//    ProgramState::getInstance().getMetadata()->cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
 
-    ProgramState::getInstance().getMetadata()->cubeMarchShader = MARCHING_CUBES_SHADER;
+    // The triangulation shader with density function 0-9 .
+    for (int i=0 ; i < 10 ; i++)
+    {
+      Shader* triangulationShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_TRIANGULATION + std::to_string(i));
+      std::vector<std::string> triangulate_src = {"shaders/triangulate.vert", "shaders/triangulate.geom", "shaders/densityFunction" + std::to_string(i) + ".df"};
+      triangulationShader->setFeedback(true,"outputCase");
+      triangulationShader->buildDensity(triangulate_src);
+    }
 
-    // The marching cubes wireframe shader.
-    Shader* marchingShaderLine = ShaderManager::getInstance().createShader(MARCHING_CUBES_WIREFRAME);
-    std::vector<std::string> marchingShaderLine_src = {"shaders/marching.vert", "shaders/marchingWireFrame_green.geom", "shaders/marchingLine2.frag"};
-    marchingShaderLine->build(marchingShaderLine_src);
-
-    ProgramState::getInstance().getMetadata()->cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
-
-    // The triangulation shader.
-    Shader* triangulationShader = ShaderManager::getInstance().createShader(MARCHING_CUBES_TRIANGULATION);
-    std::vector<std::string> triangulate_src = {"shaders/triangulate.vert", "shaders/triangulate.geom"};
-    triangulationShader->setFeedback(true,"outputCase");
-    triangulationShader->build(triangulate_src);
-
-    ProgramState::getInstance().getMetadata()->triangulationShader = MARCHING_CUBES_TRIANGULATION;
+    ProgramState::getInstance().getMetadata()->triangulationShader = MARCHING_CUBES_TRIANGULATION + std::to_string(1);
 
     // The shader for drawing the triangulated scene. The name is a bit
     // misleading.
     Shader* shaderCube = ShaderManager::getInstance().createShader(SCENE_SHADER);
     std::vector<std::string> shaderSourcesCube = {"shaders/default_notex.vert", "shaders/default_notex.frag"};
-    shaderCube->build(shaderSourcesCube);
+    shaderCube->build(shaderSourcesCube,false);
 
     ProgramState::getInstance().getMetadata()->meshShader = SCENE_SHADER;
 }

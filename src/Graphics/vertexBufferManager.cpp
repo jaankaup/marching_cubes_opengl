@@ -51,9 +51,7 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   float Y = (float)metadata->cube_count_y;
   float Z = (float)metadata->cube_count_z;
 
-  Log::getDebug().log("CUBE_COUNTS = %,%,%", std::to_string(X),std::to_string(Y),std::to_string(Z));
-
-  // Create cube poinst.
+  // Create cube base points (front left point of cube) for a single cube. In this case for 32x32x32 cubes.
   int size = metadata->cube_count_x * metadata->cube_count_y * metadata->cube_count_z; 
   std::vector<float> points;
   for (int i=0 ; i<metadata->block_size ; ++i) {
@@ -64,153 +62,120 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
     points.push_back((float)k);
   }}};
 
+  // Create (32x32x32) cube positions in world space. 
   std::vector<glm::vec3> basePositions;
-  for (int i = -10 ; i<10 ; i++) {
-  for (int j = -6;  j<6; j++) {
-  for (int k = -10;  k<10; k++) {
+  for (int i = -8 ; i<8 ; i++) {
+  for (int j = -8;  j<8; j++) {
+  for (int k = -8;  k<8; k++) {
     basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
   }}};
 
   uint32_t cubeCount = basePositions.size()*size;
   Log::getInfo().log("Marching % cubes...", std::to_string(cubeCount));
-    unsigned int instanceVBO;
-    glGenBuffers(1, &instanceVBO);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * basePositions.size(), &basePositions[0], GL_STATIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    unsigned int quadVAO, quadVBO;
-    glGenVertexArrays(1, &quadVAO);
-    glGenBuffers(1, &quadVBO);
-    glBindVertexArray(quadVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*points.size(), &points[0], GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    // also set instance data
-    glEnableVertexAttribArray(1);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO); // this attribute comes from a different vertex buffer
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
+  // Create instanced data.
+  unsigned int instanceVBO;
+  glGenBuffers(1, &instanceVBO);
+  glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * basePositions.size(), &basePositions[0], GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-  Log::getDebug().log("SIZE OF BASEDATA = %", std::to_string(basePositions.size()));
+  // Create the base points data and create data bindings for triangulate.vert
+  // shader.
+  unsigned int quadVAO, quadVBO;
+  glGenVertexArrays(1, &quadVAO);
+  glGenBuffers(1, &quadVBO);
+  glBindVertexArray(quadVAO);
+  glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float)*points.size(), &points[0], GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  // also set instance data
+  glEnableVertexAttribArray(1);
+  glBindBuffer(GL_ARRAY_BUFFER, instanceVBO); // this attribute comes from a different vertex buffer
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
 
+  // Find the trinagulate shader.
   Shader* shader = ShaderManager::getInstance().getShaderByName(metadata->triangulationShader);
   shader->bind();
+
+  // Bind the tri_table.
   Texture tritable = TextureManager::getInstance().getTextureByName(metadata->tri_table_name);
   tritable.use(1);
   shader->setUniform("tri_table", 1);
   
+  // Bind the 3D texture.
   Texture texture = TextureManager::getInstance().getTextureByName(metadata->texture3Dname);
   texture.use(0);
 
   shader->setUniform("diffuse3DTexture",0);
   shader->setUniform("voxels_per_block", (float)metadata->block_size);
-  Log::getDebug().log("HEY!! VOXELS_PER_BLOCK = %", std::to_string((float)metadata->block_size));
-  //shader->setUniform("startPoint", basePosition);
-  
-  // Continue instanced.
-//  glEnableVertexAttribArray(1);
-//  glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-//  glVertexAttribPointer(1,3, GL_FLOAT, GL_FALSE, sizeof(float)*3 , 0);
-//  glBindBuffer(GL_ARRAY_BUFFER, 0);
-//  glVertexAttribDivisor(1,1);
 
-  // Create the transform feedback buffer
-
-//  vb->bind();
-//  auto count = vb->getCount();
-  //auto count = vb->getCount();
-//  Log::getDebug().log("COUNT == %.", std::to_string(count));
+  // This is a hard code size for the feed back buffer. This might not work in
+  // all graphics cards.
   auto transformFeedbackCount = 500000000;
+
+  // Create the feedback buffer.
   GLuint tbo;
   glGenBuffers(1, &tbo);
-//  glGenTransformFeedbacks(1, &tbo);GL_ARRAY_BUFFER
-  //glBindBuffer(GL_TRANSFORM_FEEDBACK, tbo);
   glBindBuffer(GL_ARRAY_BUFFER, tbo);
-//  glBindTransformFeedback(GL_TRANSFORM_FEEDBACK);
-  glBufferData(GL_ARRAY_BUFFER, transformFeedbackCount /* sizeof(glm::vec3)*count*15*6 */, nullptr, GL_STATIC_READ /*GL_DYNAMIC_COPY*/);
-  //glBufferData(GL_TRANSFORM_FEEDBACK, transformFeedbackCount /* sizeof(glm::vec3)*count*15*6 */, nullptr, GL_STATIC_READ /*GL_DYNAMIC_COPY*/);
+  glBufferData(GL_ARRAY_BUFFER, transformFeedbackCount , nullptr, GL_STATIC_READ);
 
-  // Perform feedback transform.
+  // We don't want the clipping stage.
   glEnable(GL_RASTERIZER_DISCARD);
 
-  //glBindBufferBase(GL_ARRAY_BUFFER, 0, tbo);
   glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, tbo);
 
-  // The counter for the geomtery shader. This must be done before
-  // glBeginTransformFeedback.
+  // The counter for the output count of geometry shader.
   GLuint query;
   glGenQueries(1,&query);
-  glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN,query);
-  //glBeginQuery(GL_PRIMITIVES_GENERATED, query);
 
-  // Do the recording for cube cooridates that creates triangles.
+  // Start the counter.
+  glBeginQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN,query);
+
+  // Perform feedback.
   glBeginTransformFeedback(GL_TRIANGLES);
-  //glBeginTransformFeedback(GL_POINTS);
-//  glDrawArrays(GL_POINTS, 0, size);
-//  glDrawArraysInstanced(GL_POINTS, 0, count, 27);
   glDrawArraysInstanced(GL_POINTS, 0, size, basePositions.size());
-//  glDrawArraysInstanced(GL_POINTS, 0, count, basePositions.size());
   glEndTransformFeedback();
 
   // :noremap <F12> :wall \| !./native_compile.sh && ./runNative.sh<CR>
+
+  // Flush everythin out of geometry shader.
   glFlush();
 
+  // We can now enable the rasterizer.
   glDisable(GL_RASTERIZER_DISCARD);
-
 
   // Stop the counter.
   glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
-  //glEndQuery(GL_PRIMITIVES_GENERATED);
 
   // The result of the counter.
   GLuint primitiveCount;
   glGetQueryObjectuiv(query, GL_QUERY_RESULT, &primitiveCount);
 
-  Log::getDebug().log("PRIMITIVE_READ == %.", std::to_string(primitiveCount));
-
-  int triangleDataCount = primitiveCount;
-
+  // Take the result of geometry shader to 'feecback' buffer.
   unsigned int actual_data_size = primitiveCount*6*sizeof(float)*3;
   GLfloat* feedback = new GLfloat[primitiveCount*6*3];
-  //glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, actual_data_size, feedback);
   glGetBufferSubData(GL_ARRAY_BUFFER, 0, actual_data_size, feedback);
 
-//  for (int i=0 ; i<primitiveCount*6 ; i = i + 6)
-//  {
-//    Log::getDebug().log("v% = (%,%,%) , n = (%,%,%)", std::to_string(i/6),
-//                                                      std::to_string(feedback[i]),
-//                                                      std::to_string(feedback[i+1]),
-//                                                      std::to_string(feedback[i+2]),
-//                                                      std::to_string(feedback[i+3]),
-//                                                      std::to_string(feedback[i+4]),
-//                                                      std::to_string(feedback[i+5]));
-//  }
   Log::getInfo().log("Generated % triangles...", std::to_string(primitiveCount));
+
+  // Clean up the buffers.
   glDeleteVertexArrays(1, &quadVAO);
-  // Release the transfrom feedback buffer.
   glDeleteBuffers(1, &tbo);
-
-  // Release the instanced buffers.
   glDeleteBuffers(1, &instanceVBO);
-
-  // Release the cube points.
   glDeleteBuffers(1, &quadVBO);
 
-//    unsigned int quadVAO, quadVBO;
+  // Create the vertexbuffer from the geometry shader output data.
   Vertexbuffer* result = createVertexBuffer(optimized_name);
   result->init();
   std::vector<std::string> types = {"3f","3f"};
   result->addData(feedback, actual_data_size, types);
   result->pDataCount = primitiveCount*6;
-//  Log::getDebug().log("PRIMITIVECOUNT == %.", std::to_string(result->pDataCount));
-//  Log::getDebug().log("SIZE_OF_FEEDBACK == %.", std::to_string(sizeof(float)*primitiveCount*6));
 
   delete[] feedback;
-//  result-> init_transform_feedback(tbo, primitiveCount/3);
-
   return result;
 }
 

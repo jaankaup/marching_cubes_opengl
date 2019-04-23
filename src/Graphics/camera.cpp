@@ -264,7 +264,7 @@ void Camera::handleEvents()
         ProgramState::getInstance().setStartPoint(sp);
         logGLM("startPoint",sp);
     }
-    if(keystate[SDL_SCANCODE_T] && !shift)
+    if(keystate[SDL_SCANCODE_T])
     {
         // This should go somewhere else.
         auto metadata = ProgramState::getInstance().getMetadata();
@@ -280,11 +280,35 @@ void Camera::handleEvents()
         ModelManager::getInstance().createSceneObject();
     }
 
+    if(keystate[SDL_SCANCODE_0])
+    {
+      changeScene(0);
+//        std::string shaderName = ProgramState::getInstance().getMetadata()->triangulationShader;
+//        shaderName[shaderName.size()-1] = '0';
+//        ProgramState::getInstance().getMetadata()->triangulationShader = shaderName;
+//        Log::getInfo().log("Changing densityShader to triangulationShader0 ...");
+//        ModelManager::getInstance().createSceneObject();
+    }
+
+    if(keystate[SDL_SCANCODE_1])
+    {
+      changeScene(1);
+    }
     update();
 //  auto result = update();
 //  
 //
 //    return result;
+}
+
+void Camera::changeScene(const char number) const
+{
+        std::string shaderName = ProgramState::getInstance().getMetadata()->triangulationShader;
+        std::string newName = shaderName.substr(0, shaderName.size()-1) + std::to_string(number);
+        Log::getInfo().log("ShaderName == %", newName);
+        ProgramState::getInstance().getMetadata()->triangulationShader = newName;
+        Log::getInfo().log("Changing densityShader to % ...", newName);
+        ModelManager::getInstance().createSceneObject();
 }
 
 glm::vec3 Camera::getLookAt() const
