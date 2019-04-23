@@ -7,7 +7,7 @@
 // Interpolated values from the vertex shaders
 in vec3 vFrag_in;
 in vec3 nFrag_in;
-in vec3 vPositionCamera;
+//in vec3 vPositionCamera;
 
 // Ouput data
 out vec3 color;

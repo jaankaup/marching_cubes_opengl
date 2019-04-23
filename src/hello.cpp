@@ -88,7 +88,7 @@ void createShaders()
 // Initialize the marching cubes attributes.
 void initializeCubeAttributes()
 {
-  const int BLOCK_SIZE = 32;
+  const int BLOCK_SIZE = 4;
   const int CUBE_COUNT_X = BLOCK_SIZE;
   const int CUBE_COUNT_Y = BLOCK_SIZE;
   const int CUBE_COUNT_Z = BLOCK_SIZE;
@@ -116,7 +116,7 @@ void createtextures()
   metadata->texture3Dname = TEXTURE_NAME;
 
   // Create the tri_table.
-  Texture tritable = TextureManager::getInstance().create1D("tri_table_texture");
+  Texture tritable = TextureManager::getInstance().create1D(TRITABLE_NAME);
   tritable.create_tritable_texture();
   metadata->tri_table_name = TRITABLE_NAME;// TRITABLE_NAME;
 }

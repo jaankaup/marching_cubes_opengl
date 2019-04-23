@@ -26,13 +26,15 @@ class ModelManager
     const std::vector<Model*> getModels() const;
 
     Model* createSceneObject();
+
+    bool deleteModel(const std::string& name); 
   
   private:
     ModelManager();
     ~ModelManager();
   
     /// Name:Model pairs.
-    std::vector<std::tuple<const std::string, Model>> pModels;
+    std::vector<std::tuple<std::string, Model>> pModels;
 };
 
 #endif // MODELMANAGER_H

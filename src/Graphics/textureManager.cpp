@@ -71,9 +71,10 @@ bool TextureManager::deleteTexture(const std::string& name)
    {
      if (std::get<0>(pTextures[i]) == name)
      {
-       auto ind = pTextures.begin() + 1;
+       auto ind = pTextures.begin() + i;
        std::get<1>(pTextures[i]).dispose();
        pTextures.erase(ind);
+       Log::getDebug().log("Deleted texture '%'.", name);
        return true;
      }
    }

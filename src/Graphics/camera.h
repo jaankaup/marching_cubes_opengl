@@ -9,6 +9,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "programstate.h"
 #include "textureManager.h"
+#include "modelManager.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
 

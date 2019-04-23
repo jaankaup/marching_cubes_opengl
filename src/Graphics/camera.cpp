@@ -275,9 +275,9 @@ void Camera::handleEvents()
         tex3D.create3D(tex3D_data);
         metadata->texture3Dname = name;
         Log::getInfo().log("Creating a new 3D texture...");
-
-
-
+        
+        // Recreate scene model.
+        ModelManager::getInstance().createSceneObject();
     }
 
     update();
