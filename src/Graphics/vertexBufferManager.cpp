@@ -44,9 +44,6 @@ Vertexbuffer* VertexBufferManager::getVertexBufferByName(const std::string& name
 Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& optimized_name,
                                                            const std::string& shaderName)
 {
-  Log::getDebug().log("CREATING OPTIMIZED GREEN2.");
-
-  // Instanced thing.
   
   auto metadata = ProgramState::getInstance().getMetadata();
 
@@ -68,17 +65,19 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   }}};
 
   std::vector<glm::vec3> basePositions;
-  for (int i = 0 ; i<1 ; i++) {
-  for (int j = 0;  j<1; j++) {
-  for (int k = 0;  k<1; k++) {
+  for (int i = -10 ; i<10 ; i++) {
+  for (int j = -6;  j<6; j++) {
+  for (int k = -10;  k<10; k++) {
     basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
   }}};
 
-////    unsigned int instanceVBO;
-////    glGenBuffers(1, &instanceVBO);
-////    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
-////    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * basePositions.size(), &basePositions[0], GL_STATIC_DRAW);
-////    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  uint32_t cubeCount = basePositions.size()*size;
+  Log::getInfo().log("Marching % cubes...", std::to_string(cubeCount));
+    unsigned int instanceVBO;
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * basePositions.size(), &basePositions[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     unsigned int quadVAO, quadVBO;
     glGenVertexArrays(1, &quadVAO);
@@ -89,11 +88,11 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     // also set instance data
-////    glEnableVertexAttribArray(1);
-////    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO); // this attribute comes from a different vertex buffer
-////    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-////    glBindBuffer(GL_ARRAY_BUFFER, 0);
-////    glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO); // this attribute comes from a different vertex buffer
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
 
   Log::getDebug().log("SIZE OF BASEDATA = %", std::to_string(basePositions.size()));
 
@@ -150,9 +149,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   // Do the recording for cube cooridates that creates triangles.
   glBeginTransformFeedback(GL_TRIANGLES);
   //glBeginTransformFeedback(GL_POINTS);
-  glDrawArrays(GL_POINTS, 0, size);
+//  glDrawArrays(GL_POINTS, 0, size);
 //  glDrawArraysInstanced(GL_POINTS, 0, count, 27);
-//  glDrawArraysInstanced(GL_POINTS, 0, size, basePositions.size());
+  glDrawArraysInstanced(GL_POINTS, 0, size, basePositions.size());
 //  glDrawArraysInstanced(GL_POINTS, 0, count, basePositions.size());
   glEndTransformFeedback();
 
@@ -179,22 +178,23 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   //glGetBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, 0, actual_data_size, feedback);
   glGetBufferSubData(GL_ARRAY_BUFFER, 0, actual_data_size, feedback);
 
-  for (int i=0 ; i<primitiveCount*6 ; i = i + 6)
-  {
-    Log::getDebug().log("v% = (%,%,%) , n = (%,%,%)", std::to_string(i/6),
-                                                      std::to_string(feedback[i]),
-                                                      std::to_string(feedback[i+1]),
-                                                      std::to_string(feedback[i+2]),
-                                                      std::to_string(feedback[i+3]),
-                                                      std::to_string(feedback[i+4]),
-                                                      std::to_string(feedback[i+5]));
-  }
+//  for (int i=0 ; i<primitiveCount*6 ; i = i + 6)
+//  {
+//    Log::getDebug().log("v% = (%,%,%) , n = (%,%,%)", std::to_string(i/6),
+//                                                      std::to_string(feedback[i]),
+//                                                      std::to_string(feedback[i+1]),
+//                                                      std::to_string(feedback[i+2]),
+//                                                      std::to_string(feedback[i+3]),
+//                                                      std::to_string(feedback[i+4]),
+//                                                      std::to_string(feedback[i+5]));
+//  }
+  Log::getInfo().log("Generated % triangles...", std::to_string(primitiveCount));
   glDeleteVertexArrays(1, &quadVAO);
   // Release the transfrom feedback buffer.
   glDeleteBuffers(1, &tbo);
 
   // Release the instanced buffers.
-////  glDeleteBuffers(1, &instanceVBO);
+  glDeleteBuffers(1, &instanceVBO);
 
   // Release the cube points.
   glDeleteBuffers(1, &quadVBO);

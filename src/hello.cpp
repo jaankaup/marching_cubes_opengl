@@ -88,7 +88,7 @@ void createShaders()
 // Initialize the marching cubes attributes.
 void initializeCubeAttributes()
 {
-  const int BLOCK_SIZE = 4;
+  const int BLOCK_SIZE = 32;
   const int CUBE_COUNT_X = BLOCK_SIZE;
   const int CUBE_COUNT_Y = BLOCK_SIZE;
   const int CUBE_COUNT_Z = BLOCK_SIZE;
