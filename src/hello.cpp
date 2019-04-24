@@ -42,7 +42,7 @@
 struct context
 {
     Renderer renderer;
-    Camera2 camera = Camera2(glm::vec3(10.0f,13.0f,10.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+    Camera2 camera = Camera2(glm::vec3(5.0f,7.0f,5.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 };
 
 void createShaders()
@@ -192,6 +192,9 @@ void loop_handler2(void *arg)
                     tex3D.create3D(tex3D_data);
                     metadata->texture3Dname = name;
                     Log::getInfo().log("Creating a new 3D texture...");
+                    // Recreate scene model.
+                    Log::getInfo().log("Rebuilding scene...");
+                    ModelManager::getInstance().createSceneObject();
                     break;
             }
         case SDL_WINDOWEVENT:

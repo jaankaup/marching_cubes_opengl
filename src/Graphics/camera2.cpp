@@ -163,7 +163,7 @@ void Camera2::update(const float time)
 //        setView(target_);
 //    }
 
-    handleKeyInput();
+//    handleKeyInput();
 }
 
 /**
@@ -171,6 +171,14 @@ void Camera2::update(const float time)
  */
 void Camera2::handleKeyInput()
 {
+  uint32_t newTick = SDL_GetTicks();
+  //deltaTime = pPrevTick == 0 ? 0.0f : (newTick*1.0f) / pPrevTick;
+  auto del = newTick - pPrevTick;
+  if (del != 0)
+  {
+    deltaTime = float(newTick)/float(pPrevTick);
+  }
+  pPrevTick = newTick;
     /* Pyydetään SDL:n näppäintila */
     const Uint8* keystate = SDL_GetKeyboardState(NULL);
 
@@ -202,6 +210,7 @@ void Camera2::handleKeyInput()
 
     if(keystate[SDL_SCANCODE_C])
         position_ -= glm::normalize(up_) * speedMultiplier * deltaTime;
+    update(deltaTime);
 //    update(deltaTime);
 //    if(keystate[SDL_SCANCODE_KP_PLUS])
 //    {
@@ -334,9 +343,6 @@ void Camera2::changeScene(const char number) const
  */
 void Camera2::handleMouseInput(SDL_Event &inputEvent)
 {
-  uint32_t newTick = SDL_GetTicks();
-  deltaTime = pPrevTick == 0 ? 0.0f : (newTick*1.0f) / pPrevTick;
-  pPrevTick = newTick;
 
     switch (inputEvent.type)
     {
@@ -355,5 +361,4 @@ void Camera2::handleMouseInput(SDL_Event &inputEvent)
             break;
         }
     }
-    update(deltaTime);
 }
