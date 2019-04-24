@@ -41,6 +41,7 @@ set(graphics_src
       ${graphics_dir}/timer.cpp
       ${graphics_dir}/vertexBufferManager.cpp
       ${graphics_dir}/modelManager.cpp
+      ${graphics_dir}/camera2.cpp
       )
 
 set(util_src 

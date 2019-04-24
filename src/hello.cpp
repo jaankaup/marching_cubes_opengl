@@ -30,6 +30,7 @@
 #include "Graphics/timer.h"
 #include "Graphics/vertexBufferManager.h"
 #include "Graphics/modelManager.h"
+#include "Graphics/camera2.h"
 #include "Utils/log.h"
 #include "Utils/misc.h"
 #include "Utils/myrandom.h"
@@ -41,7 +42,7 @@
 struct context
 {
     Renderer renderer;
-    Camera camera;
+    Camera2 camera = Camera2(glm::vec3(10.0f,13.0f,10.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 };
 
 void createShaders()
@@ -129,7 +130,94 @@ void createtextures()
 void loop_handler2(void *arg)
 {
     context* c = static_cast<context*>(arg);
-    c->camera.handleEvents();
+    SDL_Event e;
+
+    while (SDL_PollEvent(&e))
+    {
+        switch (e.type)
+        {
+        case SDL_QUIT:
+            //running_ = false;
+            break;
+
+        case SDL_KEYDOWN:
+            switch (e.key.keysym.sym)
+            {
+                case SDLK_1:
+                    changeScene(1);
+                    break;
+                case SDLK_2:
+                    changeScene(2);
+                    break;
+                case SDLK_3:
+                    changeScene(3);
+                    break;
+                case SDLK_4:
+                    changeScene(4);
+                    break;
+                case SDLK_5:
+                    changeScene(5);
+                    break;
+                case SDLK_6:
+                    changeScene(6);
+                    break;
+                case SDLK_7:
+                    changeScene(7);
+                    break;
+                case SDLK_8:
+                    changeScene(8);
+                    break;
+                case SDLK_9:
+                    changeScene(9);
+                    break;
+                case SDLK_0:
+                    changeScene(0);
+                    break;
+//                case SDLK_SPACE: /* Kamera */
+//                    camera_.toggleMode();
+//                    break;
+
+                case SDLK_q: 
+                    ProgramState::getInstance().setAppRunning(false);
+                    break;
+                case SDLK_ESCAPE: 
+                    ProgramState::getInstance().setAppRunning(false);
+                    break;
+                case SDLK_t: 
+                    auto metadata = ProgramState::getInstance().getMetadata();
+                    auto name = metadata->texture3Dname;
+                    TextureManager::getInstance().deleteTexture(name); 
+                    Texture tex3D = TextureManager::getInstance().create3D(name);
+                    auto tex3D_data = createPerlin3D(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+                    tex3D.create3D(tex3D_data);
+                    metadata->texture3Dname = name;
+                    Log::getInfo().log("Creating a new 3D texture...");
+                    break;
+            }
+        case SDL_WINDOWEVENT:
+            switch(e.window.event)
+            {
+              case SDL_WINDOWEVENT_CLOSE:
+              //    running_ = false;
+                  break;
+              case SDL_WINDOWEVENT_RESIZED:
+              {
+                  int w = e.window.data1;
+                  int h = e.window.data2;
+                  glViewport(0,0,w,h);
+                  break;
+              }
+            }
+
+        /* Kameralle */
+        case SDL_MOUSEMOTION:
+        case SDL_MOUSEBUTTONDOWN:
+            c->camera.handleMouseInput(e);
+            break;
+
+        }
+    }
+    c->camera.handleKeyInput();
     c->renderer.renderModels(c->camera);
     Window::getInstance().swapBuffers();
 }

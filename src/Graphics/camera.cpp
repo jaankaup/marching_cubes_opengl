@@ -11,8 +11,8 @@ Camera::Camera()
 //    glm::vec3 pLookat = glm::vec3(0.0f,0.0f,0.0f);
     pPitch = 0.0f;
     pYaw = 0.0f;
-//    pPitch = -40.0f;
-//    pYaw = -90.0f;
+//    pPitch = 40.0f;
+//    pYaw = 90.0f;
     pRoll = 0.0f;
     pCamera_quat = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
     pMousePosition =  glm::vec2(0.0f,0.0f); 
@@ -310,6 +310,7 @@ void Camera::changeScene(const char number) const
 
 glm::vec3 Camera::getLookAt() const
 {
+  //return glm::vec3(pCamera_quat.x, pCamera_quat.y, pCamera_quat.z); 
   return glm::vec3(pViewMatrix[0][2],pViewMatrix[1][2],pViewMatrix[2][2]);
 }
 

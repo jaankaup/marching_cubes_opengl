@@ -109,3 +109,13 @@ void createBaseVertexBuffer()
   auto vb = VertexBufferManager::getInstance().optimize_vertex_buffer(BASE_VERTEX_BUFFER_NAME, shaderName );
   //vb->createExamplePoints(metadata->cube_count_x, metadata->cube_count_y, metadata->cube_count_z);
 }
+
+void changeScene(const char number)
+{
+        std::string shaderName = ProgramState::getInstance().getMetadata()->triangulationShader;
+        std::string newName = shaderName.substr(0, shaderName.size()-1) + std::to_string(number);
+        Log::getInfo().log("ShaderName == %", newName);
+        ProgramState::getInstance().getMetadata()->triangulationShader = newName;
+        Log::getInfo().log("Changing densityShader to % ...", newName);
+        ModelManager::getInstance().createSceneObject();
+}

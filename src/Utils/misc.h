@@ -13,6 +13,7 @@
 #include "../Graphics/textureData.h"
 #include "../Graphics/programstate.h"
 #include "../Graphics/vertexBufferManager.h"
+#include "../Graphics/modelManager.h"
 
 extern void joopajoo();
 extern std::string addPadding(const std::string& str, const uint32_t count, const char paddingChar);
@@ -32,4 +33,5 @@ extern TextureData createPerlin3D(const int width, const int height, const int d
 // This should go to vertexbuffer.cpp
 extern void createBaseVertexBuffer();
 
+extern void changeScene(const char number);
 #endif //MISC_H

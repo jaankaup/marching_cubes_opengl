@@ -24,15 +24,15 @@ void Renderer::init()
 //    glEnable(GL_TEXTURE_3D);
 }
 
-void Renderer::renderModels(const Camera& camera)
+void Renderer::renderModels(const Camera2& camera)
 {
   glClearColor(0.0f,0.0f,0.0f,1.0f);
   //glClearColor(0.2f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
   glm::vec3 eyePosition = camera.getPosition();
-  glm::mat4 viewMatrix = camera.getViewMatrix();
-  glm::vec3 lookAt = camera.getLookAt();
+  glm::mat4 viewMatrix = camera.getMatrix();
+  //glm::vec3 lookAt = camera.getLookAt();
 //  logGLM("eyePositionModels",eyePosition);
 //  logGLM("viewMatrixModels",viewMatrix);
 
@@ -67,7 +67,7 @@ void Renderer::renderModels(const Camera& camera)
     Shader* shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
     shader->bind();
     auto startPoint = ProgramState::getInstance().getStartPoint();
-    shader->setUniform("lookAt", lookAt);
+    //shader->setUniform("lookAt", lookAt);
     auto timeNow = std::chrono::system_clock::now().time_since_epoch().count();
     shader->setUniform("time", static_cast<float>(timeNow/1000000000));
 //    logGLM("startPoint",startPoint);

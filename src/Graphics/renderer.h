@@ -16,7 +16,7 @@
 #include "vertexbuffer.h"
 #include "texture.h"
 #include "model.h"
-#include "camera.h"
+#include "camera2.h"
 #include "textureManager.h"
 #include "shaderManager.h"
 #include "programstate.h"
@@ -37,7 +37,7 @@ class Renderer
 		~Renderer();
 
     void init();
-    void renderModels(const Camera& camera);
+    void renderModels(const Camera2& camera);
 
 	private:
 
