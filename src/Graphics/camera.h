@@ -1,57 +1,68 @@
-#ifndef CAMERA_H
-#define CAMERA_H
-//#include <iostream>
-//#include <vector>
-//#include <array>
-//#include <GL/glew.h>
+#ifndef CAMERA2_H
+#define CAMERA2_H
+
+#include <iostream>
+#include <cmath>
 #include <SDL2/SDL.h>
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "programstate.h"
 #include "textureManager.h"
 #include "modelManager.h"
 #include "../Utils/log.h"
 #include "../Utils/misc.h"
 
-/** A simple shader class with basic shader operations. */
+//#include "global.h"
+
 class Camera
 {
-	public:
-		Camera();
-		~Camera();
+    public:
+        Camera(const glm::vec3& cameraPosition, const glm::vec3& targetPosition, const glm::vec3& upVector);
+        ~Camera();
 
-//    glm::mat4 createViewMatrix() const;
+        glm::mat4 getMatrix() const;
+        glm::vec3 getPosition() const;
+        void translate(const glm::vec3& newPos);
+        void rotateCamera(const float &xoffset, const float &yoffset);
+        void update(const float time);
+        void handleKeyInput();
+        void handleMouseInput(SDL_Event &mouseEvent);
+        void setView(const glm::vec3& cameraTarget);
+        void resetView();
+        void toggleMode();
+        void adjustSpeed(const float &adjust);
+        void adjustSensitivity(const float &adjust);
+        void changeScene(const char number) const;
 
-    // Returns a view-matrix.
-    void update();
-    void rotateCamera(float x, float y, int width, int height, bool isMouserPressed);
-    void handleEvents();
-    glm::vec3 getPosition() const;
-    glm::vec3 getLookAt() const;
-    glm::mat4 getViewMatrix() const;
-    glm::vec3 getStafe() const;
+    private:
+        glm::mat4 view;
 
-    // This should put somewhere else.
-    void changeScene(const char number) const;
-//    glm::vec3 getEyePosition() const;
+        glm::vec3 defaultPosition_; // Kameran aloitussijainti
+        glm::vec3 position_;        // Kameran sijainti
+        glm::vec3 target_;          // Kameran peruskohde
+        glm::vec3 front_ = glm::vec3(0.0f, 0.0f,  -1.0f);
+        glm::vec3 up_    = glm::vec3(0.0f, 1.0f,  0.0f);
 
-	private:
-    glm::vec3 pEyePosition;
-    glm::mat4 pViewMatrix;
-//    glm::vec3 pUp;
-    glm::vec3 pLookat;
-    glm::quat pCamera_quat;
-    float pTime = 0.0f;;
-    float pPitch = -40.0f;
-    float pYaw = -90.0f;
-    float pRoll = 0.0f;
-    glm::vec2 pMousePosition;
-    float pMouseX_sensitivity = 0.002f;
-    float pMouseY_sensitivity = 0.002f;
-    float pCamspeed= 0.2f;
-    uint32_t pPrevTick;
-    uint32_t pLastX = 0;
-    uint32_t pLastY = 0;
+        float deltaTime = 0.0f; // Aikakerroin ohjelmassa. Kompensoi päivitysvälin muutoksia.
+        float movementInterp = 0.0f; // Kuvastaa ajan muutosta Tick-arvojen perusteella
+                                     // käytetään floating, orbit -kameroissa
+
+        // Katselukulma
+        float pitch = -45.0f;
+        float yaw   = -90.0f;
+
+        // Kursorin sijainti ruudulla
+        float lastMouseX = 0.0f;
+        float lastMouseY = 0.0f;
+
+        // Kameran liikkumisnopeuden kertoimet
+        float camSpeed = 0.1;       // 1.0 - 10.0
+        float camSensitivity = 0.1; // 0.1 - 1.0
+
+        uint32_t pPrevTick;
+//        enum class CameraMode { Free, Orbit, Floating };
+//        CameraMode camMode = CameraMode::Free;
 };
 
-#endif // CAMERA_H
+#endif // CAMERA2_H

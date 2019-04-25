@@ -19,7 +19,7 @@ void Renderer::init()
     glEnable(GL_MULTISAMPLE);
 }
 
-void Renderer::renderModels(const Camera2& camera)
+void Renderer::renderModels(const Camera& camera)
 {
   glClearColor(0.0f,0.0f,0.0f,1.0f);
   glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -44,8 +44,7 @@ void Renderer::renderModels(const Camera2& camera)
   {
     Shader* shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
     shader->bind();
-    auto startPoint = ProgramState::getInstance().getStartPoint();
-    auto timeNow = std::chrono::system_clock::now().time_since_epoch().count();
+    //auto timeNow = std::chrono::system_clock::now().time_since_epoch().count();
     //shader->setUniform("time", static_cast<float>(timeNow/1000000000));
     shader->setUniform("voxels_per_block", voxels_per_block);
 
@@ -78,6 +77,9 @@ void Renderer::renderModels(const Camera2& camera)
     if (com.shaderName == "marchingShaderLine" && !ProgramState::getInstance().getWireframe()) continue; 
     switch (texture.getTextureType())
     {
+      case TextureType::d1:
+        // Do nothing.
+        break;
       case TextureType::d2:
         shader->setUniform("diffuseTexture",0);
         break;

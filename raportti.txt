@@ -2,7 +2,7 @@ MARCHING CUBES ALGORITMIT TOTEUTUS OPENGL:LLÄ
 
 Ohjelma luo proseduraalista grafiikka ns. marching cubes algoritmia hyödyntäen. Ohjelmassa voi tutkailla hiirellä ja näpäimistöä käyttäen muutamia esimerkkimalleja. 
 
-Ohjelmointikielenä on käytetty c++:aa ja opengl toteutuksessa on käytetty GLSL:ää. Marching cubes algoritmi on toteuttu kokonaan GLSL:ssä. GLSL versio on 430, joten vanhat näytönohjaimet eivät todennäköisesti pysty suorittamaan tätä ohjelmaa.  
+Ohjelmointikielenä on käytetty c++:aa ja opengl toteutuksessa on käytetty GLSL:ää. Marching cubes algoritmi on toteuttu kokonaan GLSL:ssä. GLSL:sta on käytössä versio 430, joten vanhat näytönohjaimet eivät todennäköisesti pysty suorittamaan tätä ohjelmaa.  
 
 Alunperin tarkoituksena oli tehdä webassembly toteutus siten, että c++ koodi olisi käännetty emscripten kääntäjällä webassemblyksi. Näin ohjelman olisi saannut toimimaan web-selaimessa. Marching cubes algoritmi toimikin web-selain versiossa, mutta pullonkaulaksi muodostui se että marching cubes oli toteutettu c++:lla. Näin ollen algoritmin suorituskyky selaimessa oli todella huono. Tästä syystä aloin totetuttamaan marching cubesia siten, että se toimisi täysin GPU:ssa. Luonnollinen toteutus marching cubesille on esimerkiksi geometry shaderissa, mutta osoittausui että webgl ei tuo geometryshaderia. Koska webgl ei tukenut geometry shaderia, ohjelman kehitys keskittyi täysin natiivin c++:n tekemiseen. Ilmeisesti webgl on teknologia jota ei enää kehitetä, vaan tilalle on tulossa uusi standardi nimeltään webgpu. Tosin tämä teknologia ei tosin ole vielä käytössä. 
 
@@ -49,3 +49,24 @@ Ohjelmasta on jätetty aikataulusyistä pois kuutioiden debuggaus toiminnot. Aie
 
 Ohjelmassa on käytetty seuraavia kirjastoa: SDL2, GLEW, SOIL ja PerlinNoise (https://github.com/Reputeless/PerlinNoise).
 Lisäksi apuna on ollut GPU Gems 3 part 1 Chapter 1. Generatin Complex Procedural Terrains Using the GPU ja paulbourke.net/geometry/polygonise/.
+
+PROJEKTIN KÄÄNTÄMINEN UBUNTULLA
+
+1. Asenna SDL2 dev paketti.
+2. Voi olla että joudut päivittämään opengl ajurit. 
+3. Asenna cmake.
+4. Suorita scripti native_compile.sh
+5. Ohjelma asentuu kansioon nativeBuild/bin/hello
+
+PROJEKTIN KÄÄTÄMINEN VISUAL STUDIOLLA
+
+1. Asenna cmake
+2. Anna cmakelle projektin kansio.
+3. Anna cmakelle kohde kansio.
+4. Paina generate. Joudut valitsemaan visualstudio version.
+5. Paina generate.
+6. Paina launch. 
+7. Käännä projekti.
+8. Kopioi manuaalisesti shadersNative kansio samaan paikkaan jonne ohjelma kääntyi.
+9. Kopioi kaikki .dll tiedostot samaan paikkaan jonne ohjelma kääntyi.
+10. Toivottavasti kaikki meni hyvin. Todennäköisesti joudut säätämään yhtä sun toista tai sitten käytät suosiolla valmiiksi käännettyjä binaryja.

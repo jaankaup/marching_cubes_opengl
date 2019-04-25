@@ -14,26 +14,23 @@
 #include "Graphics/shader.h"
 #include "Graphics/model.h"
 #include "Graphics/vertexbuffer.h"
-#include "Graphics/indexbuffer.h"
-#include "Graphics/vertexAttributes.h"
+//#include "Graphics/vertexAttributes.h"
 #include "Graphics/renderer.h"
 #include "Graphics/texture.h"
-#include "Graphics/testData.h"
-#include "Graphics/cell.h"
-#include "Graphics/marchingCubes.h"
-#include "Graphics/voxeldata.h"
+//#include "Graphics/testData.h"
+//#include "Graphics/marchingCubes.h"
+//#include "Graphics/voxeldata.h"
 #include "Graphics/camera.h"
 #include "Graphics/textureManager.h"
 #include "Graphics/shaderManager.h"
 #include "Graphics/model.h"
 #include "Graphics/programstate.h"
-#include "Graphics/timer.h"
+//#include "Graphics/timer.h"
 #include "Graphics/vertexBufferManager.h"
 #include "Graphics/modelManager.h"
-#include "Graphics/camera2.h"
 #include "Utils/log.h"
 #include "Utils/misc.h"
-#include "Utils/myrandom.h"
+//#include "Utils/myrandom.h"
 
 
 /**
@@ -42,7 +39,7 @@
 struct context
 {
     Renderer renderer;
-    Camera2 camera = Camera2(glm::vec3(5.0f,7.0f,5.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+    Camera camera = Camera(glm::vec3(5.0f,7.0f,5.0f),glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 };
 
 void createShaders()

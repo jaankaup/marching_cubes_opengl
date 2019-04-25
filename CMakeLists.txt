@@ -65,13 +65,6 @@ if ( IS_DIRECTORY ${DEPS_DIR} )
     	include_directories(${SDL2_INCLUDE_DIRS})
 	include_directories(${GLEW_INCLUDE_DIRS})
 
-   #	include_directories ( ${DEPS_DIR}/include)
-   #   if ( CMAKE_CL_64 )
-   #     link_directories ( ${DEPS_DIR}/lib/x64 )
-   #   else ( )
-   #     link_directories ( ${DEPS_DIR}/lib/Win32 )
-   #   endif ()
-   #
 else ()
 	find_package(SDL2)
 	if (NOT SDL2_FOUND)
@@ -99,20 +92,4 @@ else ()
   message("found openGL (${OPENGL_LIBRARIES})")
 endif ()
 
-#include_directories("${CMAKE_SOURCE_DIR}/lib")
-#link_directories(${libraries})
-
-#set(CMAKE_SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-
-
-# Laitetaan make tulostamaan tekosensa.
-set(CMAKE_VERBOSE_MAKEFILE ON)
-
-# MAKE_RUNTIME_OUTPUT_DIRECTORY or EXECUTABLE_OUTPUT_PATH. Where to create the executable. 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# Library output path.
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
-
-# The following folder will be included
 add_subdirectory("${src_dir}")

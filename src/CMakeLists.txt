@@ -25,23 +25,20 @@ set(graphics_src
       ${graphics_dir}/shader.cpp
       ${graphics_dir}/model.cpp
       ${graphics_dir}/vertexbuffer.cpp
-      ${graphics_dir}/indexbuffer.cpp
       ${graphics_dir}/vertexAttributes.cpp
       ${graphics_dir}/renderer.cpp
       ${graphics_dir}/texture.cpp
-      ${graphics_dir}/cell.cpp
-      ${graphics_dir}/testData.cpp
-      ${graphics_dir}/marchingCubes.cpp
-      ${graphics_dir}/voxeldata.cpp
+      # ${graphics_dir}/testData.cpp
+      # ${graphics_dir}/marchingCubes.cpp
+      # ${graphics_dir}/voxeldata.cpp
       ${graphics_dir}/camera.cpp
       ${graphics_dir}/textureManager.cpp
       ${graphics_dir}/shaderManager.cpp
       ${graphics_dir}/programstate.cpp
       ${graphics_dir}/textureData.cpp
-      ${graphics_dir}/timer.cpp
+      # ${graphics_dir}/timer.cpp
       ${graphics_dir}/vertexBufferManager.cpp
       ${graphics_dir}/modelManager.cpp
-      ${graphics_dir}/camera2.cpp
       )
 
 set(util_src 
