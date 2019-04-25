@@ -7,12 +7,10 @@ Vertexbuffer::Vertexbuffer()
 
 Vertexbuffer::~Vertexbuffer()
 {
-//  dispose();
 }
 
 void Vertexbuffer::bind() const
 {
-//  Log::getDebug().log("Binding vao %.",std::to_string(pVAO));
   glBindVertexArray(pVAO);
 }
 
@@ -20,7 +18,7 @@ void Vertexbuffer::init()
 {
     glGenVertexArrays(1, &pVAO);
     glGenBuffers(1,&pId);
-    Log::getDebug().log("Created a vertex buffer: %", std::to_string(pId));
+//    Log::getDebug().log("Created a vertex buffer: %", std::to_string(pId));
     pTarget = GL_ARRAY_BUFFER;
     pUsage = GL_STATIC_DRAW;
 }
@@ -47,13 +45,11 @@ GLuint Vertexbuffer::getHandle() const
 
 void Vertexbuffer::addData(const void* data, unsigned int size, const std::vector<std::string>& types) const
 {
-  Log::getDebug().log("Vertexbuffer::addData: %", std::to_string(size));
+  //Log::getDebug().log("Vertexbuffer::addData: %", std::to_string(size));
   bind();
   glBindBuffer(pTarget, pId);
   glBufferData(pTarget,size, data, pUsage);
   VertexAttributes vas;
-//  std::vector<std::string> types = {"3f","2f","3f"};
-//  std::vector<std::string> types = {"3f","3f"};
   vas.create_interleaved_attributes(types, false);
   vas.registerAttributes();
   glBindVertexArray(0);
@@ -267,20 +263,9 @@ GLuint Vertexbuffer::getVAO() const
 int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY, const int dimensionZ)
 {
   int size = dimensionX * dimensionY * dimensionZ;
-//  pData.reserve(size);
-//  Log::getDebug().log("DATASIZE: %", std::to_string(size));
-//  Log::getDebug().log("DATASIZE_X: %", std::to_string(dimensionX));
-//  Log::getDebug().log("DATASIZE_Y: %", std::to_string(dimensionY));
-//  Log::getDebug().log("DATASIZE_Z: %", std::to_string(dimensionZ));
   for (int i=0 ; i<dimensionX ; ++i) {
   for (int j=0 ; j<dimensionY ; ++j) {
   for (int k=0 ; k<dimensionZ ; ++k) {
-//    for (int b=0 ; b<size ; b++)
-//    {
-//    pData.push_back((float)b);
-//    pData.push_back(0.0f);
-//    pData.push_back(0.0f);
-//    }
     pData.push_back((float)i);
     pData.push_back((float)j);
     pData.push_back((float)k);
@@ -288,55 +273,14 @@ int Vertexbuffer::createExamplePoints(const int dimensionX, const int dimensionY
 
   std::vector<std::string> types = {"3f"};
   addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
-//  Log::getDebug().log("pData.size(): %", std::to_string(pData.size()));
-//  Log::getDebug().log("DATASIZE_ÖÖÖ: %", std::to_string(pData.size()*sizeof(GL_FLOAT)));
   int dataSize = pData.size();
   pDataCount = size;
-  //pData.clear();
   return size;
-}
-
-int Vertexbuffer::createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ)
-{
-  int innerX_min = 0;
-  int innerX_max = dimensionX/2;
-  int innerY_min = 0;
-  int innerY_max = dimensionY/2;
-  int innerZ_min = 0; 
-  int innerZ_max = dimensionZ/2;
-
-  int size = dimensionX * dimensionY * dimensionZ * 4;
-  pData.reserve(size);
-  for (int i=-dimensionX ; i<dimensionX*2 ; ++i) {
-  for (int j=-dimensionY ; j<dimensionY*2 ; ++j) {
-  for (int k=-dimensionZ ; k<dimensionZ*2 ; ++k) {
-//  for (int i=0 ; i<dimensionX*2 ; ++i) {
-//  for (int j=0 ; j<dimensionY*2 ; ++j) {
-//  for (int k=0 ; k<dimensionZ*2 ; ++k) {
-    if ((i >= innerX_min && i < innerX_max) && (j >= innerY_min && j < innerY_max) && (k >= innerZ_min && k < innerZ_max)) // continue; 
-    {
-      continue;
-//    pData.push_back((float)i);
-//    pData.push_back((float)j);
-//    pData.push_back((float)k);
-  }
-    pData.push_back((float)i);
-    pData.push_back((float)j);
-    pData.push_back((float)k);
-  }}};
-
-  Log::getDebug().log("TIER2 : DATASIZE: %", std::to_string(pData.size()));
-  std::vector<std::string> types = {"3f"};
-  addData(&pData[0], pData.size() * sizeof(GL_FLOAT),types);
-  int dataSize = pData.size();
-  pDataCount = dataSize;
-  //pData.clear();
-  return dataSize;
 }
 
 void Vertexbuffer::dispose() const
 {
-  Log::getDebug().log("Deleting vertexvuffer: %", std::to_string(pId));
+//  Log::getDebug().log("Deleting vertexvuffer: %", std::to_string(pId));
   if (pId != 0) glDeleteBuffers(1,&pId);
   glDeleteVertexArrays(1, &pVAO);
   glDeleteBuffers(1, &pId);

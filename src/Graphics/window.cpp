@@ -12,27 +12,11 @@ Window& Window::getInstance()
 Window::Window()
 {
     init(1200,800);
-//  Log::getDebug().log("%","Window::Window. Creating window.");
-//  auto sdl = SDL_Init(SDL_INIT_VIDEO);
-//  Log::getDebug().log("%",std::to_string(sdl));
-//  if (!SDL_WasInit(SDL_INIT_VIDEO))
-//  {
-//    Log::getDebug().log("%","Window::Window. initializing SDL.");
-//    //if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0)
-//    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-//      Log::getError().log("%","Window::Window. Failed to initialize SDL.");
-//      return;
-//  }
-//  Log::getDebug().log("%","Window::Window. window created.");
-//  init(800,800);
 }
 
 Window::~Window()
 {
   dispose();
-//  if (pContext != NULL) { SDL_GL_DeleteContext(pContext); }
-//  if (pWindow != NULL) { SDL_DestroyWindow(pWindow); }
-//  SDL_Quit(); 
 }
 
 void Window::dispose()
@@ -42,22 +26,14 @@ void Window::dispose()
   SDL_Quit(); 
 }
 
-//Window& Window::operator=(Window&& other)
-//{
-//        std::swap(pWindow,other.pWindow);
-//        std::swap(pContext, other.pContext);
-//        return *this;
-//}
-
 bool Window::init(int width, int height)
 {
-  Log::getDebug().log("%","Window::Window. Creating window.");
+//  Log::getDebug().log("%","Window::Window. Creating window.");
   auto sdl = SDL_Init(SDL_INIT_VIDEO);
-  Log::getDebug().log("%",std::to_string(sdl));
+//  Log::getDebug().log("%",std::to_string(sdl));
   if (!SDL_WasInit(SDL_INIT_VIDEO))
   {
-    Log::getDebug().log("%","Window::Window. initializing SDL.");
-    //if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_INIT_EVENTS) != 0)
+    //Log::getDebug().log("%","Window::Window. initializing SDL.");
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
       Log::getError().log("%","Window::Window. Failed to initialize SDL.");
@@ -96,9 +72,8 @@ bool Window::init(int width, int height)
     #endif
 
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    //SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    //SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
     /* Luodaan opengl conteksti ikkunalle. */
     pContext = SDL_GL_CreateContext(pWindow);
@@ -106,6 +81,7 @@ bool Window::init(int width, int height)
     {
         std::string error = SDL_GetError();
         Log::getError().log("%.%","Window::init. Failed to create SDL_GLContext.",error);
+        Log::getError().log("Perhaps your hardware doesn't support opengl 4.3.");
     }
 
     glewExperimental = GL_TRUE;
@@ -113,37 +89,20 @@ bool Window::init(int width, int height)
 
     GLenum error = glewInit();
     if (error != GLEW_NO_ERROR) {
-//        std::string error = reinterpret_cast<const char*>(glewGetErrorString(error));
         Log::getError().log("%","Window::init. Failed to initialize glew.");
         return false;
      }
 
-    Log::getDebug().log("GL_Version: %", glGetString(GL_VERSION));
-    Log::getDebug().log("Vendor: %", glGetString(GL_VENDOR));
-    Log::getDebug().log("Renderer: %", glGetString(GL_RENDERER));
-    int a;
-    SDL_GL_GetAttribute(SDL_GL_RED_SIZE,&a);
-    Log::getError().log("Alpha-size: %", std::to_string(a));
+    Log::getInfo().log("GL_Version: %", glGetString(GL_VERSION));
+    Log::getInfo().log("Vendor: %", glGetString(GL_VENDOR));
+    Log::getInfo().log("Renderer: %", glGetString(GL_RENDERER));
     SDL_GL_SetSwapInterval(true);
-//    //if (GLEW_ARB_geometry_shader4) {
-//    if (GLEW_EXT_geometry_shader) {
-//      Log::getDebug().log("juuuuuuuuh!");
-//    }
-//    else
-//    {
-//      Log::getDebug().log("eiiiiiiiih!");
-//    }
-//    Log::getDebug().log("%","Window::init. Initializing glew.");
 
     return true;
 }
 
 void Window::swapBuffers()
 {
-//  pBlah = !pBlah;
-//  if (pBlah) glClearColor(0.0f,0.5f,0.0f,1.0f);
-//  else glClearColor(0.0f,0.2f,0.0f,1.0f);
-//  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   SDL_GL_SwapWindow(pWindow);
 }
 
@@ -159,9 +118,4 @@ void Window::resize(int w, int h)
     e.window.data1 = w;
     e.window.data2 = h;
     SDL_PushEvent(&e);
-}
-
-void Window::isValid() const
-{
-  
 }

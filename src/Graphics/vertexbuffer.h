@@ -16,20 +16,11 @@ class Vertexbuffer
 		Vertexbuffer();
 		~Vertexbuffer();
 
-//    // Copying causes problems because destructor deletes the buffers.
-//    Vertexbuffer& operator=(const Vertexbuffer&) = delete;
-//    Vertexbuffer(const Vertexbuffer&) = delete;
-//
-//    // Use move instead.
-//    Vertexbuffer(Vertexbuffer&&) = default;
-//    Vertexbuffer& operator=(Vertexbuffer&&) = default;
-
     void init();
     void bind() const;
     void addData(const void* data, unsigned int size, const std::vector<std::string>& types) const;
     void createExampleCube();
     int createExamplePoints(const int dimensionX, const int dimensionY, const int dimensionZ);
-    int createExamplePointsTier2(const int dimensionX, const int dimensionY, const int dimensionZ);
     GLuint getHandle() const;
     GLuint getVAO() const;
     void init_transform_feedback(const GLuint id, GLuint count);

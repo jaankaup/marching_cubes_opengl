@@ -48,8 +48,6 @@ struct context
 void createShaders()
 {
     
-    // TODO: delete all existing shaders here.
-    
 // WE OMIT THE DEBUG SHADERS FOR NOW. 
   
 //    const std::string MARCHING_CUBES_SHADER = "marchingShader_green"; 
@@ -124,7 +122,7 @@ void createtextures()
   // Create the tri_table.
   Texture tritable = TextureManager::getInstance().create1D(TRITABLE_NAME);
   tritable.create_tritable_texture();
-  metadata->tri_table_name = TRITABLE_NAME;// TRITABLE_NAME;
+  metadata->tri_table_name = TRITABLE_NAME;
 }
 
 void loop_handler2(void *arg)
@@ -238,7 +236,7 @@ void loop_handler2(void *arg)
             switch(e.window.event)
             {
               case SDL_WINDOWEVENT_CLOSE:
-              //    running_ = false;
+                    ProgramState::getInstance().setAppRunning(false);
                   break;
               case SDL_WINDOWEVENT_RESIZED:
               {
@@ -249,7 +247,7 @@ void loop_handler2(void *arg)
               }
             }
 
-        /* Kameralle */
+        /* Camera. */
         case SDL_MOUSEMOTION:
         case SDL_MOUSEBUTTONDOWN:
             c->camera.handleMouseInput(e);
@@ -290,121 +288,13 @@ int main(int argc, char* argv[])
 
   createShaders();
 
-///////    ProgramState::getInstance().getMetadata()->cubeMarchWireframe = MARCHING_CUBES_WIREFRAME;
   #endif
 
   // Initialize the renderer.
   c.renderer.init();
 
-  #ifndef EMSCRIPTEN
-
-  // Create models.
-//  Model* green_thing = ModelManager::getInstance().create_green_thing(false);
-////  Model* green_thing_line = ModelManager::getInstance().create_green_thing(true);
-//  std::vector<Command>& gm = *(green_thing->getCommands());
-////  Command c_green;
-//  if (gm.size() == 0) Log::getError().log("hello::main. gm.size() = %", std::to_string(gm.size()));
-//  auto mData = ProgramState::getInstance().getMetadata();
-//  //Vertexbuffer* green_vb = VertexBufferManager::getInstance().getVertexBufferByName("greenThingVB");
-//  Vertexbuffer* optimizedGreen =
-//    VertexBufferManager::getInstance().optimize_vertex_buffer("green_thing_optimized_vb",
-//                                                              "green_thing_optimized");
-//  auto ps = ProgramState::getInstance();
-//  gm[0].vao = optimizedGreen->getVAO();
-//  gm[0].count = optimizedGreen->getCount();
-//  gm[0].shaderName = ps.getMetadata()->meshShader;
-//  gm[0].draw = GL_TRIANGLES;
     ModelManager::getInstance().createSceneObject();
-//  glm::mat4 original = glm::mat4(1.0f);
-//
-//  Shader geom = ShaderManager::getInstance().getShaderByName("marchingShader");
-//  Model m;
-//  Command command;
-//  command.vao = vb2.getVAO();
-//  command.draw = GL_POINTS;
-//  //command.textureName = "my3Dtexture";
-//  command.textureName = "my3Dtexture";
-//  command.shaderName = "marchingShader";
-//  command.startIndex = 0;
-//  command.count = vb2_count; // CUBE_TOTAL_COUNT;
-////  auto scale = glm::scale(original,glm::vec3(58.0f));
-////  auto rotate = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-////  auto translate = glm::translate(original,glm::vec3(0.0f,-0.5f,-1.0f));
-////  command.modelMatrix = scale * translate * rotate;
-//  command.modelMatrix = original;
-//  m.addCommand(command);
-//  c.models.push_back(m);
-//
-//  Model m3;
-//  Command command3;
-//  command3.vao = vb2.getVAO();
-//  command3.draw = GL_POINTS;
-//  //command.textureName = "my3Dtexture";
-//  command3.textureName = "my3Dtexture";
-//  command3.shaderName = "marchingShaderLine";
-//  command3.startIndex = 0;
-//  command3.count = vb2_count; //CUBE_TOTAL_COUNT;
-////  command3.modelMatrix = scale * translate * rotate;
-//  command3.modelMatrix = original;
-//  m3.addCommand(command3);
-//  c.models.push_back(m3);
-//
-//  Model m5;
-//  Command command5;
-//  command5.name = "marching_tier2_wire";
-//  command5.vao = vb3.getVAO();
-//  command5.draw = GL_POINTS;
-//  //command.textureName = "my3Dtexture";
-//  command5.textureName = "my3Dtexture";
-//  command5.shaderName = "marchingShaderLine";
-//  command5.startIndex = 0;
-//  command5.count = vb3_count; //CUBE_TOTAL_COUNT;
-////  command3.modelMatrix = scale * translate * rotate;
-////  auto scale5 = glm::scale(original,glm::vec3(1.0f));
-////  auto rotate5 = glm::rotate(original,glm::radians(0.0f),glm::vec3(1.0f,0.0f,0.0f));
-////  auto translate5 = glm::translate(original,glm::vec3(-2.0f,-2.0f,-2.0f));
-////  command5.modelMatrix = translate5;
-//  command5.modelMatrix = original;
-//  m5.addCommand(command5);
-//  c.models.push_back(m5);
-//
-//  Model m4;
-//  Command command4;
-//  command4.name = "marching_tier2";
-//  command4.vao = vb3.getVAO();
-//  command4.draw = GL_POINTS;
-//  //command.textureName = "my3Dtexture";
-//  command4.textureName = "my3Dtexture";
-//  command4.shaderName = "marchingShader";
-//  command4.startIndex = 0;
-//  command4.count = vb3_count; // 16859136;
-////  command3.modelMatrix = scale * translate * rotate;
-//  command4.modelMatrix = original;
-//  m4.addCommand(command4);
-//  c.models.push_back(m4);
-  #endif
-//
-//  Model m2;
-////  m.addModelMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-//  Command command2;
-//  command2.vao = vb.getVAO();
-//  command2.draw = GL_TRIANGLES;
-//  command2.textureName = "cubeTexture";
-//  command2.shaderName = "cubeShader";
-//  command2.startIndex = 0;
-//  command2.count = 12*3;
-//  glm::mat4 original2 = glm::mat4(1.0f);
-//  auto scale2 = glm::scale(original2,glm::vec3(1.0f));
-//  auto rotate2 = glm::rotate(original2,glm::radians(30.0f),glm::vec3(1.0f,0.0f,0.0f));
-//  auto translate2 = glm::translate(original2,glm::vec3(8.0f,8.0f,8.0f));
-//  command2.modelMatrix = scale2 * translate2 * rotate2;
-//  m2.addCommand(command2);
-//  c.models.push_back(m2);
-//
-//  Model m234 = createEarth();
-  Timer::getInstance().reset();
-
-
+    //Timer::getInstance().reset();
 
     /**
      * Schedule the main loop handler to get 
@@ -422,7 +312,6 @@ int main(int argc, char* argv[])
     }
     #endif
 
-//    c.window.dispose();
     return 0;
 }
 

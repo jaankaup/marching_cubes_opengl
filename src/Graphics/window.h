@@ -13,23 +13,15 @@ using SDL_GLContext = void*;
 class Window
 {
 
-//  friend class WindowManager;
-
   public:
 
     static Window& getInstance();
-//    Window& operator=(const Window& other) = delete;
-//    Window& operator=(Window&& other);
-
 
     // Swaps buffers.
     void swapBuffers();
 
     // Resize method for window.
     void resize(int width, int height);
-
-    // Remove?
-    void isValid() const;
 
     // Doesn't destroy the SDL2 and window. Call dispose to do this.
     ~Window();
@@ -38,8 +30,6 @@ class Window
 
     SDL_Window* pWindow = NULL; 
     SDL_GLContext pContext = NULL; 
-
-    //bool pBlah = false;
 
     // Creates a window and initializes SDL2.
     Window();

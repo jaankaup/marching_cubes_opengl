@@ -13,7 +13,7 @@ Shader::~Shader()
 
 void Shader::dispose() const
 {
-  Log::getDebug().log("Deleting shader program: %", std::to_string(pId));
+  //Log::getDebug().log("Deleting shader program: %", std::to_string(pId));
   if (pId != 0) glDeleteProgram(pId);
 }
 
@@ -21,7 +21,7 @@ void Shader::init()
 {
   pId = glCreateProgram();
 
-  Log::getDebug().log("Created shader program: %", std::to_string(pId));
+  //Log::getDebug().log("Created shader program: %", std::to_string(pId));
 
   if (pId == 0)
   {
@@ -93,7 +93,7 @@ void Shader::build(const std::vector<std::string>& sources, const bool triangula
     {
       for (const auto& location : sources)
       {
-          Log::getDebug().log("Creating shader from file: %", location);
+          //Log::getDebug().log("Creating shader from file: %", location);
 
           /* Solve the type of shader object from file extension. */
           GLenum shaderType = getShaderType(location);
@@ -148,25 +148,24 @@ void Shader::build(const std::vector<std::string>& sources, const bool triangula
     if (pFeedback)
     {
       const GLchar* feedbackVaryings[] = {"fPosIn","fNormalIn"}; //pFeedbackVarying.c_str()}; 
-      Log::getDebug().log("feedback varying: %",feedbackVaryings[0]);
-      Log::getDebug().log("pId: %",std::to_string(pId));
+      //Log::getDebug().log("feedback varying: %",feedbackVaryings[0]);
+      //Log::getDebug().log("pId: %",std::to_string(pId));
       glTransformFeedbackVaryings(pId, 2, feedbackVaryings, GL_INTERLEAVED_ATTRIBS);
     }
 
     GLenum pname = GL_LINK_STATUS;
 
-    Log::getDebug().log("Linking shader.");
+    //Log::getDebug().log("Linking shader.");
 
     glLinkProgram(pId);
 
-    Log::getDebug().log("Linked shader succeed.");
+    //Log::getDebug().log("Linked shader succeed.");
 
     int status;
     int errorLength;
 
-    Log::getDebug().log("Checking shader for errors.");
+    //Log::getDebug().log("Checking shader for errors.");
 
-//    glGetShaderiv(pId, pname, &status);
     glGetProgramiv(pId, pname, &status);
 
     if (status == GL_FALSE)
@@ -178,11 +177,7 @@ void Shader::build(const std::vector<std::string>& sources, const bool triangula
         delete[] errorMessage;
     }
 
-    //for (const auto object : sod)
-    //{
-    //    glDeleteShader(object.shaderObj);
-    //}
-    Log::getDebug().log("Shader program created succesfully.");
+    //Log::getDebug().log("Shader program created succesfully.");
 }
 
 void Shader::bind() const
@@ -194,42 +189,36 @@ void Shader::bind() const
 void Shader::setUniform(const std::string& name, int value) const
 {
     GLint loc = glGetUniformLocation(pId, name.c_str());
-    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
     glUniform1i(loc, value);
 }
 
 void Shader::setUniform(const std::string& name, float value) const
 {
     GLint loc = glGetUniformLocation(pId, name.c_str());
-    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
     glUniform1f(loc, value);
 }
 
 void Shader::setUniform(const std::string& name, const glm::vec3& value) const
 {
     GLint loc = glGetUniformLocation(pId, name.c_str());
-    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
     glUniform3fv(loc, 1,  glm::value_ptr(value));
 }
 
 void Shader::setUniform(const std::string& name, const glm::mat3& value) const
 {
     GLint loc = glGetUniformLocation(pId, name.c_str());
-    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
     glUniformMatrix3fv(loc, 1, GL_FALSE,  glm::value_ptr(value));
 }
 
 void Shader::setUniform(const std::string& name, const glm::vec4& value) const
 {
     GLint loc = glGetUniformLocation(pId, name.c_str());
-    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
     glUniform4fv(loc, 1,  glm::value_ptr(value));
 }
 
 void Shader::setUniform(const std::string& name, const glm::mat4& value) const
 {
     GLint loc = glGetUniformLocation(pId, name.c_str());
-    //if (loc == -1) logDebug.log("setUniform(%) ei loydy!", name);
     glUniformMatrix4fv(loc, 1, GL_FALSE,  glm::value_ptr(value));
 }
 
@@ -294,7 +283,7 @@ GLuint Shader::getShaderType(const std::string& fileLoc)
 
 void Shader::compileShader(const GLuint id, const std::string& source)
 {
-    Log::getDebug().log("Shader::compileShaer(): Compiling shader: %", std::to_string(id));
+    //Log::getDebug().log("Shader::compileShaer(): Compiling shader: %", std::to_string(id));
     // Transform c++ string to C string.
     const char* src_C = source.c_str();
     // Push source to shader object managed by opengl.
@@ -305,7 +294,7 @@ void Shader::compileShader(const GLuint id, const std::string& source)
 
 bool Shader::checkShader(GLuint obj)
 {
-    Log::getDebug().log("Shader::checkShader(): Checking shader: %", std::to_string(obj));
+    //Log::getDebug().log("Shader::checkShader(): Checking shader: %", std::to_string(obj));
     /* We are checking linking status by default. */
     GLenum pname = GL_COMPILE_STATUS;
 
@@ -322,6 +311,6 @@ bool Shader::checkShader(GLuint obj)
         delete[] errorMessage;
         return false;
     }
-    Log::getDebug().log("Shader::checkShader(): Shader checked successfully: %", std::to_string(obj));
+    //Log::getDebug().log("Shader::checkShader(): Shader checked successfully: %", std::to_string(obj));
     return true;
 }

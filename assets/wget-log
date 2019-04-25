@@ -1,11 +1,0 @@
---2019-02-27 12:07:32--  https://images.pexels.com/photos/326311/pexels-photo-326311.jpeg?cs=srgb
-Resolving images.pexels.com (images.pexels.com)... 104.17.208.102, 104.17.209.102, 2606:4700::6811:d166, ...
-Connecting to images.pexels.com (images.pexels.com)|104.17.208.102|:443... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: unspecified [image/jpeg]
-Saving to: ‘pexels-photo-326311.jpeg?cs=srgb’
-
-pexels-photo-326311.jpeg?cs=srgb                                [<=>                                                                                                                                      ]       0  --.-KB/s               pexels-photo-326311.jpeg?cs=srgb                                [ <=>                                                                                                                                     ]   2.36M  11.7MB/s               pexels-photo-326311.jpeg?cs=srgb                                [  <=>                                                                                                                                    ]   4.50M  11.2MB/s               pexels-photo-326311.jpeg?cs=srgb                                [   <=>                                                                                                                                   ]   6.63M  13.6MB/s    in 0.5s    
-
-2019-02-27 12:07:34 (13.6 MB/s) - ‘pexels-photo-326311.jpeg?cs=srgb’ saved [6951821]
-

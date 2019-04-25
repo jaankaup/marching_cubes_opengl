@@ -26,7 +26,7 @@ bool VertexAttributes::create_interleaved_attributes(const std::vector<std::stri
     std::string vector2str = "[";
     for (auto const& s : types) { vector2str += (s + ","); }
     vector2str += "]";
-    Log::getDebug().log("VertexAttributes::create_interleaved_attributes(%).", vector2str );
+//    Log::getDebug().log("VertexAttributes::create_interleaved_attributes(%).", vector2str );
   #endif  
 
 
@@ -96,20 +96,11 @@ void VertexAttributes::registerAttributes() const
     for (const auto& x : pAttributes)
     {
         glEnableVertexAttribArray(x.attributeLocation);
-        Log::getDebug().log("VertexAttributes::registerAttributes.");
-        Log::getDebug().log("x.attributeLocation == %.", x.attributeLocation );
-        Log::getDebug().log("x.size == %.", x.size );
-        Log::getDebug().log("x.type == %.", x.type );
-        Log::getDebug().log("x.normalized == %.", x.normalized );
-        Log::getDebug().log("x.stride == %.", x.stride );
-        Log::getDebug().log("x.offset == %.", x.offset );
         glVertexAttribPointer(
             x.attributeLocation,   // attribute location. location for shader attribute.
             x.size,       // size
             GL_FLOAT,       // type
-            //x.type,       // type
             GL_FALSE, // normalized
-            //x.normalized, // normalized
             x.stride,     // stride
             (GLvoid*)x.offset      // array buffer offset.
             );

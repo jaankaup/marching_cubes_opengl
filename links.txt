@@ -1,1 +1,0 @@
-https://github.com/IGME_RIT/Basic-OpenGL-with-GLFW-Geometry-Shaders/blob/master/shaders/geometry.glsl
