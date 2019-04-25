@@ -50,17 +50,19 @@ Ohjelmasta on jätetty aikataulusyistä pois kuutioiden debuggaus toiminnot. Aie
 Ohjelmassa on käytetty seuraavia kirjastoa: SDL2, GLEW, SOIL ja PerlinNoise (https://github.com/Reputeless/PerlinNoise).
 Lisäksi apuna on ollut GPU Gems 3 part 1 Chapter 1. Generatin Complex Procedural Terrains Using the GPU ja paulbourke.net/geometry/polygonise/.
 
+Varsinaiset shaderit löytyvät kansiosta shaderNative. Webassembly version shaderit löytyvät shader kansiosta. Projektissa on mukana edelleen cpu versio marching cubesista, mutta tiedostoja marchingCuber.h, marchingCubes.cpp, voxelData.h, voxelData.cpp, testData.h ja testData.cpp ei tarvita. Nämä tiedostot ovat jätetty pois projektista. Lisäksi mukana on timer luokka, mutta sitäkään ei nyt käytetä. 
+
 PROJEKTIN KÄÄNTÄMINEN UBUNTULLA
 
 1. Asenna SDL2 dev paketti.
 2. Voi olla että joudut päivittämään opengl ajurit. 
 3. Asenna cmake.
 4. Suorita scripti native_compile.sh
-5. Ohjelma asentuu kansioon nativeBuild/bin/hello
+5. Ohjelma asentuu kansioon nativeBuild/bin/hello. Voit suorittaa ohjelman esimerkiksi ajamalla runNative.sh tai ajamalla tiedosto hello sen omassa kansiossaan.
 
 PROJEKTIN KÄÄTÄMINEN VISUAL STUDIOLLA
 
-1. Asenna cmake
+1. Asenna cmake (lisäksi täytyy asentaa mahdollisesti jokin visual c++ paketti visual studiossa). 
 2. Anna cmakelle projektin kansio.
 3. Anna cmakelle kohde kansio.
 4. Paina generate. Joudut valitsemaan visualstudio version.
