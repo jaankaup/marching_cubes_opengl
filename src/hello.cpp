@@ -94,7 +94,7 @@ void createShaders()
 // Initialize the marching cubes attributes.
 void initializeCubeAttributes()
 {
-  const int BLOCK_SIZE = 32;
+  const int BLOCK_SIZE = 16;
   const int CUBE_COUNT_X = BLOCK_SIZE;
   const int CUBE_COUNT_Y = BLOCK_SIZE;
   const int CUBE_COUNT_Z = BLOCK_SIZE;
@@ -173,7 +173,27 @@ void loop_handler2(void *arg)
                 case SDLK_0:
                     changeScene(0);
                     break;
-//                case SDLK_SPACE: /* Kamera */
+                case SDLK_KP_PLUS:
+                    {
+                      auto blockSize = ProgramState::getInstance().getMetadata()->block_size;
+                      if (blockSize != 34)
+                      {
+                        ProgramState::getInstance().getMetadata()->block_size = blockSize + 2;
+                        Log::getInfo().log("Block size: %", std::to_string(blockSize + 2));
+                      }
+                    break;
+                    }
+                case SDLK_KP_MINUS:
+                    {
+                      auto blockSize = ProgramState::getInstance().getMetadata()->block_size;
+                      if (blockSize != 2)
+                      {
+                        ProgramState::getInstance().getMetadata()->block_size = blockSize - 2;
+                        Log::getInfo().log("Block size: %", std::to_string(blockSize - 2));
+                      }
+                      break;
+                    }
+//                case SDLK_SPACE:
 //                    camera_.toggleMode();
 //                    break;
 
@@ -183,7 +203,8 @@ void loop_handler2(void *arg)
                 case SDLK_ESCAPE: 
                     ProgramState::getInstance().setAppRunning(false);
                     break;
-                case SDLK_t: 
+                case SDLK_t:
+                    {
                     auto metadata = ProgramState::getInstance().getMetadata();
                     auto name = metadata->texture3Dname;
                     TextureManager::getInstance().deleteTexture(name); 
@@ -196,6 +217,22 @@ void loop_handler2(void *arg)
                     Log::getInfo().log("Rebuilding scene...");
                     ModelManager::getInstance().createSceneObject();
                     break;
+                    }
+                case SDLK_y: 
+                    {
+                    auto metadata = ProgramState::getInstance().getMetadata();
+                    auto name = metadata->texture3Dname;
+                    TextureManager::getInstance().deleteTexture(name); 
+                    Texture tex3D = TextureManager::getInstance().create3D(name);
+                    auto tex3D_data = createPerlin3D_rough(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+                    tex3D.create3D(tex3D_data);
+                    metadata->texture3Dname = name;
+                    Log::getInfo().log("Creating a new 3D texture with more rought noise...");
+                    // Recreate scene model.
+                    Log::getInfo().log("Rebuilding scene...");
+                    ModelManager::getInstance().createSceneObject();
+                    break;
+                    }
             }
         case SDL_WINDOWEVENT:
             switch(e.window.event)

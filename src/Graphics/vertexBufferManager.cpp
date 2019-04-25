@@ -42,32 +42,30 @@ Vertexbuffer* VertexBufferManager::getVertexBufferByName(const std::string& name
 }
 
 Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& optimized_name,
-                                                           const std::string& shaderName)
+                                                          const std::string& shaderName)
 {
   
   auto metadata = ProgramState::getInstance().getMetadata();
 
-  float X = (float)metadata->cube_count_x;
-  float Y = (float)metadata->cube_count_y;
-  float Z = (float)metadata->cube_count_z;
-
-  // Create cube base points (front left point of cube) for a single cube. In this case for 32x32x32 cubes.
-  int size = metadata->cube_count_x * metadata->cube_count_y * metadata->cube_count_z; 
+  // Create cube base points (front left point of cube) for a single cube.
+  int blockSize = metadata->block_size; 
+  int size = blockSize*blockSize*blockSize; 
   std::vector<float> points;
-  for (int i=0 ; i<metadata->block_size ; ++i) {
-  for (int j=0 ; j<metadata->block_size ; ++j) {
-  for (int k=0 ; k<metadata->block_size ; ++k) {
+  for (int i=0 ; i<blockSize ; ++i) {
+  for (int j=0 ; j<blockSize ; ++j) {
+  for (int k=0 ; k<blockSize ; ++k) {
     points.push_back((float)i);
     points.push_back((float)j);
     points.push_back((float)k);
   }}};
 
-  // Create (32x32x32) cube positions in world space. 
+  // Create the "dimension" of the scene.
+  // 8^3 cubes. 
   std::vector<glm::vec3> basePositions;
   for (int i = -8 ; i<8 ; i++) {
   for (int j = -8;  j<8; j++) {
   for (int k = -8;  k<8; k++) {
-    basePositions.push_back(glm::vec3(float(i)*X,float(j)*Y,float(k)*Z));
+    basePositions.push_back(glm::vec3(float(i)*blockSize,float(j)*blockSize,float(k)*blockSize));
   }}};
 
   uint32_t cubeCount = basePositions.size()*size;

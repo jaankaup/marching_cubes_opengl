@@ -134,3 +134,87 @@
 > Ei tunnu olevan jarkevaa tapaa saada uutta gl:aa selaimeen. Muutin projektia niin etta se kaantyy myos nyt linuksille 
 > natiiviksi cpp ohjelmaksi. Sama ohjelma on ainakain 10 kertaa nopeampi binaarina kuin webassemblyna. 
 > Nyt toimii myos geometry shader, tosin binaarina ohjelmana.
+
+### 2.4.2019 10:00 -> 16:00 (6h) ### 
+### 2.4.2019 17:00 -> 20:00 (3h) ### 
+
+> Koodausta.
+
+### 3.4.2019 11:00 -> 19:00 (8h) ### 
+
+> Koodausta. Geometry shaderin ja opengl ohjelmointia.
+
+### 4.4.2019 11:00 -> 19:00 (8h) ### 
+
+> Koodausta. Geometry shaderin ja opengl ohjelmointia.
+
+### 5.4.2019 14:00 -> 19:00 (5h) ### 
+
+> Koodausta.
+
+### 8.4.2019 15:00 -> 20:00 (5h) ### 
+
+> Koodausta. Nyt alkaa vahitellen toimimaan marching cubes naytonohjaimella. Marching cubes suoritetaan joka piirtoframe.  
+
+### 9.4.2019 11:00 -> 19:00 (8h) ### 
+
+> Koodausta. Tarkoitus saada marssivat kuutiot liikkumaan kameran mukana.
+
+### 10.4.2019 17:00 -> 19:00 (2h) ### 
+
+> Koodausta.
+
+### 11.4.2019 12:00 -> 20:00 (8h) ### 
+
+> Debuggaustoimintojen ohjelmointia. Marching cubes tuntuu jattavan aukkoja.
+
+### 12.4.2019 8:00 -> 10:00 (2h) ### 
+### 12.4.2019 11:00 -> 20:00 (7h) ### 
+
+> Debuggaustoimintojen ohjelmointia. Aukot korjattu.
+
+### 15.4.2019 12:00 -> 20:00 (8h) ### 
+
+> Debuggaustoiminnot valmiit. Nyt pystyy debuggaamaan siten etta pystyy valitsemaan 
+> minka tahansa cube casen ja katsomaan mita geometriaa se piirtaa.
+
+### 16.4.2019 9:00 -> 20:00 (11h) ### 
+
+> Toteutettu geometry shaderin ulostulon tallentaminen ohjelmaan. Nyt pystytaan 
+> valitsemaan tasmalleen ne kuutiot jotka tuottavat geometriaa ja hylkaamaan 
+> ne kuutiot jotka eivat piirra mitaan. Algoritmi toimii paljon nopeammin nain. 
+
+### 17.4.2019 9:00 -> 16:00 (7h) ### 
+### 17.4.2019 18:00 -> 20:00 (2h) ### 
+
+> Toteutetaan algoritmi siten, etta geometry shader tallentaakin cube casen sijaan triangle meshin 
+> ohjelman muistiin. Nyt siis marching cubes suoritetaan vain kerran ja piirretaan sen tuottama 
+> kolmioverkko sitten. Nainhan tama varkaankin on tarkoitettukin!
+
+### 18.4.2019 9:00 -> 20:00 (11h) ### 
+
+> Refaktorointia ja ohjelman tomintojen muokkausta.
+
+### 19.4.2019 11:00 -> 18:00 (6h) ### 
+
+> Ongelmia instanced drawining kanssa. Tuntuu silta kuin osa scenesta jaisi piirtamatta.
+
+### 20.4.2019 11:00 -> 18:00 (6h) ### 
+
+> Ongelmia instanced drawining kanssa. Refaktorointia.
+
+### 22.4.2019 11:00 -> 14:00 (5h) ### 
+
+> Ongelmia instanced drawining kanssa. Ongelma korjattu.
+
+### 23.4.2019 10:00 -> 20:00 (10h) ### 
+
+> Esimerkkitapausten keksimista. Refaktorointia.
+
+### 24.4.2019 10:00 -> 20:00 (10h) ### (278.5 op) (278.5 / 27 == 10.3) Alkaa olla jo yliajalla. 
+
+> Esimerkkien keksimista ja refaktorointia. Kamera korjattu.
+
+### 25.4.2019 9:00 -> 11:00 (2h) ### 
+
+> Raportin kirjoittamista.

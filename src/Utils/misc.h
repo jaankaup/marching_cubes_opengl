@@ -29,6 +29,7 @@ extern void logGLM(const std::string& name, const glm::mat4& object);
 //extern TextureData createChess3Ddata(const  int width, const int height, const int depth);
 
 extern TextureData createPerlin3D(const int width, const int height, const int depth);
+extern TextureData createPerlin3D_rough(const int width, const int height, const int depth);
 
 // This should go to vertexbuffer.cpp
 extern void createBaseVertexBuffer();

@@ -53,14 +53,10 @@ void logGLM(const std::string& name, const glm::mat4& object)
 
 TextureData createPerlin3D(const int width, const int height, const int depth)
 {
-  Log::getDebug().log("Persin noise w,h,d = (%,%,%)", std::to_string(width), std::to_string(height), std::to_string(depth));
   int size = width*height*depth*4;
   TextureData td(size,width,height,depth);
   
   auto data = td.getData();
-
-  // Reinterpret the one dimensional array as multi-dimensional array.
-  //uint8_t (&multiArray)[width][height][depth][4] = *reinterpret_cast<uint8_t (*)[width][height][depth][4]>(data);
 
   MyRandom<double> mr;
   mr.setDistribution(0,250000.0);
@@ -68,13 +64,9 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
   siv::PerlinNoise pn(mr());
   siv::PerlinNoise pn2(mr());
 
-  const double fx = width; // / frequency;
-  const double fy = height; // / frequency;
-  const double fz = depth; // / frequency;
-
-
-//  MyRandom<int> mr2;
-//  mr2.setDistribution(0,255);
+  const double fx = width; 
+  const double fy = height;
+  const double fz = depth; 
 
   unsigned int xOffset = 4;
   unsigned int yOffset = 4 * width;
@@ -86,7 +78,7 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
     int density = mr();
 	unsigned int position = x*xOffset + y*yOffset + z*zOffset;
     data[position] = 123;
-    data[position+1] = 100; // mr2();
+    data[position+1] = 100;
     data[position+2] = pn2.noise0_1(x / fx, y / fy, z / fz) * 255; 
     data[position+3] = pn.noise0_1(x / fx, y / fy, z / fz) * 255;
 	lkm++;
@@ -95,6 +87,43 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
   return std::move(td);
 }
 
+TextureData createPerlin3D_rough(const int width, const int height, const int depth)
+{
+  int size = width*height*depth*4;
+  TextureData td(size,width,height,depth);
+  
+  auto data = td.getData();
+
+  MyRandom<double> mr;
+  mr.setDistribution(0,250000.0);
+
+  siv::PerlinNoise pn(mr());
+
+  const double fx = width; // / frequency;
+  const double fy = height; // / frequency;
+  const double fz = depth; // / frequency;
+
+  MyRandom<int> mr2;
+  mr2.setDistribution(0,255);
+
+  unsigned int xOffset = 4;
+  unsigned int yOffset = 4 * width;
+  unsigned int zOffset = 4 * width * height;
+  unsigned int lkm = 0;
+  for (int z = 0; z < depth ; z++) {
+  for (int y = 0; y < height ; y++){
+  for (int x = 0; x < width ; x++) {
+    int density = mr();
+	  unsigned int position = x*xOffset + y*yOffset + z*zOffset;
+    data[position] = 123;
+    data[position+1] = 100;
+    data[position+2] = pn.octaveNoise0_1(x/fx, y/fy, z/fz, 2) * 255; 
+    data[position+3] = pn.octaveNoise0_1(x / fx, y / fy, z / fz, 3) * 255;
+	lkm++;
+  }}};
+
+  return std::move(td);
+}
 
 // Create the buffer for the base data points.
 void createBaseVertexBuffer()

@@ -12,7 +12,6 @@ uniform sampler3D diffuse3DTexture;
 uniform sampler1D tri_table;
 uniform float voxels_per_block;
 uniform float isovalue = 0.0;
-uniform float densityFunction = 0.0; 
 
 struct Cube
 {

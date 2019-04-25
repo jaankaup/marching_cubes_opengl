@@ -46,7 +46,7 @@
    * it won't produce any triangles.
    * */
   struct Cube_meta_data {
-    int block_size = 0;
+    int block_size = 16;
     int cube_count_x = 0;
     int cube_count_y = 0;
     int cube_count_z = 0;
