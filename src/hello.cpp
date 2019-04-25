@@ -168,6 +168,60 @@ void loop_handler2(void *arg)
                 case SDLK_0:
                     changeScene(0);
                     break;
+//                case SDLK_u:
+//                    {
+//                    auto metadata = ProgramState::getInstance().getMetadata();
+//                    int dimensionX_min = metadata->dimensionX_min + 1;
+//                    if (dimensionX_min == metadata->dimensionX_max) break;
+//                    metadata->dimensionX_min = dimensionX_min;
+//                    Log::getInfo().log("%",ProgramState::getInstance().dimensionToString());
+//                    break;
+//                    }
+//                case SDLK_i:
+//                    {
+//                    auto metadata = ProgramState::getInstance().getMetadata();
+//                    int dimensionY_min = metadata->dimensionY_min + 1;
+//                    if (dimensionY_min == metadata->dimensionY_max) break;
+//                    metadata->dimensionY_min = dimensionY_min;
+//                    Log::getInfo().log("%",ProgramState::getInstance().dimensionToString());
+//                    break;
+//                    }
+//                case SDLK_o:
+//                    {
+//                    auto metadata = ProgramState::getInstance().getMetadata();
+//                    int dimensionZ_min = metadata->dimensionZ_min + 1;
+//                    if (dimensionZ_min == metadata->dimensionZ_max) break;
+//                    metadata->dimensionZ_min = dimensionZ_min;
+//                    Log::getInfo().log("%",ProgramState::getInstance().dimensionToString());
+//                    break;
+//                    }
+//                case SDLK_j:
+//                    {
+//                    auto metadata = ProgramState::getInstance().getMetadata();
+//                    int dimensionX_max = metadata->dimensionX_max - 1;
+//                    if (dimensionX_max == metadata->dimensionX_min) break;
+//                    metadata->dimensionX_max = dimensionX_max;
+//                    Log::getInfo().log("%",ProgramState::getInstance().dimensionToString());
+//                    break;
+//                    }
+//                case SDLK_k:
+//                    {
+//                    auto metadata = ProgramState::getInstance().getMetadata();
+//                    int dimensionY_max = metadata->dimensionY_max - 1;
+//                    if (dimensionY_max == metadata->dimensionY_min) break;
+//                    metadata->dimensionY_max = dimensionY_max;
+//                    Log::getInfo().log("%",ProgramState::getInstance().dimensionToString());
+//                    break;
+//                    }
+//                case SDLK_l:
+//                    {
+//                    auto metadata = ProgramState::getInstance().getMetadata();
+//                    int dimensionZ_max = metadata->dimensionZ_max - 1;
+//                    if (dimensionZ_max == metadata->dimensionZ_min) break;
+//                    metadata->dimensionZ_max = dimensionZ_max;
+//                    Log::getInfo().log("%",ProgramState::getInstance().dimensionToString());
+//                    break;
+//                    }
                 case SDLK_KP_PLUS:
                     {
                       auto blockSize = ProgramState::getInstance().getMetadata()->block_size;

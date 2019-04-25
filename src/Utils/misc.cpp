@@ -1,10 +1,5 @@
 #include "misc.h"
 
-void joopajoo()
-{
-  std::cout << "1234kljh1234lkjh" << std::endl;
-}
-
 std::string addPadding(const std::string& str, const uint32_t count, const char paddingChar)
 {
   std::string result = str;
@@ -14,9 +9,6 @@ std::string addPadding(const std::string& str, const uint32_t count, const char 
   }
   return result;
 }
-
-//template <typename T>
-//void logGLM(const std::string& name, const T& object) {}
 
 void logGLM(const std::string& name, const glm::vec2& object)
 {
@@ -50,7 +42,6 @@ void logGLM(const std::string& name, const glm::mat4& object)
   Log::getDebug().log("%   (%,%,%,%)",padded ,std::to_string(object[3][0]),std::to_string(object[3][1]),std::to_string(object[3][2]),std::to_string(object[3][3]));
 }
 
-
 TextureData createPerlin3D(const int width, const int height, const int depth)
 {
   int size = width*height*depth*4;
@@ -75,7 +66,6 @@ TextureData createPerlin3D(const int width, const int height, const int depth)
   for (int z = 0; z < depth ; z++) {
   for (int y = 0; y < height ; y++){
   for (int x = 0; x < width ; x++) {
-    int density = mr();
 	unsigned int position = x*xOffset + y*yOffset + z*zOffset;
     data[position] = 123;
     data[position+1] = 100;
@@ -113,7 +103,6 @@ TextureData createPerlin3D_rough(const int width, const int height, const int de
   for (int z = 0; z < depth ; z++) {
   for (int y = 0; y < height ; y++){
   for (int x = 0; x < width ; x++) {
-    int density = mr();
 	  unsigned int position = x*xOffset + y*yOffset + z*zOffset;
     data[position] = 123;
     data[position+1] = 100;
@@ -134,9 +123,7 @@ void createBaseVertexBuffer()
   metadata->base_vertex_buffer_name = BASE_VERTEX_BUFFER_NAME;
   auto shaderName = metadata->triangulationShader; 
   if (shaderName == "") Log::getError().log("Misc::createBaseVertexBuffer: triangulation shader was not created.");
-//  auto vb = VertexBufferManager::getInstance().(BASE_VERTEX_BUFFER_NAME);
-  auto vb = VertexBufferManager::getInstance().optimize_vertex_buffer(BASE_VERTEX_BUFFER_NAME, shaderName );
-  //vb->createExamplePoints(metadata->cube_count_x, metadata->cube_count_y, metadata->cube_count_z);
+  VertexBufferManager::getInstance().optimize_vertex_buffer(BASE_VERTEX_BUFFER_NAME, shaderName );
 }
 
 void changeScene(const char number)

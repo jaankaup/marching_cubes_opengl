@@ -58,9 +58,13 @@
     std::string texture3Dname;
     std::string tri_table_name;
     float isovalue = 0.0;
-
-  };
-
+    int dimensionX_min = -8; 
+    int dimensionY_min = -8;  
+    int dimensionZ_min = -8;
+    int dimensionX_max = 8;
+    int dimensionY_max = 8;  
+    int dimensionZ_max = 8;
+    };
 class ProgramState
 { 
 
@@ -91,6 +95,7 @@ class ProgramState
     void setCubeMask(const float cubeMask);
     void setDebugCube(const bool debugCube);
     void setCubeDimension(const glm::ivec3& cubeDimension);
+    std::string dimensionToString() const;
 
 	private:
 

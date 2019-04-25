@@ -62,9 +62,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   // Create the "dimension" of the scene.
   // 8^3 cubes. 
   std::vector<glm::vec3> basePositions;
-  for (int i = -8 ; i<8 ; i++) {
-  for (int j = -8;  j<8; j++) {
-  for (int k = -8;  k<8; k++) {
+  for (int i = metadata->dimensionX_min ; i < metadata->dimensionX_max ; i++) {
+  for (int j = metadata->dimensionY_min ; j < metadata->dimensionY_max ; j++) {
+  for (int k = metadata->dimensionZ_min ; k < metadata->dimensionZ_max ; k++) {
     basePositions.push_back(glm::vec3(float(i)*blockSize,float(j)*blockSize,float(k)*blockSize));
   }}};
 
