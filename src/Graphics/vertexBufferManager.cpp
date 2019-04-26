@@ -46,6 +46,8 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
 {
   
   auto metadata = ProgramState::getInstance().getMetadata();
+  int activeShader = metadata->activeShaderNumber;
+  auto dimensions = metadata->dimensionsPerDF[activeShader];
 
   // Create cube base points (front left point of cube) for a single cube.
   int blockSize = metadata->block_size; 
@@ -62,9 +64,9 @@ Vertexbuffer* VertexBufferManager::optimize_vertex_buffer(const std::string& opt
   // Create the "dimension" of the scene.
   // 8^3 cubes. 
   std::vector<glm::vec3> basePositions;
-  for (int i = metadata->dimensionX_min ; i < metadata->dimensionX_max ; i++) {
-  for (int j = metadata->dimensionY_min ; j < metadata->dimensionY_max ; j++) {
-  for (int k = metadata->dimensionZ_min ; k < metadata->dimensionZ_max ; k++) {
+  for (int i = std::get<0>(dimensions) ; i < std::get<3>(dimensions) ; i++) {
+  for (int j = std::get<1>(dimensions) ; j < std::get<4>(dimensions) ; j++) {
+  for (int k = std::get<2>(dimensions) ; k < std::get<5>(dimensions) ; k++) {
     basePositions.push_back(glm::vec3(float(i)*blockSize,float(j)*blockSize,float(k)*blockSize));
   }}};
 

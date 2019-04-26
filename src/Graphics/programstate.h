@@ -5,6 +5,7 @@
 //#include <array>
 //#include <GL/glew.h>
 #include <cmath>
+#include <tuple>
 #include <glm/glm.hpp>
 //#include <glm/gtc/type_ptr.hpp>
 #include "vertexbuffer.h"
@@ -58,13 +59,16 @@
     std::string texture3Dname;
     std::string tri_table_name;
     float isovalue = 0.0;
-    int dimensionX_min = -8; 
-    int dimensionY_min = -8;  
-    int dimensionZ_min = -8;
-    int dimensionX_max = 8;
-    int dimensionY_max = 8;  
-    int dimensionZ_max = 8;
+//    int dimensionX_min = -8; 
+//    int dimensionY_min = -8;  
+//    int dimensionZ_min = -8;
+//    int dimensionX_max = 8;
+//    int dimensionY_max = 8;  
+//    int dimensionZ_max = 8;
+    int activeShaderNumber = 1;
+    std::vector<std::tuple<int,int,int,int,int,int>> dimensionsPerDF;
     };
+
 class ProgramState
 { 
 
@@ -95,7 +99,7 @@ class ProgramState
     void setCubeMask(const float cubeMask);
     void setDebugCube(const bool debugCube);
     void setCubeDimension(const glm::ivec3& cubeDimension);
-    std::string dimensionToString() const;
+//    std::string dimensionToString() const;
 
 	private:
 

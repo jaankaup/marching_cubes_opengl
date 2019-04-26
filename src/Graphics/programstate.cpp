@@ -128,10 +128,10 @@ Cube_meta_data* ProgramState::getMetadata()
   return &pMetaData;
 }
 
-std::string ProgramState::dimensionToString() const
-{
-  return "([" + std::to_string(pMetaData.dimensionX_min) + ","  + std::to_string(pMetaData.dimensionX_max) + "] , " +
-         "[" +  std::to_string(pMetaData.dimensionY_min)  + "," + std::to_string(pMetaData.dimensionY_max) + "] , " +
-         "[" +  std::to_string(pMetaData.dimensionZ_min)  + "," + std::to_string(pMetaData.dimensionZ_max) + "])";
-
-}
+//std::string ProgramState::dimensionToString() const
+//{
+//  return "([" + std::to_string(pMetaData.dimensionX_min) + ","  + std::to_string(pMetaData.dimensionX_max) + "] , " +
+//         "[" +  std::to_string(pMetaData.dimensionY_min)  + "," + std::to_string(pMetaData.dimensionY_max) + "] , " +
+//         "[" +  std::to_string(pMetaData.dimensionZ_min)  + "," + std::to_string(pMetaData.dimensionZ_max) + "])";
+//
+//}

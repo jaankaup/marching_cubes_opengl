@@ -1,3 +1,6 @@
+//voxels_per_block:16
+//SceneDimension:-12,-12,-12,12,12,12     this means => (xMin,xMax,yMin,yMax,zMin,zMax)
+
 // This is a density function that creates a wierd ball.
 // The @v is the input vertice.
 // The diffuse3DTexture is for sampling. Now the 3d texture coordinates

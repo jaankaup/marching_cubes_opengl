@@ -41,6 +41,7 @@ void Shader::buildDensity(const std::vector<std::string>& sources)
   std::string geom;
   std::string vert;
 
+
   // This is a copy paste function. TODO: move it to the misc.cpp.
   static const auto endsWith = [](const std::string& str, const std::string& postFix)
   {
@@ -64,6 +65,55 @@ void Shader::buildDensity(const std::vector<std::string>& sources)
     if (endsWith(src,".geom")) geom = loadSource(src);
     else if (endsWith(src,".df")) density = loadSource(src);
     else if (endsWith(src,".vert")) vert = loadSource(src);
+  }
+
+  static const std::string regText = R"([\w|\W]*voxels_per_block:(\d+)[\w|\W]*)";
+  static const std::regex reg_vpb(regText);
+
+  static const std::string regDim = R"([\w|\W]*SceneDimension:(\-?\d+),(\-?\d+),(\-?\d+),(\-?\d+),(\-?\d+),(\-?\d+)[\w|\W]*)";
+  static const std::regex reg_dim(regDim);
+
+   auto metadata = ProgramState::getInstance().getMetadata(); 
+
+  // Find the voxels_per_block from the density file.
+  std::smatch rex_result;
+  if (regex_match(density, rex_result, reg_vpb))
+  {
+    std::string s_num = rex_result[1];
+    metadata->block_size = atoi(s_num.c_str()); 
+  }
+
+  // Find the dimension of the scene.
+  std::smatch rex_result_dim;
+  if (regex_match(density, rex_result_dim, reg_dim))
+  {
+    std::string xMin = rex_result_dim[1];
+    std::string yMin = rex_result_dim[2];
+    std::string zMin = rex_result_dim[3];
+    std::string xMax = rex_result_dim[4];
+    std::string yMax = rex_result_dim[5];
+    std::string zMax = rex_result_dim[6];
+//    metadata->dimensionX_min = atoi(xMin.c_str()); 
+//    metadata->dimensionY_min = atoi(yMin.c_str()); 
+//    metadata->dimensionZ_min = atoi(zMin.c_str()); 
+//    metadata->dimensionX_max = atoi(xMax.c_str()); 
+//    metadata->dimensionY_max = atoi(yMax.c_str()); 
+//    metadata->dimensionZ_max = atoi(zMax.c_str()); 
+    Log::getDebug().log("% % % % % %",
+                        std::to_string(atoi(xMin.c_str())),
+                        std::to_string(atoi(yMin.c_str())),
+                        std::to_string(atoi(zMin.c_str())),
+                        std::to_string(atoi(xMax.c_str())),
+                        std::to_string(atoi(yMax.c_str())),
+                        std::to_string(atoi(zMax.c_str()))
+        );
+    metadata->dimensionsPerDF.push_back(std::make_tuple(atoi(xMin.c_str()),
+                                                        atoi(yMin.c_str()),
+                                                        atoi(zMin.c_str()),
+                                                        atoi(xMax.c_str()),
+                                                        atoi(yMax.c_str()),
+                                                        atoi(zMax.c_str())));
+                             
   }
 
   bool result = replace(geom, "{{density_function_comes_here_from_another_file}}", density); 
