@@ -66,7 +66,8 @@
 //    int dimensionY_max = 8;  
 //    int dimensionZ_max = 8;
     int activeShaderNumber = 1;
-    std::vector<std::tuple<int,int,int,int,int,int>> dimensionsPerDF;
+    // The xMin,yMin,zMin,xMax,yMax,zMax,voxels_per_block
+    std::vector<std::tuple<int,int,int,int,int,int,int>> dimensionsPerDF;
     };
 
 class ProgramState

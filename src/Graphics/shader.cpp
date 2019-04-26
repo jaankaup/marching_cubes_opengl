@@ -75,12 +75,16 @@ void Shader::buildDensity(const std::vector<std::string>& sources)
 
    auto metadata = ProgramState::getInstance().getMetadata(); 
 
+
+   int voxs_per_b;  
+
   // Find the voxels_per_block from the density file.
   std::smatch rex_result;
   if (regex_match(density, rex_result, reg_vpb))
   {
     std::string s_num = rex_result[1];
-    metadata->block_size = atoi(s_num.c_str()); 
+    
+    voxs_per_b = atoi(s_num.c_str()); 
   }
 
   // Find the dimension of the scene.
@@ -112,7 +116,8 @@ void Shader::buildDensity(const std::vector<std::string>& sources)
                                                         atoi(zMin.c_str()),
                                                         atoi(xMax.c_str()),
                                                         atoi(yMax.c_str()),
-                                                        atoi(zMax.c_str())));
+                                                        atoi(zMax.c_str()),
+                                                        voxs_per_b));
                              
   }
 

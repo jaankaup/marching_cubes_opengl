@@ -112,7 +112,7 @@ void createtextures()
 
   // Create the 3D texture.
   Texture tex3D = TextureManager::getInstance().create3D(TEXTURE_NAME);
-  auto tex3D_data = createPerlin3D(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+  auto tex3D_data = createPerlin3D(256,256,256);
   tex3D.create3D(tex3D_data);
   metadata->texture3Dname = TEXTURE_NAME;
 
@@ -225,7 +225,7 @@ void loop_handler2(void *arg)
                 case SDLK_KP_PLUS:
                     {
                       auto blockSize = ProgramState::getInstance().getMetadata()->block_size;
-                      if (blockSize != 34)
+                      if (blockSize != 66)
                       {
                         ProgramState::getInstance().getMetadata()->block_size = blockSize + 2;
                         Log::getInfo().log("Block size: %", std::to_string(blockSize + 2));
@@ -258,7 +258,8 @@ void loop_handler2(void *arg)
                     auto name = metadata->texture3Dname;
                     TextureManager::getInstance().deleteTexture(name); 
                     Texture tex3D = TextureManager::getInstance().create3D(name);
-                    auto tex3D_data = createPerlin3D(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+                    //auto tex3D_data = createPerlin3D(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+                    auto tex3D_data = createPerlin3D(256,256,256);
                     tex3D.create3D(tex3D_data);
                     metadata->texture3Dname = name;
                     Log::getInfo().log("Creating a new 3D texture...");
@@ -273,7 +274,7 @@ void loop_handler2(void *arg)
                     auto name = metadata->texture3Dname;
                     TextureManager::getInstance().deleteTexture(name); 
                     Texture tex3D = TextureManager::getInstance().create3D(name);
-                    auto tex3D_data = createPerlin3D_rough(metadata->block_size*2,metadata->block_size*2,metadata->block_size*2);
+                    auto tex3D_data = createPerlin3D_rough(256,256,256);
                     tex3D.create3D(tex3D_data);
                     metadata->texture3Dname = name;
                     Log::getInfo().log("Creating a new 3D texture with more rought noise...");
