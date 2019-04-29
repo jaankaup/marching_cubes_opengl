@@ -218,3 +218,18 @@
 ### 25.4.2019 9:00 -> 11:00 (2h) ### 
 
 > Raportin kirjoittamista.
+
+### 26.4.2019 10:00 -> 20:00 (10h) ### 
+
+> Raportin kirjoittamista. Refaktorointia. Nyt ohjelma lukee voxels_per_block
+  arvon ja piirretävän alueen dimensiot densityFunction{n}.df tiedostoista. 
+
+### 28.4.2019 17:00 -> 21:00 (4h) ### 
+
+> Rapostin kirjoittamista. Demon kuvakaappaus.
+
+### 28.4.2019 8:00 -> 11:00 (3h) ###  (297.5 h omien laskujeni mukaan).
+
+> Tässä on mukana vain tunnit jotka olen käyttänyt istuen koneen ääressä. Aikaa
+  on kulunut jonkin verran myös vapaa-ajalla kävellessä ym. Eli eiköhän tuosta
+  Nyt 8 op tule kasaan.

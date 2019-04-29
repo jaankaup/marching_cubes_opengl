@@ -1,5 +1,5 @@
-*.sh
 *.swp
+*.swo
 .project
 buildEclipse
 bak

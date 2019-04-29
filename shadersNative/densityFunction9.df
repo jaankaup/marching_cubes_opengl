@@ -1,10 +1,16 @@
 //voxels_per_block:16
-//SceneDimension:-12,-12,-12,12,12,12     this means => (xMin,xMax,yMin,yMax,zMin,zMax)
+//SceneDimension:-16,-12,-16,16,12,16     this means => (xMin,xMax,yMin,yMax,zMin,zMax)
 
 // This is a density function that creates a wierd ball.
 // The @v is the input vertice.
 // The diffuse3DTexture is for sampling. Now the 3d texture coordinates
 // See for application code src/Util/textureData.cpp::createPerlin3D
 // function for more details how the 3d texture creation.
-float sinijuttu = sin(v.x);
-return v.y + sinijuttu;
+
+    float noise = texture(diffuse3DTexture,0.05*v).w;
+    float noise2 = clamp(3.0*texture(diffuse3DTexture,0.1*vec3(v.x*noise,v.y*noise*0.88,v.z*noise*0.77)).b,-1.9,1.9);
+    float noise3 = clamp(3.0*texture(diffuse3DTexture,0.1*vec3(v.x*noise2*0.55,v.y*noise2*0.78,v.z*noise*0.37 + 0.5)).b,-1.5,1.0);
+    float noise4 = texture(diffuse3DTexture,0.001*v+vec3(0.42,0.97,0.33)).b;
+    float noise5 = texture(diffuse3DTexture,0.03*v).b;
+//     return v.y + 5*noise2 - 5.0 + noise*3 - noise4 * 3;
+    return v.y + 5*fbm(v*0.3) + 8*noise2 - 12.0 + noise*3 - noise4 * 5 - 6 * noise5 * sin(v.y*0.2);

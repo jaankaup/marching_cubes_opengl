@@ -135,7 +135,6 @@ void changeScene(const char number)
         metadata->triangulationShader = newName;
         metadata->activeShaderNumber = number;
         metadata->block_size = std::get<6>(metadata->dimensionsPerDF[number]);
-        Log::getError().log("%", std::to_string(metadata->block_size));
         Log::getInfo().log("Changing densityShader to % ...", newName);
         ModelManager::getInstance().createSceneObject();
 }

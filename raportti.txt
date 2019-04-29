@@ -1,36 +1,57 @@
-MARCHING CUBES ALGORITMIT TOTEUTUS OPENGL:LLÄ
+MARCHING CUBES ALGORITMIN TOTEUTUS OPENGL:LLÄ
+
+Tekjijä: Janne Kauppinen
+Kurssi: TIES504
 
 1. Johdanto
 
-Kyseessä on opengl ohjelma, joka luo kolmiulotteista proseduraalista grafiikka. Ohjelmointikielenä on käytetty c++:aa ja opengl shader kielenä käytetty GLSL versiota 430. Ohjelma luo geometriaa ns. marching cubes algorimilla, joka on toteutettu kokonaan GLSL:llä. Toisin sanoen algoritmi suoritetaan täysin näytönohjaimella. Ohjelma kääntyy tällä hetkellä ubuntulle ja visual studiolla windows käyttöjärjestelmälle. 
+Kyseessä on opengl ohjelma, joka luo kolmiulotteista proseduraalista grafiikka.
+Ohjelmointikielenä on käytetty c++:aa ja opengl shader kielenä käytetty GLSL
+versiota 430. Ohjelma luo geometriaa ns. marching cubes algorimilla, joka on
+toteutettu kokonaan GLSL:llä. Toisin sanoen algoritmi suoritetaan kokonaan
+näytönohjaimella. Ohjelma kääntyy tällä hetkellä ubuntulle ja visual studiolla
+windows käyttöjärjestelmälle. 
 
 2. Ohjelmointityön taustaa 
 
 Alun perin oli tarkoitus tehdä webassebly sovellus siten, että jokin c++
-ohjelma kääntyisi webassemblysi emscripten kääntäjällä. Idea proseduraalisesta
-grafiikasta tuli siitä, että tällä tavalla voitaisiin välttyä valmiiden mallien
-ja tekstuurien lataamisesta sovellukseen. Webasseblyllä toteutetut ohjelmat ja
-ohjelman käyttämän tiedostot joudutaan lataamaan palvelimelta. Tästä syystä
-ladatun tiedoston koko kasvaa sitä suuremmaksi mitä enemmän se tarvitsee muita
-tiedostoja toimiakseen. Marching cubes algoritmi oli itselleni täysin uusi
-asia. Olin kuullut siitä joskus, mutta en ollut aikaisemmin perehtynyt kyseen
-omaiseen tekniikkaan.  Ajattelin että se olisi riittävän epätriviaali tekniikka
-proseduraalisen grafiikan luomiseksi. 
+ohjelma kääntyisi webassemblysi emscripten kääntäjällä. Ajattelin että
+jonkinlainen 3d grafiikka demo olisi mukava web-selaimessa. Idea
+proseduraalisesta grafiikasta tuli siitä, että tällä tavalla voitaisiin välttyä
+valmiiden mallien ja tekstuurien lataamisesta sovellukseen. Webasseblyllä
+toteutetut ohjelmat ja ohjelman käyttämän tiedostot joudutaan lataamaan aina
+palvelimelta. Tästä syystä ladatun tiedoston koko kasvaa sitä suuremmaksi mitä
+enemmän se tarvitsee muita tiedostoja toimiakseen. Luomalla grafiikka
+proseduraalisesti sovelluksen fyysinen koko pienenee. Tosin sovellus tarvitsee
+enemmän aikaa ja muistia käynnistyäkseen sillä piirrettävät mallit ja teksuurit
+luodaan ohjelman suorituksen aikana. Marching cubes algoritmi oli itselleni
+täysin uusi asia. Olin kuullut siitä joskus, mutta en ollut aikaisemmin
+perehtynyt kyseen omaiseen tekniikkaan. Ajattelin että se olisi riittävän
+epätriviaali tekniikka proseduraalisen grafiikan luomiseksi. Tämän lisäksi
+ajatuksena oli se, että tästä työstä jäisi jonkinlainen marching cubes
+implementaatio, ja että se voisi toimia pohjana sellaiselle henkilölle joka
+haluaa soveltaa tai kehittää algoritmiä vieläkin pidemmälle. 
 
 3. Muutos suunnitelmiin
 
 Toteutin ohjelmaa webassembly projektina niin pitkälle, että sain marching
-cubes algoritmin toimimaan CPU tasolla. Toteutus oli web-selaimessa kuitenkin
-erittäin hidas. En osaa sanoa mistä hitaus johtui. Epäilyksenä oli se, että
-webassemblyksi käännetty koodi ei ehkä hyödyntänyt muistiä niin hyvin kuin
+cubes algoritmin toimimaan CPU tasolla. Valitetavasti toteutus oli web-selaimessa
+erittäin hidas. En osaa sanoa mistä hitaus johtui. Arvelin että
+webassemblyksi käännetty koodi ei välttämättä hyödynnä muistiä niin hyvin kuin
 natiivi c++ ohjelma. Tämä asia jäi kuitenkin vain epäilyksen tasolle. Aloin
 kehittää algoritmiä GLSL:llä, mutta kävi ilmi että sitä ei voi kovinkaan
 helposti toteuttaa verteksi shaderissa. Opengl:n geometry shader osoittautui
-käytännöllisemmäksi paikaksi toteuttaa marching cubes.   
+käytännöllisemmäksi paikaksi toteuttaa marching cubes algoritmi.   
 
 4. Siirtyminen webassemblystä natiiviin c++ ohjelmaan
 
-Emscripten kääntää opengl ohjelmat webgl:ksi. Tämä osoittautui ongelmaksi, sillä webgl ei tue geometry shaderia. Lisäksi selvisi se, että webgl on jo vanhentunut tekniikka eikä sitä juurikaan enää kehitetä. Sen tulee korvaamaan tekniikka nimeltään webgpu. Koska webgpu on vasta kehitysasteella, en voinnut hyödyntää sitä. Ainoa järkevä ratkaisu oli luopua webasseymblystä ja siirtyä kokonaan natiivin c++ ohjelman kehittämiseen, jolloin käyttössäni oli koko opengl ilman rajoitteita.  
+Emscripten kääntää opengl käskyt webgl:ksi. Tämä osoittautui ongelmaksi, sillä
+webgl ei tue geometry shaderia. Lisäksi selvisi se, että webgl on jo
+vanhentunut tekniikka eikä sitä juurikaan enää kehitetä. Sen tulee korvaamaan
+tekniikka nimeltään webgpu. Koska webgpu on vasta kehitysasteella, en voinnut
+hyödyntää sitä. Ainoa järkevä ratkaisu oli luopua webasseymblystä ja siirtyä
+kokonaan natiivin c++ ohjelman kehittämiseen jolloin käyttössäni oli koko
+opengl ilman rajoitteita.  
 
 5. Ohjelman rakenne
 
@@ -41,19 +62,21 @@ kutsuttiin luonti metodia, ja paluuarvoksi sai osoittimen resursiin kuten
 esimerkiksi tekstruuriin. Resurssin tuhoamien jäi myöskin singelton luokkien
 vastuulle. Ohjelman edetessä tein usein pikaisesti erilaisia funktioita jotka
 eivät välttämättä olleet sillä hetkellä kovinkaan järkevässä paikassa.
-Ajatuksen oli refaktoroida koodia myöhemmin ja keksi näille funktioille
-järkevämpiä sijoituspaikkoa, mutta en löytänyt tarpeeksi aikaa refaktoroida ja
-uudelleen järkestää ohjelman rakennetta täysin loogiseksi. 
+Ajatuksen oli refaktoroida koodia ja jäsentää ohjelma koodi loogisemmaksi,
+mutta en löytänyt tarpeeksi aikaa refaktoroida ja uudelleen järkestää ohjelman
+rakennetta. Suurin osa ajasta meni marching cubesin implementoimiseen. Loin
+ohjelmaan toimintoja sitä mukaan kun oli tarve. Tästä syytä ohjelmakoodin
+lukeminen saattaa olla ulkopuoliselle välilä vaikeaa.
 
 6. Ohjelman kehityshistoria
 
 Aluksi ohjelma toimi selaimessa. Tämän jälkeen ohjelmam eri versiot kääntyivät
-linuksille. Ohjelmassa oli alussa paljon debuggaus toimintoja. Ohjelma suoritti
-marching cubesin joka piirtoframella ja kuutioita prosessia pystyi seuraamaan
+linuksille. Ohjelmassa oli ensin paljon debuggaus toimintoja. Ohjelma suoritti
+marching cubesin joka piirtoframella ja kuutiointiprosessia pystyi seuraamaan
 wireframeversiona. Kuution eri caseja (tähän palataa seuraavissa kohdassa)
-pystyi valitsemaan plus ja miinus näppäimillä ja läpikäytävä kuutiomassa
+pystyi valitsemaan (+) ja (/) näppäimillä, ja läpikäytävä kuutiomassa
 seurasi kameraa. Lopullisessa versiossa debuggaustoiminnot on jätetty kokonaan
-pois. Nyt marching cubes suoritetaan vain kerran, ja tällöin algoritmi tuottaa
+pois. Nyt marching cubes suoritetaan vain kerrani. Algoritmi tuottaa
 piirrettävän monikulmioverkon jota sitten piirretään. Tämä on huomattavasti
 tehokkaampaa kuin suorittaa marching cubes algoritmi joka piirtoframella. 
 
@@ -61,17 +84,29 @@ tehokkaampaa kuin suorittaa marching cubes algoritmi joka piirtoframella.
 
 Marching cubes algoritmi on vahna keksintö. Idea julkaistiin 1987 SIGGRAPH:ssa.
 Algoritmi oli suunniteltu lähinnä lääketieteellisten kuvien visualisointiin (CT
-ja MRI). Algoritmillä muuttaa skalaarikenttää kolmioverkoksi. Algoritmissa
+ja MRI). Algoritmilla muutetaan skalaarikenttää kolmioverkoksi. Ohjelmassa
 skalaarikenttä jaetaan osiin (pieniksi kuutioiksi). Algoritmille annetaan arvo
-(usein liukulukuarvo) jota kutsutaan usein isovalueksi. Skalaarikenttää käydään
-läpi kuution kokoinen kohde kerrallaan, kunnes koko alue on käyty läpi.
-Kussakin yksittäisen kuution kohdalla suoritetaan seuraavat kohdat:     
+(liukulukuarvo) jota kutsutaan usein isovalueksi. Tämä on skalaarikentä arvo
+joka tuottaa visualisoitava kappaleen pinnan. Skalaarikenttää jaetaan ensin
+yksikkokuution kokoisiksi palasiksi. Tämän jälkeen kukin yksikkökuutio jaetaan
+useammaksi pieneksi kuutioiksi. Jaon jälkeen kaikki pienet kuutiot käydään läpi
+kutsuen marching cubes algoritmia. Eli marching cubesia kutsutaa jokaisen
+yksittäisen kuutio kohdalla erikseen, ja se tuottaa 0-5 kolmiota. Tämä
+toisetaan jokaisen kuution kohdalla erikseen kunnes koko alue on käyty läpi.
+Kunkin kuution kohdalta marching cubes algoritmin tuottamat kolmiot ja niitä
+vastaavien normaalit tallennetaan taulukkoon piirtämistä varten. Mitä pienempiä
+kuutiot ovat, sitä tarkemmin skalaarikenttä näytteistetään ja sitä tarkempi on
+visualisoitava approksimaatio kappaleen pinnasta. Tosin kuutioiden määrä kasvaa
+aina n^3 kun kuutioiden kokoa pienennetään. Seuraavaksi käydään läpi marching
+cubes algoritmin vaiheet (omassa koodissa shadersNative/triangulate.geom, olen
+kommentoinnut ne PHASE_n merkinnällä, missä n on vaiheen numero):     
 
 * 1. Luodaan kuutio. 
 
-* 2. Lasketaan jokaiselle kuution kulmapisteelle tiheysarvo näytteistämällä skalaarikenttää kyseenomaisessa koordinaatissa.
+* 2. Lasketaan jokaiselle kuution kulmapisteelle tiheysarvo näytteistämällä
+     skalaarikenttää kyseenomaisessa koordinaatissa.
 
-* 3. Tutkitaan jokaisen kulmapisteen kohdalla onko se pienempi kuin annettu
+* 3.1. Tutkitaan jokaisen kulmapisteen kohdalla onko se pienempi kuin annettu
 isovalue. Isovalue on arvo joka määrittää mikä on skalaarikentässä olevan
 pinnan arvo. Kuution kulmapisteen kohdalla siis katsotaan onko se pienempi kuin
 isovalue. Jos tämä on tosi, niin silloin kuution kulmapiste on "kappaleen"
@@ -81,43 +116,71 @@ ovat joko kappaleen sisä- tai ulkopuolella, niin silloin ei synny geometriaa.
 Jos yksikin kulmapiste on kappaleen sisäpuolella ja toinen kulmapisten
 kappaleen ulkopuolella, niin sillin tiedetään että kuution on "uponnut"
 kappaleeseen, tai toisin sanoen kuutio leikkaa kappaleen pintaa. Tällöin kuutio
-tuottaa geometriaa.  
+tuottaa geometriaa. 
 
-* 4. Lasketaan edellisen kohdan perusteella niin sanottu cube case. Erilaisia erilaisia vaihtoehtoja on kaiken kaikkiaan 255. Tapaus 0 tarkoittaa sitä että kaikki kuution kulmapisteet ovat kappaleen sisäpuolella ja 255 tarkoittaa sitä että kaikki kulmapisteet ovat kappaleen ulkopuolella. Tapaukset 1-254 tuottavat kolmioita ja ne ovat jo valmiiksi taulukoitu ja löydettävissä internetistä (katso viiteet).
+* 3.2. Lasketaan edellisen kohdan perusteella niin sanottu cube case. Erilaisia
+       erilaisia vaihtoehtoja on kaiken kaikkiaan 255. Tapaus 0 tarkoittaa sitä että
+       kaikki kuution kulmapisteet ovat kappaleen ulkopuolella ja 255 tarkoittaa sitä
+       että kaikki kulmapisteet ovat kappaleen sisäpuolella. Tapaukset 1-254 tuottavat
+       kolmioita ja ne ovat jo valmiiksi taulukoitu ja löydettävissä internetistä
+       (katso viiteet).
 
-* 5. Selvitetään cube casen perusteella mihin kuution sivuihin tulee kolmion leikauskohdat.
+* 4. Lasketaan kuution kulmapisteiden normaalit kuution kulmapisteen naapuripisteiden 
+     tiheysarvojen perusteella (tiheysfunktio).
 
-* 6. Selvitetään moniselitteiset tapaukset (tätä ei toteutettu tässä ohjelmassa).  
+* 5. Selvitetään cube casen perusteella mihin kuution sivuihin tulee kolmion
+     leikauskohdat lineaarisella interpolaatiolla. Tässä siis tehdään
+     approksimaatio siitä mihin kohtaan kuution reunassa sijaitsee isovalue.
 
-* 7. Luodaan ja interpoloidaan kolmioiden kulmapisteet.
+* 5.1. Selvitetään moniselitteiset tapaukset (tätä ei toteutettu tässä ohjelmassa).  
 
-* 8. Luodaan vastaavat kolmion normaalit. Normaalit lasketaan tiheusfunktiolla kuution kulmapisteen naapureiden tiheysarvojen perusteella. Tämän jälkeen normaali interpoloidaan ja normalisoidaan.
+* 6. Luodaan vastaavat kolmion normaalit. Normaalit lasketaan tiheusfunktiolla
+     kuution kulmapisteen naapureiden tiheysarvojen perusteella. Tämän jälkeen
+     normaali interpoloidaan ja normalisoidaan.
 
-Tämä prosessi toistetaan jokaisen kuution kohdalla, ja lopputuloksena on kolmioverkko jota voidaan piirtää ohjelmalla. 
+Tämä prosessi toistetaan jokaisen kuution kohdalla, ja lopputuloksena on
+kolmioverkko jota voidaan piirtää ohjelmalla. 
 
 8. Marching cubes algoritmi omassa sovelluksessa
 
-8.1 Koko algoritmi on toteutettu triangulate.geom shaderissa. Se saa syötteenä
+8.1 Marching cubes shaderissa
+
+Koko algoritmi on toteutettu triangulate.geom shaderissa. Se saa syötteenä
 yhden kulmion kulmapisteen ja luo pisteen ja uniform muuttujana annetun
 voxels_per_block arvon perusteella kuution. Voxels_per_block kertoo sen kuinka
 suuri on kuution sivun pituus. Tämä arvo on 1/voxels_per_block. Eli mitä
 suurempi arvo on kyseessä, sitä pienempiä ovat läpikäytävät kuutiot ja sitä
-tarkemmin skalaarikenttä käydään läpi. 
+tarkemmin skalaarikenttä käydään läpi. Ohelmassa kuutioiden määrä lisääntyy n^3
+kun kuution sivujen pituuksia pienennetään. 
 
-8.2 Skalaarikenttä muodostetaan näytteistämällä 3d tekstuuria ja hyödyntämällä
+8.2 Kuution kulmapisteiden näytteistäminen
+
+Skalaarikenttä muodostetaan näytteistämällä 3d tekstuuria ja hyödyntämällä
 erilaisia matemaattisia funktioita. Esimerkiksi ympyrän yhtälö yhdistettyä
 isovalueen piirtää ympyrän pinnan. Jos halutaan ympyrän pintaan epätasaisuutta,
 niin ympyrän yhtälöön x,y,z koordinaatissa voidaan summata vaikkapa vastaavista
 3D tekstuurin koordinaateista näytteistetty arvo. Ohjelman käytössäolevat
 density funktioiden määritelmät ovat kansiossa shadersNative
-densityFuncion{n}.df.    
+densityFuncion{n}.df. Erityisesti jokaisen kuution kulmapisteen kohdalla täytyy
+pystyä määrittämään mikä on sen arvo pisteessä (x,y,z). Skalaarikenttä voisi olla
+myös esimerkiksi 3d tekstuuri ihmisen kallosta. Asettamalla isovalueksi
+vaikkapa luun tiheyden arvo algoritmi tuottaa kolmioverkon ihmisen luun
+pinnasta näytteistämällä 3d tekstuuria ihmisen pään tiheysarvoista. Tai jos haluttaisiin 
+visualisoida pehmeämpiä kudoksia niin laskemalla isovaluea algoritmi loisi kolmioverkon 
+pehmeämmistä kudoksista. Arvot voisivat olla myös esimekiksi lämpötila arvoja tai 
+nopeus arvoja. Yhdistämällä eri skalaarikenttiä voidaan visualisoida esimerkiksi 
+nestevirtauksia tai muita fyksikaalisia ominaisuuksia.  
 
-8.3 Valitaan alue joka halutaan marssia läpi ja skalaarikentän määritelmä.
+8.3 Visualisoitavan alueen määritys tapahtuu c++ ohjelmasssa.
+
+Valitaan alue joka halutaan marssia läpi ja skalaarikentän määritelmä. 
 Tämän jälkeen käydään läpi koko alue kuutioilla ja tallennetaan lopputulos
 ohjelmassa luotuun taulukkoon. Taulukkoon kertyy siis kolmioverkko, joka sitten
-piirretään joka piirtoframe. Tämä prosessi tapahtuu src/Graphics/vertexBufferManager.cpp
-tiedostossa optimize_vertex_buffer metodissa. Tämä metodi suoritetaan joka kerta 
-kun teksuuria tai density funktiota vaihdetaan.
+piirretään joka piirtoframe. Tämä prosessi tapahtuu
+src/Graphics/vertexBufferManager.cpp tiedostossa optimize_vertex_buffer
+metodissa. Tämä metodi suoritetaan joka kerta kun teksuuria tai density
+funktiota vaihdetaan. Toisin sanoen: tässä metodissa suoritetaan marching cubes
+algoritmi ja sen tuottama kolmioverkko tallenetaan opengl:lle piirrettäväksi.
 
 9. Ohjelman toiminnot
 
@@ -125,8 +188,8 @@ A = liiku vasemmalle.
 W = liiku ylös.
 D = liiku oikealle.
 S = liiku alas.
-  = liiku ylös.
-  = liiku alas.
+V = liiku ylös.
+C = liiku alas.
 
 T = Luo uusi 3D tekstuuri ja päivitä scene.
 Y = Luo uusi 3D tekstuuri (octave versio) ja päivitä scene. Tämä tekstuuri on rösöisempi.
@@ -138,34 +201,46 @@ Y = Luo uusi 3D tekstuuri (octave versio) ja päivitä scene. Tämä tekstuuri o
 0-9 numerot ovat varattuja eri skalaarikenttien määritystä varten.
     Nämä määritykset löytyvät shaderNative/densityFunction{n}.df, n=0,..,9
 
+Tapaus 9 on erilainen kuin muut. Tässä on mukana myös GLSL:ssä tuottamaa
+kohinaa (kallio maisema demossa.). GLSL:ssä tuotettu kohina on huomattavasti 
+raskaampaa laskea kuin näytteistämällä jo valmista 3D tekstuuria.  
+
 Ohelma tulostaa läpikäytävien kuutioiden ja luotujen kolmioiden lukumäärän kun
-tekstuuria ja skalaarikenttää muutetaan.  Kuutiomäärä kasvaa nopeasti satoihin
+tekstuuria ja skalaarikenttää muutetaan. Kuutiomäärä kasvaa nopeasti satoihin
 miljooniin, mutta itse kolmioiden määrä on usein vain kymmenistä tuhansista
 muutamaan miljoonaan.  Eli suurin osa läpikäytävistä kuutioista ovat joko
 kappaleen sisä- tai ulkopuolella. Toki on mahdollista määritellä skalaarikenttä
 siten, että kolmioita syntyy paljon (esim. asteroidikenttä tai reikäjuusto).
-Nykytoteutuksella ohjelma todennäköisesti kaatuu. Ongelman pystyy kyllä
-korjaamaan käymällä alue läpi palasissa ja luomalla taulukoita aina tarpeen
-mukaan, mutta tähän ei ollut tarpeeksi aikaa. 
 
 10. Ohjelman riippuvuudet
 
 Ohjelmassa on käytetty seuraavia kirjastoa: SDL2, GLEW, SOIL ja PerlinNoise
-(https://github.com/Reputeless/PerlinNoise). Ohjelma kääntyy linuksille ja
-windosille (visual studio). Lisäksi ohjelma vaatii näytönohjaimelta tuen GLSL
-versioon 430. Tämä vaatimus sulkee pois mm. yliopiston perustietokoneet.
+(https://github.com/Reputeless/PerlinNoise). Lisäski GLSL:n kohinafunktiot
+ovat otettu täältä:
+
+https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83.
+
+Ohjelma kääntyy linuksille ja windosille (visual studio). Lisäksi ohjelma
+vaatii näytönohjaimelta tuen GLSL versioon 430. Tämä vaatimus sulkee pois mm.
+yliopiston perustietokoneet. Nyky demo on hyvin raskas tavalliselle
+näytönohjaimelle. Vaikka versiovaatimukset täyttyisivätkin, niin on mahdollista
+että näytönohjaimista voi loppua rekisterit tai muisti kesken.
 
 11. Mikä oli vaikea ja mikä suoraviivaista 
 
-Projektin luonti oli aika epäsuoraviista puuhaa. Jouduin käyttämään aikaa
-jonkin verran esimerkiksi cmaken opetteluun. Lisäksi aikaa kului webassemblyyn
-tutustumiseen. Opengl ei ole itselleni kovinkaan tuttu asia, joten sain aikaa
-kulumaan paljon siihenkin. Myös itse marching cubes algoritmin opetteluun kului
-paljon aikaa. Aihealueet olivat entuudestaan tuntemattomia mikä vaikeutti
-huomattavasti ohjelman rakenteen luomista. Ja lopulta kun monet asit olivat
+Projektinluonti oli aika epäsuoraviista puuhaa. Jouduin käyttämään aikaa jonkin
+verran esimerkiksi cmaken opetteluun. Lisäksi aikaa kului webassemblyyn
+tutustumiseen. Opengl ei ole itselleni kovinkaan tuttu asia, joten sen
+opetteluun meni aikaa. Myös itse marching cubes algoritmin opetteluun kului
+paljon työtunteja. Aihealueet olivat entuudestaan tuntemattomia mikä vaikeutti
+huomattavasti ohjelman rakenteen luomista. Ja lopulta kun monet asiat olivat
 selkeitä, huomasin ettei ohjelman rakenne ollut kaikin puolin kovinkaan
 järkevä. Lisäksi opengl:n debuggaaminen oli tuskaista. Aikaa kului paljon
-vikojen etsimiseen, ja vikojen paikallastaminen oli melko hidasta.
+vikojen etsimiseen, ja vikojen paikallastaminen oli melko hidasta. Jouduin
+ohjelmoimaan aika paljon "sokkona", sillä opengl:stä saa vain rajallisesti
+tulostettua debuggaus tietoja. Välillä vikaa etsittiin c++:sta, välillä itse
+ohjelmasta ja välillä shadereista. Virheiden paikallistaminen oli todella
+vaikeaa. Ohjelmassa on paljon indeksipyörittelyä. Tämä vei aika paljon aikaa. 
 
 12. Miten työ onnistui ja mitä olisi kannattanut tehdä toisin
 
@@ -181,12 +256,15 @@ Niiden integrointi takaisin lopulliseen ohjelmaan olisi vienyt aikaa, ja aika
 loppui kesken. Webassemblyyn meni ehkä liikaa aikaa. Ehkä olisi kannattanut
 ensin tehdä natiivi c++ ohjelma ja vasta tämän jälkeen yrittää kääntää se
 webassemblyksi. Opengl:n debuggaaminen oli vaikeaa.  Projektin loppupuolella
-selvisi, että nvidialla on nsight niminen plugin visualstudioon ja eclipseen.
-Tästä olisi ehkä ollut hyötyä.  
+selvisi, että nvidialla on Nsight niminen plugin visualstudioon ja eclipseen.
+Tästä olisi ehkä ollut hyötyä. 
 
 13. Lisä materiaalia 
 
-Apumateriaalina käytin GPU Gems 3 part 1 Chapter 1. Lisäksi seuraavasta linkistä oli suuri apu: Generatin Complex Procedural Terrains Using the GPU ja paulbourke.net/geometry/polygonise/. Sieltä löytyi mm. algoritmin vaatimat taulukot ja esimerkki totetutus marching cubesista c++:lla.
+Apumateriaalina käytin GPU Gems 3 part 1 Chapter 1. Lisäksi seuraavasta
+linkistä oli suuri apu: Generatin Complex Procedural Terrains Using the GPU ja
+paulbourke.net/geometry/polygonise/. Sieltä löytyi mm. algoritmin vaatimat
+taulukot ja esimerkkitotetutus marching cubesista c++:lla.
 
 14. Projektin kääntäminen 
 
@@ -211,14 +289,16 @@ PROJEKTIN KÄÄTÄMINEN VISUAL STUDIOLLA
 9. Kopioi kaikki .dll tiedostot samaan paikkaan jonne ohjelma kääntyi.
 10. Toivottavasti kaikki meni hyvin. Todennäköisesti joudut säätämään yhtä sun toista tai sitten käytät suosiolla valmiiksi käännettyjä binaryja.
 
-15. Lukijalle 
+15. Loppusanat. 
 
-Pahoittelen koodin jäsentelyä ja rakennetta. Koodi on paikoitellen
-vaikealukuista, ja ohjelman rakenne ja suoritusjärjestys ei ole kovinkaan
-intuiviininen. Lisäksi ohjelmaan on jäänyt jonkin verran kommentteja joita ei
-ole päivitetty ajan tasalle, ja monet muuttujan nimet ovat jääneet
-epäkuvaaviksi. Tärkeimmät asiat marching cubesin kannalta sijaitsevat
-shadersNative/triangulate.vert, shadersNative/triangulate.geom,
-src/vertexBufferManager.cpp, src/Graphics/texture.cpp ja src/Utils/misc.cpp
-tiedostoissa. Mukana on cpu version tiedostoja, joita ei nyt käytetä. Ne ovat
-kommentoitu pois src/CMakelists.txt tiedostossa.
+Marcing cubes algoritmi kannattaisi ehkä toteuttaa CUDA:lla tai jollakin muulla
+laskentarajapinnalla. Laskentarajapinnat ovat itselleni tuntemattomia, mutta
+uskoisin että GLSL ei ole kovinkaan hyvä tässä asiassa. GLSL saattaa riittää
+tietokonepeligrafiikan luomisessa, mutta vaikeampien asioiden visualisointiin
+se ei todennäköisesti ole riittävä. Uskoisin että monet skalaarikentät ovat
+niin monimutakisia että GLSL:n funktiot eivät riitä niiden laskemiseen. Yritin
+etsiä jotain erikoisia funtioita esim. solmuteorista, mutta niiden laskeminen
+olisi vaatinut integrointia ym. joten tämä jäi sitten vain haaveeksi tällä
+kertaa. Itse kolmioverkon piirtämisen on tietenkin hyvä suorittaa jollakin
+grafiikkarajapinnalla. Olisi ollut hauska tulostaa oman demon tuotoksia esim.
+3D tulostimella.  
