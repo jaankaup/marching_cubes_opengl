@@ -1,5 +1,5 @@
 //voxels_per_block:32
-//SceneDimension:-7,-7,-7,7,7,7     this means => (xMin,xMax,yMin,yMax,zMin,zMax)
+//SceneDimension:-7,-7,-7,7,7,7 
 
 // This is a density function that creates a wierd ball.
 // The @v is the input vertice.

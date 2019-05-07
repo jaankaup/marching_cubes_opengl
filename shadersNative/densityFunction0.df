@@ -1,5 +1,5 @@
 //voxels_per_block:16
-//SceneDimension:-12,-15,-12,12,15,12     this means => (xMin,xMax,yMin,yMax,zMin,zMax)
+//SceneDimension:-12,-15,-12,12,15,12     this means => (xMin,yMin,zMin,xMax,yMax,zMax). The dimension of the scene.
 
 // The @v is the input vertice.
 // The diffuse3DTexture is for sampling. Now the 3d texture coordinates
