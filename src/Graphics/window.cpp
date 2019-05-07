@@ -29,7 +29,7 @@ void Window::dispose()
 bool Window::init(int width, int height)
 {
 //  Log::getDebug().log("%","Window::Window. Creating window.");
-  auto sdl = SDL_Init(SDL_INIT_VIDEO);
+  SDL_Init(SDL_INIT_VIDEO);
 //  Log::getDebug().log("%",std::to_string(sdl));
   if (!SDL_WasInit(SDL_INIT_VIDEO))
   {

@@ -121,7 +121,7 @@ void Shader::buildDensity(const std::vector<std::string>& sources)
                              
   }
 
-  bool result = replace(geom, "{{density_function_comes_here_from_another_file}}", density); 
+  replace(geom, "{{density_function_comes_here_from_another_file}}", density); 
   
   std::vector<std::string> triangulate_src = {vert, geom};
   build(triangulate_src, true);

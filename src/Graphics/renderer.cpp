@@ -44,11 +44,8 @@ void Renderer::renderModels(const Camera& camera)
   {
     Shader* shader = ShaderManager::getInstance().getShaderByName(com.shaderName);
     shader->bind();
-    //auto timeNow = std::chrono::system_clock::now().time_since_epoch().count();
-    //shader->setUniform("time", static_cast<float>(timeNow/1000000000));
     shader->setUniform("voxels_per_block", voxels_per_block);
 
-    // TODO: remove unnecessary setUniform calls.
     auto metadata = ProgramState::getInstance().getMetadata();
     auto tName = metadata->texture3Dname;
     glm::mat4 mx = com.modelMatrix ;
@@ -67,13 +64,10 @@ void Renderer::renderModels(const Camera& camera)
     shader->setUniform("lights[0].attentuationFactor", 0.00009f);
     shader->setUniform("cameraPosition", eyePosition);
     shader->setUniform("lights[0].position", glm::vec3(8.0f,8.0f,8.0f));/* eyePosition);*/
-//    shader->setUniform("startPoint", ProgramState::getInstance().getStartPoint()); /* sumPoint  */; //  ProgramState::getInstance().getStartPoint());
-//    shader->setUniform("cubeMask",  ProgramState::getInstance().getCubeMaskCeil());
-//    shader->setUniform("debugMask", ProgramState::getInstance().getDebugCube() ? 1.0f : 0.0f);
-//    shader->setUniform("wireframe", ProgramState::getInstance().getWireframe() ? 1.0f : 0.0f);
 
     Texture tritable = TextureManager::getInstance().getTextureByName("tri_table_texture");//{TextureType::d2,0};
 
+    // TODO: wireframe is not available in this version. Remove these lines.
     if (com.shaderName == "marchingShaderLine" && !ProgramState::getInstance().getWireframe()) continue; 
     switch (texture.getTextureType())
     {
